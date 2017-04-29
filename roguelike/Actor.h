@@ -42,6 +42,7 @@ public:
 	static std::vector<Actor*> get_actors(int x, int y, int z);
 
 	bool is_impassable() { return _impassable; }
+	bool is_transparent() { return _transparent; }
 
 protected:
 	int _screen_x, _screen_y, _screen_z;
@@ -51,21 +52,9 @@ protected:
 	TCODColor _bcolor;
 	std::string _name;
 	bool _impassable;
+	bool _transparent;
 
 private:
 	static std::vector<Actor*>* _buffer;
 };
 
-class Tile : public Actor {
-public:
-	enum TILE_TYPE {
-		GRASS,
-		STONE_WALL,
-		DIRT,
-		DIRT_WALL,
-		WATER,
-		TREE,
-	};
-
-	Tile(int x, int y, int z, TILE_TYPE type, TCODColor color = TCODColor::black);
-};

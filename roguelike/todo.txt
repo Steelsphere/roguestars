@@ -1,0 +1,18 @@
+World Generation:
+	*More biomes:
+		*Desert
+		*Plains
+		*Mountains
+		*Beach
+	*Structures
+
+Player:
+	*Viewing X
+	
+General:
+	*World map
+	*Monsters
+
+GUI:
+	*Console
+	*Announcements

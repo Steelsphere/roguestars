@@ -9,13 +9,13 @@ Actor::Actor()
 }
 
 Actor::Actor(int x, int y, int z, std::string name) :
-	_screen_x(x), _screen_y(y), _screen_z(z), _world_x(x), _world_y(y), _world_z(z), _name(name), _impassable(false)
+	_screen_x(x), _screen_y(y), _screen_z(z), _world_x(x), _world_y(y), _world_z(z), _name(name), _impassable(false), _transparent(true)
 {
 	_buffer->push_back(this);
 }
 
 Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, std::string name) : 
-	_screen_x(x), _screen_y(y), _screen_z(z), _c(c), _fcolor(fcolor), _bcolor(bcolor), _world_x(x), _world_y(y), _world_z(z), _name(name), _impassable(false)
+	_screen_x(x), _screen_y(y), _screen_z(z), _c(c), _fcolor(fcolor), _bcolor(bcolor), _world_x(x), _world_y(y), _world_z(z), _name(name), _impassable(false), _transparent(true)
 {
 	_buffer->push_back(this);
 }
@@ -65,7 +65,7 @@ Actor* Actor::get_actor(int x, int y, int z) {
 //	std::cout << "Get actor called at: " << x << " " << y << " " << std::endl;
 //	std::cout << "Player pos: " << GameObjects::player->get_screen_pos()[0] << " " << GameObjects::player->get_screen_pos()[1] << std::endl;
 	for (int i = 0; i < _buffer->size(); i++) {
-		if (_buffer->at(i)->get_screen_pos()[0] == x && _buffer->at(i)->get_screen_pos()[1] == y && _buffer->at(i)->get_screen_pos()[2] == z) {
+		if (_buffer->operator[](i)->get_screen_pos()[0] == x && _buffer->operator[](i)->get_screen_pos()[1] == y && _buffer->operator[](i)->get_screen_pos()[2] == z) {
 			return _buffer->at(i);
 		}
 	}
@@ -107,102 +107,10 @@ void Actor::move(std::string dir) {
 	}
 
 	this->set_position(_screen_x + xm, _screen_y + ym, _screen_z);
-	this->set_world_position(_screen_x + xm, _screen_y + ym, _screen_z);
+	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
 }
 
 void Actor::set_buffer(std::vector<Actor*>* buffer) {
 	_buffer = buffer;
 }
 
-Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z) {
-	switch (type) {
-	
-	case GRASS:
-		switch (Random::one_to_four(Random::generator)) {
-		case 1:
-			_c = '.';
-			break;
-		case 2:
-			_c = ',';
-			break;
-		case 3:
-			_c = '`';
-			break;
-		case 4:
-			_c = '\'';
-			break;
-		}
-		switch (Random::coinflip(Random::generator)) {
-		case 1:
-			_fcolor = TCODColor::darkGreen;
-			break;
-		case 2:
-			_fcolor = TCODColor::green;
-			break;
-		}
-		_bcolor = TCODColor::black;
-		_name = "Grass";
-		break;
-	
-	case STONE_WALL:
-		_c = 219;
-		_fcolor = TCODColor::grey;
-		_bcolor = TCODColor::grey;
-		
-		_name = "Stone";
-		_impassable = true;
-		break;
-	
-	case DIRT:
-		switch (Random::one_to_four(Random::generator)) {
-		case 1:
-			_c = '.';
-			break;
-		case 2:
-			_c = ',';
-			break;
-		case 3:
-			_c = '`';
-			break;
-		case 4:
-			_c = '~';
-			break;
-		}
-		if (color == TCODColor::black) {
-			_fcolor = TCODColor::sepia;
-			_bcolor = TCODColor::black;
-		}
-		else {
-			_fcolor = color;
-		}
-		_name = "Dirt";
-		break;
-	
-	case DIRT_WALL:
-		_c = 219;
-		_fcolor = TCODColor::sepia;
-		_bcolor = TCODColor::sepia;
-		
-		_name = "Dirt";
-		_impassable = true;
-		break;
-	
-	case WATER:
-		_c = 178;
-		_fcolor = TCODColor::blue;
-		_bcolor = TCODColor::blue;
-		
-		_name = "Water";
-		_impassable = true;
-		break;
-	
-	case TREE:
-		_c = 24;
-		_fcolor = TCODColor::lightGreen;
-		_bcolor = TCODColor::black;
-
-		_name = "Tree";
-		_impassable = true;
-		break;
-	}
-}

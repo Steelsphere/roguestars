@@ -15,5 +15,9 @@ public:
 	static std::uniform_int_distribution<int> one_to_sixteen;
 	
 	static std::uniform_int_distribution<int> coinflip;
+
+	static std::uniform_int_distribution<int> one_to_thirty_two;
+
+	static std::uniform_int_distribution<int> one_to_sixty_four;
 };
 

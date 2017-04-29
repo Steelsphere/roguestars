@@ -68,9 +68,12 @@ void Game::update() {
 	
 	GameObjects::camera->update();
 	
+	TCODMap* fov = _level->get_fov_map();
+	fov->computeFov(GameObjects::player->get_world_pos()[0], GameObjects::player->get_world_pos()[1], 100);
+
 	for (int i = 0; i < actors->size(); i++) {
 		
-		a = actors->at(i);
+		a = actors->operator[](i);
 		
 		ar = a->get_screen_pos();
 		cr = GameObjects::camera->get_screen_pos();
@@ -80,8 +83,10 @@ void Game::update() {
 			ar[0] > cr[0] - _screen_width / 2 - 10 &&
 			ar[1] > cr[1] - _screen_height / 2 - 10
 			) {
-				_num_actors_drawn++;
-				a->draw();
+				if (fov->isInFov(a->get_world_pos()[0], a->get_world_pos()[1])) {
+					_num_actors_drawn++;
+					a->draw();
+				}
 			} 
 	}
 //	std::cout << "Number of actors drawn " << _num_actors_drawn << "\r";
