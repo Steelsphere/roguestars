@@ -11,6 +11,7 @@ public:
 		DIRT_WALL,
 		WATER,
 		TREE,
+		SAND,
 	};
 
 	Tile(int x, int y, int z, TILE_TYPE type, TCODColor color = TCODColor::black);

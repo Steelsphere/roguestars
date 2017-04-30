@@ -13,8 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\FastNoise">
+    <Filter Include="Source Files\Third Party">
       <UniqueIdentifier>{6bae199a-36a6-4d78-ab18-cc953b05d193}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Third Party">
+      <UniqueIdentifier>{77680af0-2fcc-41ca-b28a-17e12634e2b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +49,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FastNoise.cpp">
-      <Filter>Source Files\FastNoise</Filter>
+      <Filter>Source Files\Third Party</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files</Filter>
@@ -54,12 +57,12 @@
     <ClCompile Include="Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hsvtorgb.cpp">
+      <Filter>Source Files\Third Party</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ASCIICodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -83,19 +86,27 @@
     <ClInclude Include="Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FastNoise.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FastNoise.h">
+      <Filter>Header Files\Third Party</Filter>
+    </ClInclude>
+    <ClInclude Include="hsvtorgb.h">
+      <Filter>Header Files\Third Party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="level.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

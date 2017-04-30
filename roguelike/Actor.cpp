@@ -2,6 +2,7 @@
 #include "GameObjects.h"
 
 std::vector<Actor*>* Actor::_buffer;
+std::vector<std::vector<std::vector<Actor*>>>* Actor::_map;
 
 Actor::Actor()
 {
@@ -62,23 +63,20 @@ void Actor::draw() {
 }
 
 Actor* Actor::get_actor(int x, int y, int z) {
-//	std::cout << "Get actor called at: " << x << " " << y << " " << std::endl;
-//	std::cout << "Player pos: " << GameObjects::player->get_screen_pos()[0] << " " << GameObjects::player->get_screen_pos()[1] << std::endl;
-	for (int i = 0; i < _buffer->size(); i++) {
-		if (_buffer->operator[](i)->get_screen_pos()[0] == x && _buffer->operator[](i)->get_screen_pos()[1] == y && _buffer->operator[](i)->get_screen_pos()[2] == z) {
-			return _buffer->at(i);
-		}
-	}
-	return nullptr;
+	return _map->operator[](x)[y][0];
 }
 
 std::vector<Actor*> Actor::get_actors(int x, int y, int z) {
 	std::vector<Actor*> a;
-	for (int i = 0; i < _buffer->size(); i++) {
-		if (_buffer->operator[](i)->get_screen_pos()[0] == x && _buffer->operator[](i)->get_screen_pos()[1] == y && _buffer->operator[](i)->get_screen_pos()[2] == z) {
-			a.push_back(_buffer->operator[](i));
-		}
+	
+	if (x < 0 || y < 0 || x >= _map->size() || y >= _map->size()) {
+		return a;
 	}
+
+	for (int i = 0; i < _map->operator[](x)[y].size(); i++) {
+			a.push_back(_map->operator[](x)[y][i]);
+		}
+	
 	return a;
 }
 
@@ -110,7 +108,6 @@ void Actor::move(std::string dir) {
 	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
 }
 
-void Actor::set_buffer(std::vector<Actor*>* buffer) {
-	_buffer = buffer;
+void Actor::get_color(float* h, float* s, float* v) {
+	_fcolor.getHSV(h, s, v);
 }
-

@@ -13,12 +13,6 @@ public:
 	
 	static bool update;
 	
-	static std::vector<Actor*> actors;
-	
-	static Player* player;
-	
-	static Camera* camera;
-
 	static const std::map<std::string, std::pair<int, int>> map_dir;
 };
 

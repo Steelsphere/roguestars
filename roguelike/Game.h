@@ -37,7 +37,9 @@ private:
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
 	TCOD_event_t _event;
-	Level* _level = new Level;
+	Level* _level;
+	Player* _player;
+	Camera* _camera;
 };
 
 

@@ -19,5 +19,9 @@ public:
 	static std::uniform_int_distribution<int> one_to_thirty_two;
 
 	static std::uniform_int_distribution<int> one_to_sixty_four;
+
+	static std::uniform_int_distribution<int> one_to_one_twenty_eight;
+
+	static std::uniform_int_distribution<int> one_to_eight;
 };
 

@@ -18,13 +18,19 @@ void Game::init() {
 void Game::start() {
 	TCODConsole::root->clear();
 
-	_level->generate_level(512, 512, Level::HILLS);
+	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
+
+	_level = new Level;
+	_level->generate_level(1024, Level::DESERT);
 	
-	GameObjects::player = new Player(250, 250, 0, '@', TCODColor::blue);
-	GameObjects::player->spawn_player_in_world();
-	GameObjects::camera = new Camera(GameObjects::player);
-	GameObjects::camera->set_level(_level);
-	GameObjects::camera->update();
+	_player = new Player(250, 250, 0, '@', TCODColor::blue);
+	Input::set_input_reciever(_player);
+	_player->spawn_player_in_world();
+	_camera = new Camera(_player);
+	_camera->set_level(_level);
+	_camera->update();
+
+	_level->save_level_image();
 
 	game_loop();
 }
@@ -66,17 +72,17 @@ void Game::update() {
 	Actor* a;
 	int* ar, *cr;
 	
-	GameObjects::camera->update();
+	_camera->update();
 	
 	TCODMap* fov = _level->get_fov_map();
-	fov->computeFov(GameObjects::player->get_world_pos()[0], GameObjects::player->get_world_pos()[1], 100);
+	fov->computeFov(_player->get_world_pos()[0], _player->get_world_pos()[1], 100);
 
 	for (int i = 0; i < actors->size(); i++) {
 		
 		a = actors->operator[](i);
 		
 		ar = a->get_screen_pos();
-		cr = GameObjects::camera->get_screen_pos();
+		cr = _camera->get_screen_pos();
 		
 		if (ar[0] < cr[0] + _screen_width / 2 + 10 &&
 			ar[1] < cr[1] + _screen_height / 2 + 10 &&

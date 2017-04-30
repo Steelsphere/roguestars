@@ -17,7 +17,12 @@ void Player::move(std::string dir) {
 	int xm = GameObjects::map_dir.at(dir).first;
 	int ym = GameObjects::map_dir.at(dir).second;
 	
-	std::vector<Actor*> checkvec = Actor::get_actors(_screen_x + xm, _screen_y + ym, _screen_z);
+	std::vector<Actor*> checkvec = Actor::get_actors(_world_x + xm, _world_y + ym, _world_z);
+	
+	if (checkvec.size() == 0) {
+		return;
+	}
+
 	for (int i = 0; i < checkvec.size(); i++) {
 		if (checkvec[i]->is_impassable()) {
 			return;

@@ -143,6 +143,7 @@
     <ClCompile Include="FastNoise.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjects.cpp" />
+    <ClCompile Include="hsvtorgb.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -153,11 +154,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
-    <ClInclude Include="ASCIICodes.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FastNoise.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjects.h" />
+    <ClInclude Include="hsvtorgb.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Level.h" />
@@ -167,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="level.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

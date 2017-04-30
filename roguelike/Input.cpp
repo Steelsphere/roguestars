@@ -2,33 +2,34 @@
 
 int Input::_cooldown = 100;
 int Input::_cdfirst = TCODSystem::getElapsedMilli();
+Actor* Input::_reciever;
 
 void Input::input(TCOD_key_t key) {
 	if (key.pressed) {
 		switch (key.vk) {
 		case TCODK_KP8:
-			GameObjects::player->move("top");
+			_reciever->move("top");
 			break;
 		case TCODK_KP7:
-			GameObjects::player->move("topleft");
+			_reciever->move("topleft");
 			break;
 		case TCODK_KP9:
-			GameObjects::player->move("topright");
+			_reciever->move("topright");
 			break;
 		case TCODK_KP4:
-			GameObjects::player->move("left");
+			_reciever->move("left");
 			break;
 		case TCODK_KP6:
-			GameObjects::player->move("right");
+			_reciever->move("right");
 			break;
 		case TCODK_KP1:
-			GameObjects::player->move("bottomleft");
+			_reciever->move("bottomleft");
 			break;
 		case TCODK_KP2:
-			GameObjects::player->move("bottom");
+			_reciever->move("bottom");
 			break;
 		case TCODK_KP3:
-			GameObjects::player->move("bottomright");
+			_reciever->move("bottomright");
 			break;
 		}
 	}

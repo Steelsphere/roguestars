@@ -94,5 +94,27 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		_impassable = true;
 		_transparent = false;
 		break;
+	
+	case SAND:
+		switch (Random::one_to_four(Random::generator)) {
+		case 1:
+			_c = '.';
+			break;
+		case 2:
+			_c = ',';
+			break;
+		case 3:
+			_c = '`';
+			break;
+		case 4:
+			_c = '~';
+			break;
+		}
+		_fcolor = TCODColor::yellow;
+		_bcolor = TCODColor::black;
+
+		_name = "Sand";
+		break;
 	}
+
 }

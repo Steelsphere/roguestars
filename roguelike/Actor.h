@@ -7,6 +7,7 @@
 #include <vector>
 #include "Random.h"
 
+
 class Actor
 {
 public:
@@ -23,6 +24,8 @@ public:
 	int* get_screen_pos();
 	int* get_world_pos();
 
+	void get_color(float* h, float* s, float* v);
+	
 	void set_position(int x, int y, int z);
 	void set_world_position(int x, int y, int z);
 
@@ -35,9 +38,10 @@ public:
 	std::map<std::string, Actor*> get_adjacent_actors();
 	virtual void move(std::string dir);
 	
-	static void set_buffer(std::vector<Actor*>* buffer);
+	static void set_buffer(std::vector<Actor*>* buffer) { _buffer = buffer; }
 	static std::vector<Actor*>* get_buffer() { return _buffer; }
-	
+	static void set_map(std::vector<std::vector<std::vector<Actor*>>>* map) { _map = map; }
+
 	static Actor* get_actor(int x, int y, int z);
 	static std::vector<Actor*> get_actors(int x, int y, int z);
 
@@ -56,5 +60,6 @@ protected:
 
 private:
 	static std::vector<Actor*>* _buffer;
+	static std::vector<std::vector<std::vector<Actor*>>>* _map;
 };
 

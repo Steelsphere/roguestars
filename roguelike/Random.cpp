@@ -15,3 +15,7 @@ std::uniform_int_distribution<int> Random::coinflip(1, 2);
 std::uniform_int_distribution<int> Random::one_to_thirty_two(1, 32);
 
 std::uniform_int_distribution<int> Random::one_to_sixty_four(1, 64);
+
+std::uniform_int_distribution<int> Random::one_to_one_twenty_eight(1, 128);
+
+std::uniform_int_distribution<int> Random::one_to_eight(1, 8);
