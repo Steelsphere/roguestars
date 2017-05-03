@@ -6,12 +6,24 @@
 class Input
 {
 public:
+	enum MODE {
+		NORMAL,
+		ENTER_TO_CONTINUE,
+	};
+	
 	static void input(TCOD_key_t key);
+	
 	static bool calc_key_cooldown();
+	
 	static void set_input_reciever(Actor* r) { _reciever = r; }
+	
+	static MODE get_mode() { return _mode; }
+	
+	static void set_mode(MODE mode) { _mode = mode; }
 private:
 	static int _cooldown;
 	static int _cdfirst;
 	static Actor* _reciever;
+	static MODE _mode;
 };
 

@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include "Level.h"
+#include "GUI.h"
 
 class Game
 {
@@ -31,8 +32,9 @@ public:
 	
 	void update();
 
+	void update_gui();
 private:
-	int _screen_width, _screen_height, _num_actors_drawn;
+	int _screen_width, _screen_height, _num_actors_drawn, _num_updates;
 	float _time;
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
@@ -40,6 +42,7 @@ private:
 	Level* _level;
 	Player* _player;
 	Camera* _camera;
+	std::vector<GUI*> _guis;
 };
 
 

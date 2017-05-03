@@ -45,4 +45,3 @@ private:
 	TCODMap* _fovmap;
 	FastNoise _noise;
 };
-

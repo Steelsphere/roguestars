@@ -21,17 +21,20 @@ void Game::start() {
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
 	_level = new Level;
-	_level->generate_level(1024, Level::DESERT);
-	
+	_level->generate_level(1024, Level::GRASSLAND);
+//	_level->save_level_image();
+
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
-	Input::set_input_reciever(_player);
 	_player->spawn_player_in_world();
+	
+	Input::set_input_reciever(_player);
+
 	_camera = new Camera(_player);
 	_camera->set_level(_level);
 	_camera->update();
 
-	_level->save_level_image();
-
+	GUI::set_buffer(&_guis);
+	
 	game_loop();
 }
 
@@ -51,9 +54,12 @@ void Game::game_loop() {
 			update();
 		}
 		
+		update_gui();
+		
 		TCODConsole::flush();
-		std::cout << "FPS: " << TCODSystem::getFps() << "\r";
+		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
 		_time += 0.01f;
+	
 	}
 }
 
@@ -96,7 +102,20 @@ void Game::update() {
 			} 
 	}
 //	std::cout << "Number of actors drawn " << _num_actors_drawn << "\r";
+	_num_updates++;
+	if (_num_updates == 30) {
+		new Message_Box("Nuclear missiles launched!");
+	}
+	if (_num_updates == 20) {
+		new Message_Box("Test");
+	}
 	GameObjects::update = false;
+}
+
+void Game::update_gui() {
+	for (int i = 0; i < _guis.size(); i++) {
+		_guis[i]->draw();
+	}
 }
 
 

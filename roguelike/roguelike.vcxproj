@@ -103,6 +103,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -143,6 +144,7 @@
     <ClCompile Include="FastNoise.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjects.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="hsvtorgb.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -158,6 +160,7 @@
     <ClInclude Include="FastNoise.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjects.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="hsvtorgb.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Item.h" />
