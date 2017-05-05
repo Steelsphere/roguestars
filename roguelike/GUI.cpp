@@ -54,6 +54,13 @@ void GUI::draw() {
 	}
 }
 
+void GUI::position_text() {
+	for (int i = 0; i < _text.size(); i++) {
+		_text[i].x += _x;
+		_text[i].y += _y;
+	}
+}
+
 Message_Box::Message_Box(std::string text) : GUI(GameObjects::screen_width/2 - 13, GameObjects::screen_height/2 - 10, 24, 12, std::vector<Text>()) {
 	Text top = { 6, 0, 12, 2, "Announcement", TCODColor::red };
 	Text message = { 6, 4, 12, 12, text, TCODColor::white };
@@ -77,4 +84,23 @@ void Message_Box::draw() {
 	if (Input::get_mode() == Input::NORMAL) {
 		Message_Box::~Message_Box();
 	}
+}
+
+Log::Log() : GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
+	Text name = { (_width/2) - 3, 0, 3, 1, "Log", TCODColor::red };
+	_text.push_back(name);
+	position_text();
+}
+
+void Log::message(std::string message, TCODColor color) {
+	for (int i = 1; i < _text.size(); i++) {
+		_text[i].y -= 1;
+		if (_text[i].y <= _y) {
+			_text.erase(_text.begin() + i);
+		}
+	}
+	Text m = { 1, _height - 2, _width - 1, 1, message, color };
+	m.x += _x;
+	m.y += _y;
+	_text.push_back(m);
 }

@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include <map>
 #include <string>
+#include "GUI.h"
 
 class GameObjects
 {

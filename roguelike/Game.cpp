@@ -35,6 +35,8 @@ void Game::start() {
 
 	GUI::set_buffer(&_guis);
 	
+	_log = new Log;
+
 	game_loop();
 }
 
@@ -50,13 +52,14 @@ void Game::game_loop() {
 			on_exit();
 		}
 		
+		update_gui();
+		
 		if (GameObjects::update) {
 			update();
 		}
 		
-		update_gui();
-		
 		TCODConsole::flush();
+		
 		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
 		_time += 0.01f;
 	
@@ -103,12 +106,10 @@ void Game::update() {
 	}
 //	std::cout << "Number of actors drawn " << _num_actors_drawn << "\r";
 	_num_updates++;
-	if (_num_updates == 30) {
+	if (_num_updates == 70) {
 		new Message_Box("Nuclear missiles launched!");
 	}
-	if (_num_updates == 20) {
-		new Message_Box("Test");
-	}
+	_log->message(std::to_string(_num_updates), TCODColor::white);
 	GameObjects::update = false;
 }
 

@@ -25,6 +25,8 @@ public:
 	virtual void draw();
 
 	static void set_buffer(std::vector<GUI*>* buffer) { _buffer = buffer; }
+
+	void position_text();
 protected:
 	int _x, _y, _width, _height;
 	std::vector<Text> _text;
@@ -37,4 +39,11 @@ public:
 	Message_Box(std::string text);
 
 	virtual void draw() override;
+};
+
+class Log : public GUI {
+public:
+	Log();
+
+	void message(std::string message, TCODColor color);
 };

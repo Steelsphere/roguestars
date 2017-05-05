@@ -43,6 +43,7 @@ private:
 	Player* _player;
 	Camera* _camera;
 	std::vector<GUI*> _guis;
+	Log* _log;
 };
 
 
