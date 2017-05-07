@@ -7,6 +7,7 @@
 #include "hsvtorgb.h"
 #include <Windows.h>
 
+
 Level::Level()
 {
 }
@@ -70,7 +71,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		_map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]].push_back(_actors[i]);
 	}
 
-	Actor::set_map(&_map);
+	Actor::set_map(&_map); 
 	
 	std::cout << "Size of level: " << _actors.size() << std::endl;
 }
@@ -160,4 +161,41 @@ void Level::save_level_image() {
 	}
 
 	img.save("level.png");
+}
+
+void Level::save_level_file() {
+	std::ofstream os;
+	os.open("Data\\datalevel.dat", std::ios::binary);
+	
+	int size = _width + _height;
+	os.write(reinterpret_cast<char*>(&size), sizeof(size));
+	
+	int vecsize = _actors.size();
+	os.write(reinterpret_cast<char*>(&vecsize), sizeof(vecsize));
+
+	for (int i = 0; i < _actors.size(); i++) {
+		_actors[i]->serialize(&os);
+	}
+}
+
+Level* Level::load_level_file() {
+	std::ifstream is;
+	Level* level = new Level;
+	int size;
+	int vecsize;
+	
+	is.open("Data\\datalevel.dat", std::ios::binary);
+	
+	is.read(reinterpret_cast<char*>(&size), sizeof(size));
+	is.read(reinterpret_cast<char*>(&vecsize), sizeof(vecsize));
+
+	while (!is.eof()) {
+		Actor* actor = new Actor;
+		Actor::deserialize(&is, actor);
+		level->_actors.push_back(actor);
+	}
+	
+	level->_actors.pop_back();
+	level->generate_level(size, Level::NONE);
+	return level;
 }

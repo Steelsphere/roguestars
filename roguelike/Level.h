@@ -9,6 +9,7 @@ class Level
 {
 public:
 	enum LEVEL_TYPE {
+		NONE,
 		GRASSLAND,
 		FOREST,
 		HILLS,
@@ -38,6 +39,10 @@ public:
 	void update();
 
 	void save_level_image();
+
+	void save_level_file();
+
+	static Level* load_level_file();
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;

@@ -34,7 +34,6 @@ void Camera::update() {
 	Actor* a;
 	int* ar;
 
-//	std::cout << "Camera pos: " << _world_x << " " << _world_y << std::endl;
 	for (int i = 0; i < actors->size(); i++) {
 		a = actors->at(i);
 		ar = a->get_screen_pos();

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include "Random.h"
+#include <fstream>
 
 
 class Actor
@@ -47,6 +48,9 @@ public:
 
 	bool is_impassable() { return _impassable; }
 	bool is_transparent() { return _transparent; }
+
+	void serialize(std::ofstream* os);
+	static void deserialize(std::ifstream* is, Actor* actor);
 
 protected:
 	int _screen_x, _screen_y, _screen_z;

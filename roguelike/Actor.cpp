@@ -6,7 +6,6 @@ std::vector<std::vector<std::vector<Actor*>>>* Actor::_map;
 
 Actor::Actor()
 {
-	_buffer->push_back(this);
 }
 
 Actor::Actor(int x, int y, int z, std::string name) :
@@ -24,7 +23,9 @@ Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, st
 
 Actor::~Actor()
 {
-	_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this), _buffer->end());
+	if (std::find(_buffer->begin(), _buffer->end(), this) != _buffer->end()) {
+		_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this), _buffer->end());
+	}
 }
 
 int* Actor::get_screen_pos() {
@@ -110,4 +111,67 @@ void Actor::move(std::string dir) {
 
 void Actor::get_color(float* h, float* s, float* v) {
 	_fcolor.getHSV(h, s, v);
+}
+
+void Actor::serialize(std::ofstream* os) {
+	os->write(reinterpret_cast<char*>(&_screen_x), sizeof(_screen_x));
+	os->write(reinterpret_cast<char*>(&_screen_y), sizeof(_screen_y));
+	os->write(reinterpret_cast<char*>(&_screen_z), sizeof(_screen_z));
+	
+	os->write(reinterpret_cast<char*>(&_world_x), sizeof(_world_x));
+	os->write(reinterpret_cast<char*>(&_world_y), sizeof(_world_y));
+	os->write(reinterpret_cast<char*>(&_world_z), sizeof(_world_z));
+	
+	os->write(reinterpret_cast<char*>(&_c), sizeof(_c));
+
+	float fh, fs, fv;
+	_fcolor.getHSV(&fh, &fs, &fv);
+
+	os->write(reinterpret_cast<char*>(&fh), sizeof(fh));
+	os->write(reinterpret_cast<char*>(&fs), sizeof(fs));
+	os->write(reinterpret_cast<char*>(&fv), sizeof(fv));
+
+	float bh, bs, bv;
+	_bcolor.getHSV(&bh, &bs, &bv);
+
+	os->write(reinterpret_cast<char*>(&bh), sizeof(bh));
+	os->write(reinterpret_cast<char*>(&bs), sizeof(bs));
+	os->write(reinterpret_cast<char*>(&bv), sizeof(bv));
+
+	os->write(reinterpret_cast<char*>(&_name), sizeof(_name));
+	os->write(reinterpret_cast<char*>(&_impassable), sizeof(_impassable));
+	os->write(reinterpret_cast<char*>(&_transparent), sizeof(_transparent));
+
+}
+
+void Actor::deserialize(std::ifstream* is, Actor* actor) {
+	is->read(reinterpret_cast<char*>(&actor->_screen_x), sizeof(_screen_x));
+	is->read(reinterpret_cast<char*>(&actor->_screen_y), sizeof(_screen_y));
+	is->read(reinterpret_cast<char*>(&actor->_screen_z), sizeof(_screen_z));
+
+	is->read(reinterpret_cast<char*>(&actor->_world_x), sizeof(_world_x));
+	is->read(reinterpret_cast<char*>(&actor->_world_y), sizeof(_world_y));
+	is->read(reinterpret_cast<char*>(&actor->_world_z), sizeof(_world_z));
+
+	is->read(reinterpret_cast<char*>(&actor->_c), sizeof(_c));
+
+	float fh, fs, fv;
+	
+	is->read(reinterpret_cast<char*>(&fh), sizeof(fh));
+	is->read(reinterpret_cast<char*>(&fs), sizeof(fs));
+	is->read(reinterpret_cast<char*>(&fv), sizeof(fv));
+
+	actor->_fcolor = TCODColor(fh, fs, fv);
+
+	float bh, bs, bv;
+	
+	is->read(reinterpret_cast<char*>(&bh), sizeof(bh));
+	is->read(reinterpret_cast<char*>(&bs), sizeof(bs));
+	is->read(reinterpret_cast<char*>(&bv), sizeof(bv));
+
+	actor->_bcolor = TCODColor(bh, bs, bv);
+
+	is->read(reinterpret_cast<char*>(&actor->_name), sizeof(_name));
+	is->read(reinterpret_cast<char*>(&actor->_impassable), sizeof(_impassable));
+	is->read(reinterpret_cast<char*>(&actor->_transparent), sizeof(_transparent));
 }

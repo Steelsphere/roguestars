@@ -20,9 +20,11 @@ void Game::start() {
 
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
-	_level = new Level;
-	_level->generate_level(1024, Level::GRASSLAND);
+	_level = Level::load_level_file();
+//	_level = new Level;
+//	_level->generate_level(1024, Level::GRASSLAND);
 //	_level->save_level_image();
+//	_level->save_level_file();
 
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -37,6 +39,8 @@ void Game::start() {
 	
 	_log = new Log;
 
+	std::cout << Actor::get_actor(1, 1, 0)->get_char() << std::endl;
+	
 	game_loop();
 }
 
