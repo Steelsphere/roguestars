@@ -6,6 +6,8 @@
 class Player : public Actor
 {
 public:
+	Player();
+	
 	Player(int x, int y, int z, char c, TCODColor color);
 	
 	~Player();

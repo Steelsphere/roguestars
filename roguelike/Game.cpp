@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Camera.h"
 
 Game::Game() : _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height), _time(0)
 {
@@ -20,11 +21,11 @@ void Game::start() {
 
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
-	_level = Level::load_level_file();
+	_level = Level::load_level_file("Data\\datalevel.dat");
 //	_level = new Level;
 //	_level->generate_level(1024, Level::GRASSLAND);
 //	_level->save_level_image();
-//	_level->save_level_file();
+//	_level->save_level_file("Data\\datalevel.dat");
 
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -39,7 +40,7 @@ void Game::start() {
 	
 	_log = new Log;
 
-	std::cout << Actor::get_actor(1, 1, 0)->get_char() << std::endl;
+	std::cout << typeid((*Actor::get_actor(25, 25, 0))).name() << std::endl;
 	
 	game_loop();
 }

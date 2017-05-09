@@ -1,7 +1,12 @@
 #include "Tile.h"
 #include "Random.h"
 
+Tile::Tile() {
+
+}
+
 Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z) {
+	
 	switch (type) {
 
 	case GRASS:

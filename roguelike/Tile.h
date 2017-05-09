@@ -1,6 +1,9 @@
 #pragma once
+
 #include <libtcod\libtcod.hpp>
+
 #include "Actor.h"
+
 
 class Tile : public Actor {
 public:
@@ -14,5 +17,7 @@ public:
 		SAND,
 	};
 
+	Tile();
+	
 	Tile(int x, int y, int z, TILE_TYPE type, TCODColor color = TCODColor::black);
 };

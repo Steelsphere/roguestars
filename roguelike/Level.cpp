@@ -1,12 +1,12 @@
 #include "Level.h"
-#include <cstdlib>
-#include <Ctime>
 #include "Tile.h"
 #include "Item.h"
-#include <fstream>
-#include "hsvtorgb.h"
-#include <Windows.h>
+#include "GameObjects.h"
 
+#include <fstream>
+#include <cstdlib>
+#include <Ctime>
+#include <string>
 
 Level::Level()
 {
@@ -163,34 +163,33 @@ void Level::save_level_image() {
 	img.save("level.png");
 }
 
-void Level::save_level_file() {
+void Level::save_level_file(std::string path) {
 	std::ofstream os;
-	os.open("Data\\datalevel.dat", std::ios::binary);
+	os.open(path, std::ios::binary);
 	
 	int size = _width + _height;
 	os.write(reinterpret_cast<char*>(&size), sizeof(size));
 	
-	int vecsize = _actors.size();
-	os.write(reinterpret_cast<char*>(&vecsize), sizeof(vecsize));
-
 	for (int i = 0; i < _actors.size(); i++) {
 		_actors[i]->serialize(&os);
 	}
 }
 
-Level* Level::load_level_file() {
+Level* Level::load_level_file(std::string path) {
 	std::ifstream is;
 	Level* level = new Level;
 	int size;
-	int vecsize;
 	
-	is.open("Data\\datalevel.dat", std::ios::binary);
+	is.open(path, std::ios::binary);
 	
 	is.read(reinterpret_cast<char*>(&size), sizeof(size));
-	is.read(reinterpret_cast<char*>(&vecsize), sizeof(vecsize));
-
+	
+	std::string typestring;
+	
 	while (!is.eof()) {
-		Actor* actor = new Actor;
+		is.read(reinterpret_cast<char*>(&typestring), sizeof(typestring));
+		Actor* actor = GameObjects::type_map[typestring]();
+
 		Actor::deserialize(&is, actor);
 		level->_actors.push_back(actor);
 	}

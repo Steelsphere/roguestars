@@ -1,7 +1,9 @@
 #include "Player.h"
 #include "GameObjects.h"
 
+Player::Player() {
 
+}
 
 Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Actor(x, y, z, c, fcolor, TCODColor::black)
 {

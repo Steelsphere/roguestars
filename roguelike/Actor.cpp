@@ -1,5 +1,7 @@
 ﻿#include "Actor.h"
 #include "GameObjects.h"
+#include <typeinfo>
+#include "Item.h"
 
 std::vector<Actor*>* Actor::_buffer;
 std::vector<std::vector<std::vector<Actor*>>>* Actor::_map;
@@ -114,6 +116,9 @@ void Actor::get_color(float* h, float* s, float* v) {
 }
 
 void Actor::serialize(std::ofstream* os) {
+	std::string typestring = typeid((*this)).name();
+	os->write(reinterpret_cast<char*>(&typestring), sizeof(typestring));
+	
 	os->write(reinterpret_cast<char*>(&_screen_x), sizeof(_screen_x));
 	os->write(reinterpret_cast<char*>(&_screen_y), sizeof(_screen_y));
 	os->write(reinterpret_cast<char*>(&_screen_z), sizeof(_screen_z));
@@ -145,6 +150,7 @@ void Actor::serialize(std::ofstream* os) {
 }
 
 void Actor::deserialize(std::ifstream* is, Actor* actor) {
+	
 	is->read(reinterpret_cast<char*>(&actor->_screen_x), sizeof(_screen_x));
 	is->read(reinterpret_cast<char*>(&actor->_screen_y), sizeof(_screen_y));
 	is->read(reinterpret_cast<char*>(&actor->_screen_z), sizeof(_screen_z));
@@ -174,4 +180,26 @@ void Actor::deserialize(std::ifstream* is, Actor* actor) {
 	is->read(reinterpret_cast<char*>(&actor->_name), sizeof(_name));
 	is->read(reinterpret_cast<char*>(&actor->_impassable), sizeof(_impassable));
 	is->read(reinterpret_cast<char*>(&actor->_transparent), sizeof(_transparent));
+}
+
+void Actor::check_type(Actor* actor) {
+	
+}
+
+bool operator== (const Actor &a1, const Actor &a2) {
+	return (a1._c == a2._c && 
+		a1._fcolor == a2._fcolor && 
+		a1._bcolor == a2._bcolor && 
+		a1._name == a2._name && 
+		a1._impassable == a2._impassable && 
+		a1._transparent == a2._transparent);
+}
+
+bool operator!= (const Actor &a1, const Actor &a2) {
+	return (a1._c != a2._c &&
+		a1._fcolor != a2._fcolor &&
+		a1._bcolor != a2._bcolor &&
+		a1._name != a2._name &&
+		a1._impassable != a2._impassable &&
+		a1._transparent != a2._transparent);
 }

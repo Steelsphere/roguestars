@@ -9,6 +9,7 @@ public:
 		BUSH,
 	};
 	
+	Item();
 	Item(int x, int y, int z, Item::ITEM_TYPE type);
 	~Item();
 };

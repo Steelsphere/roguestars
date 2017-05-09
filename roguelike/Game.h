@@ -1,17 +1,18 @@
 #pragma once
-#include <libtcod\libtcod.hpp>
-#include <iostream>
-#include <cmath>
-#include "ASCIICodes.h"
-#include <vector>
+
 #include "Actor.h"
 #include "Player.h"
 #include "GameObjects.h"
 #include "Input.h"
-#include <cstdlib>
-#include <algorithm>
 #include "Level.h"
 #include "GUI.h"
+#include "Camera.h"
+
+#include <cstdlib>
+#include <algorithm>
+#include <libtcod\libtcod.hpp>
+#include <iostream>
+#include <cmath>
 
 class Game
 {

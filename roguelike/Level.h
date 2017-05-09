@@ -1,9 +1,12 @@
 #pragma once
-#include <vector>
+
 #include "Actor.h"
-#include <iostream>
 #include "FastNoise.h"
 #include "Tile.h"
+
+#include <string>
+#include <iostream>
+#include <vector>
 
 class Level
 {
@@ -40,9 +43,9 @@ public:
 
 	void save_level_image();
 
-	void save_level_file();
+	void save_level_file(std::string path);
 
-	static Level* load_level_file();
+	static Level* load_level_file(std::string path);
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;

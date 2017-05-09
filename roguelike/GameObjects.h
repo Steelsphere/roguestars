@@ -1,11 +1,11 @@
 #pragma once
-#include <vector>
+
 #include "Actor.h"
-#include "Player.h"
-#include "Camera.h"
+
+#include <vector>
 #include <map>
 #include <string>
-#include "GUI.h"
+
 
 class GameObjects
 {
@@ -14,6 +14,12 @@ public:
 	
 	static bool update;
 	
-	static const std::map<std::string, std::pair<int, int>> map_dir;
+	static std::map<std::string, std::pair<int, int>> map_dir;
+
+	template <typename T>
+	static Actor* create_actor_instance() { return new T; }
+	
+	static std::map<std::string, Actor*(*)()> type_map;
+
 };
 

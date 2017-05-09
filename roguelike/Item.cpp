@@ -2,6 +2,10 @@
 #include "Random.h"
 
 
+Item::Item() {
+
+}
+
 Item::Item(int x, int y, int z, Item::ITEM_TYPE type) : Actor(x, y, z) {
 	_transparent = true;
 

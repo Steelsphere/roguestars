@@ -51,6 +51,10 @@ public:
 
 	void serialize(std::ofstream* os);
 	static void deserialize(std::ifstream* is, Actor* actor);
+	virtual void check_type(Actor* actor);
+
+	friend bool operator== (const Actor &a1, const Actor &a2);
+	friend bool operator!= (const Actor &a1, const Actor &a2);
 
 protected:
 	int _screen_x, _screen_y, _screen_z;
