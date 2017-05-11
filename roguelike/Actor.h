@@ -49,10 +49,9 @@ public:
 	bool is_impassable() { return _impassable; }
 	bool is_transparent() { return _transparent; }
 
-	void serialize(std::ofstream* os);
-	static void deserialize(std::ifstream* is, Actor* actor);
-	virtual void check_type(Actor* actor);
-
+	void serialize(TCODZip* zip);
+	void deserialize(TCODZip* zip);
+	
 	friend bool operator== (const Actor &a1, const Actor &a2);
 	friend bool operator!= (const Actor &a1, const Actor &a2);
 

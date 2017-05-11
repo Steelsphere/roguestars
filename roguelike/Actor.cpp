@@ -1,7 +1,9 @@
 ﻿#include "Actor.h"
 #include "GameObjects.h"
-#include <typeinfo>
 #include "Item.h"
+
+#include <typeinfo>
+#include <iostream>
 
 std::vector<Actor*>* Actor::_buffer;
 std::vector<std::vector<std::vector<Actor*>>>* Actor::_map;
@@ -115,75 +117,29 @@ void Actor::get_color(float* h, float* s, float* v) {
 	_fcolor.getHSV(h, s, v);
 }
 
-void Actor::serialize(std::ofstream* os) {
+void Actor::serialize(TCODZip* zip) {
 	std::string typestring = typeid((*this)).name();
-	os->write(reinterpret_cast<char*>(&typestring), sizeof(typestring));
 	
-	os->write(reinterpret_cast<char*>(&_screen_x), sizeof(_screen_x));
-	os->write(reinterpret_cast<char*>(&_screen_y), sizeof(_screen_y));
-	os->write(reinterpret_cast<char*>(&_screen_z), sizeof(_screen_z));
+	if (typestring.size() == 0) {
+		std::cerr << "Serialization error!\n";
+	}
 	
-	os->write(reinterpret_cast<char*>(&_world_x), sizeof(_world_x));
-	os->write(reinterpret_cast<char*>(&_world_y), sizeof(_world_y));
-	os->write(reinterpret_cast<char*>(&_world_z), sizeof(_world_z));
-	
-	os->write(reinterpret_cast<char*>(&_c), sizeof(_c));
-
-	float fh, fs, fv;
-	_fcolor.getHSV(&fh, &fs, &fv);
-
-	os->write(reinterpret_cast<char*>(&fh), sizeof(fh));
-	os->write(reinterpret_cast<char*>(&fs), sizeof(fs));
-	os->write(reinterpret_cast<char*>(&fv), sizeof(fv));
-
-	float bh, bs, bv;
-	_bcolor.getHSV(&bh, &bs, &bv);
-
-	os->write(reinterpret_cast<char*>(&bh), sizeof(bh));
-	os->write(reinterpret_cast<char*>(&bs), sizeof(bs));
-	os->write(reinterpret_cast<char*>(&bv), sizeof(bv));
-
-	os->write(reinterpret_cast<char*>(&_name), sizeof(_name));
-	os->write(reinterpret_cast<char*>(&_impassable), sizeof(_impassable));
-	os->write(reinterpret_cast<char*>(&_transparent), sizeof(_transparent));
-
+	zip->putString(typestring.c_str());
+	zip->putInt(_screen_x); zip->putInt(_screen_y); zip->putInt(_screen_z);
+	zip->putInt(_world_x); zip->putInt(_world_y); zip->putInt(_world_z);
+	zip->putChar(_c);
+	zip->putColor(&_fcolor); zip->putColor(&_bcolor);
+	zip->putString(_name.c_str());
+	zip->putInt(_impassable); zip->putInt(_transparent);
 }
 
-void Actor::deserialize(std::ifstream* is, Actor* actor) {
-	
-	is->read(reinterpret_cast<char*>(&actor->_screen_x), sizeof(_screen_x));
-	is->read(reinterpret_cast<char*>(&actor->_screen_y), sizeof(_screen_y));
-	is->read(reinterpret_cast<char*>(&actor->_screen_z), sizeof(_screen_z));
-
-	is->read(reinterpret_cast<char*>(&actor->_world_x), sizeof(_world_x));
-	is->read(reinterpret_cast<char*>(&actor->_world_y), sizeof(_world_y));
-	is->read(reinterpret_cast<char*>(&actor->_world_z), sizeof(_world_z));
-
-	is->read(reinterpret_cast<char*>(&actor->_c), sizeof(_c));
-
-	float fh, fs, fv;
-	
-	is->read(reinterpret_cast<char*>(&fh), sizeof(fh));
-	is->read(reinterpret_cast<char*>(&fs), sizeof(fs));
-	is->read(reinterpret_cast<char*>(&fv), sizeof(fv));
-
-	actor->_fcolor = TCODColor(fh, fs, fv);
-
-	float bh, bs, bv;
-	
-	is->read(reinterpret_cast<char*>(&bh), sizeof(bh));
-	is->read(reinterpret_cast<char*>(&bs), sizeof(bs));
-	is->read(reinterpret_cast<char*>(&bv), sizeof(bv));
-
-	actor->_bcolor = TCODColor(bh, bs, bv);
-
-	is->read(reinterpret_cast<char*>(&actor->_name), sizeof(_name));
-	is->read(reinterpret_cast<char*>(&actor->_impassable), sizeof(_impassable));
-	is->read(reinterpret_cast<char*>(&actor->_transparent), sizeof(_transparent));
-}
-
-void Actor::check_type(Actor* actor) {
-	
+void Actor::deserialize(TCODZip* zip) {
+	_screen_x = zip->getInt(); _screen_y = zip->getInt(); _screen_z = zip->getInt();
+	_world_x = zip->getInt(); _world_y = zip->getInt(); _world_z = zip->getInt();
+	_c = zip->getChar();
+	_fcolor = zip->getColor(); _bcolor = zip->getColor();
+	_name = zip->getString();
+	_impassable = zip->getInt(); _transparent = zip->getInt();
 }
 
 bool operator== (const Actor &a1, const Actor &a2) {

@@ -55,10 +55,10 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		break;
 	}
 
-	_fovmap = new TCODMap(_width, _height);
+	_fovmap = TCODMap(_width, _height);
 	
 	for (int i = 0; i < _actors.size(); i++) {
-		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
+		_fovmap.setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
 	}
 
 	_map.resize(_height);
@@ -78,7 +78,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 
 void Level::update() {
 	for (int i = 0; i < _actors.size(); i++) {
-		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
+		_fovmap.setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
 	}
 	_map.clear();
 	for (int i = 0; i < _actors.size(); i++) {
@@ -164,33 +164,36 @@ void Level::save_level_image() {
 }
 
 void Level::save_level_file(std::string path) {
-	std::ofstream os;
-	os.open(path, std::ios::binary);
+	TCODZip zip;
 	
 	int size = _width + _height;
-	os.write(reinterpret_cast<char*>(&size), sizeof(size));
+	zip.putInt(size);
 	
 	for (int i = 0; i < _actors.size(); i++) {
-		_actors[i]->serialize(&os);
+		_actors[i]->serialize(&zip);
 	}
+	zip.saveToFile(path.c_str());
 }
 
 Level* Level::load_level_file(std::string path) {
-	std::ifstream is;
+	TCODZip zip;
 	Level* level = new Level;
+	
+	zip.loadFromFile(path.c_str());
+
 	int size;
+	size = zip.getInt();
 	
-	is.open(path, std::ios::binary);
-	
-	is.read(reinterpret_cast<char*>(&size), sizeof(size));
-	
-	std::string typestring;
-	
-	while (!is.eof()) {
-		is.read(reinterpret_cast<char*>(&typestring), sizeof(typestring));
+	while (true) {
+		std::string typestring = zip.getString();;
+		
+		if (typestring.size() == 0) {
+			break;
+		}
+
 		Actor* actor = GameObjects::type_map[typestring]();
 
-		Actor::deserialize(&is, actor);
+		actor->deserialize(&zip);
 		level->_actors.push_back(actor);
 	}
 	

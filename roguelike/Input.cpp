@@ -1,9 +1,8 @@
 #include "Input.h"
 
-int Input::_cooldown = 100;
-int Input::_cdfirst = TCODSystem::getElapsedMilli();
 Actor* Input::_reciever;
 Input::MODE Input::_mode = NORMAL;
+TCOD_key_t Input::_lastkey;
 
 void Input::input(TCOD_key_t key) {
 	if (key.pressed) {
@@ -44,15 +43,6 @@ void Input::input(TCOD_key_t key) {
 			break;
 			}
 		}
+		_lastkey = key;
 	}
-}
-
-bool Input::calc_key_cooldown() {
-	std::cout << TCODSystem::getElapsedMilli() << std::endl;
-	std::cout << _cdfirst << std::endl;
-	if (TCODSystem::getElapsedMilli() - _cooldown > _cdfirst) {
-		_cdfirst = TCODSystem::getElapsedMilli();
-		return true;
-	}
-	return false;
 }

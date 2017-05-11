@@ -18,20 +18,18 @@ public:
 	
 	GUI(int x, int y, int w, int h, std::vector<Text> text);
 	
-	GUI(GUI_TYPE type, std::string text);
-
 	~GUI();
 
 	virtual void draw();
 
-	static void set_buffer(std::vector<GUI*>* buffer) { _buffer = buffer; }
+	static std::vector<GUI*>* get_buffer() { return &_buffer; }
 
 	void position_text();
 protected:
 	int _x, _y, _width, _height;
 	std::vector<Text> _text;
 private:
-	static std::vector<GUI*>* _buffer;
+	static std::vector<GUI*> _buffer;
 };
 
 class Message_Box : public GUI {
@@ -46,4 +44,36 @@ public:
 	Log();
 
 	void message(std::string message, TCODColor color);
+};
+
+class Status : public GUI {
+public:
+	Status();
+};
+
+class Main_Menu : public GUI {
+public:
+	struct MText {
+		int x, y, w, h;
+		std::string str;
+		TCODColor color;
+		bool selected;
+	};
+	
+	enum STATE {
+		FRONT,
+	};
+	
+	Main_Menu();
+
+	void front();
+
+	void update();
+
+	virtual void draw() override;
+
+	void set_selector();
+private:
+	STATE _state = FRONT;
+	std::vector<MText> _mtext;
 };

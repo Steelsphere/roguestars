@@ -4,7 +4,7 @@
 #include <cstring>
 #include "Input.h"
 
-std::vector<GUI*>* GUI::_buffer;
+std::vector<GUI*> GUI::_buffer;
 
 GUI::GUI(int x, int y, int w, int h, std::vector<Text> text) : 
 _x(x), _y(y), _width(w), _height(h), _text(text)
@@ -13,35 +13,12 @@ _x(x), _y(y), _width(w), _height(h), _text(text)
 		_text[i].x += _x;
 		_text[i].y += _y;
 	}
-	_buffer->push_back(this);
-}
-
-GUI::GUI(GUI_TYPE type, std::string text) {
-	_buffer->push_back(this);
-
-	switch (type) {
-	case MESSAGE_BOX:
-		_x = GameObjects::screen_width/2 - 13;
-		_y = GameObjects::screen_height / 2 - 10;
-		_width = 24;
-		_height = 12;
-		Text top = { 6, 0, 12, 2, "Announcement", TCODColor::red };
-		Text message = { 6, 4, 12, 12, text, TCODColor::white };
-		Text bottom = { 6, 10, 12, 2, "Press enter to continue", TCODColor::red };
-		_text.push_back(top);
-		_text.push_back(message);
-		_text.push_back(bottom);
-		break;
-	}
-	for (int i = 0; i < _text.size(); i++) {
-		_text[i].x += _x;
-		_text[i].y += _y;
-	}
+	_buffer.push_back(this);
 }
 
 GUI::~GUI()
 {
-	_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this), _buffer->end());
+	_buffer.erase(std::remove(_buffer.begin(), _buffer.end(), this), _buffer.end());
 	TCODConsole::root->rect(_x, _y, _width, _height, true, TCOD_BKGND_ALPHA(0.0f));
 	GameObjects::update = true;
 }
@@ -76,11 +53,7 @@ Message_Box::Message_Box(std::string text) : GUI(GameObjects::screen_width/2 - 1
 }
 
 void Message_Box::draw() {
-	TCODConsole::root->printFrame(_x, _y, _width, _height, true, TCOD_BKGND_ALPHA(1.0f));
-	for (int i = 0; i < _text.size(); i++) {
-		TCODConsole::setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
-		TCODConsole::root->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	}
+	GUI::draw();
 	if (Input::get_mode() == Input::NORMAL) {
 		Message_Box::~Message_Box();
 	}
@@ -103,4 +76,86 @@ void Log::message(std::string message, TCODColor color) {
 	m.x += _x;
 	m.y += _y;
 	_text.push_back(m);
+}
+
+Status::Status() : GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
+	Text name = { (_width / 2) - 3, 0, 6, 1, "Status", TCODColor::red };
+	_text.push_back(name);
+	position_text();
+}
+
+Main_Menu::Main_Menu() : GUI(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
+	update();
+}
+
+void Main_Menu::front() {
+	_text.clear();
+	
+	static Text title = { (GameObjects::screen_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
+	_text.push_back(title);
+	
+	static MText n1 = { (GameObjects::screen_width / 2) - 5, 20, 20, 1, "New World", TCODColor::white, 1 };
+	static MText n2 = { (GameObjects::screen_width / 2) - 5, 22, 20, 1, "Load World", TCODColor::white, 0 };
+	static MText n3 = { (GameObjects::screen_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0 };
+	
+	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
+	
+	position_text();
+	set_selector();
+}
+
+void Main_Menu::update() {
+	switch (_state) {
+	case FRONT:
+		front();
+	}
+}
+
+void Main_Menu::draw() {
+	GUI::draw();
+	for (int i = 0; i < _mtext.size(); i++) {
+		TCODConsole::setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
+		TCODConsole::root->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	}
+	if (Input::get_last_key().vk == TCODK_DOWN && Input::get_last_key().pressed) {
+		for (int i = 0; i < _mtext.size(); i++) {
+			if (_mtext[i].selected) {
+				_mtext[i].selected = false;
+				if (i == _mtext.size() - 1) {
+					_mtext[0].selected = true;
+				}
+				else {
+					_mtext[i + 1].selected = true;
+				}
+				set_selector();
+				break;
+			}
+		}
+	}
+	if (Input::get_last_key().vk == TCODK_UP && Input::get_last_key().pressed) {
+		for (int i = 0; i < _mtext.size(); i++) {
+			if (_mtext[i].selected) {
+				_mtext[i].selected = false;
+				if (i == 0) {
+					_mtext[_mtext.size()-1].selected = true;
+				}
+				else {
+					_mtext[i - 1].selected = true;
+				}
+				set_selector();
+				break;
+			}
+		}
+	}
+}
+
+void Main_Menu::set_selector() {
+	for (MText& i : _mtext) {
+		if (i.selected) {
+			i.color = TCODColor::yellow;
+		}
+		else {
+			i.color = TCODColor::white;
+		}
+	}
 }
