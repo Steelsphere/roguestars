@@ -1,6 +1,7 @@
 #pragma once
+#include "Actor.h"
+
 #include <libtcod\libtcod.hpp>
-#include "GameObjects.h"
 #include <iostream>
 
 class Input
@@ -9,6 +10,7 @@ public:
 	enum MODE {
 		NORMAL,
 		ENTER_TO_CONTINUE,
+		NONE,
 	};
 	
 	static void input(TCOD_key_t key);

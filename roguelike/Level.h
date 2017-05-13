@@ -28,7 +28,7 @@ public:
 
 	std::vector<std::vector<std::vector<Actor*>>>* get_actor_map() { return &_map; }
 
-	TCODMap* get_fov_map() { return &_fovmap; }
+	TCODMap* get_fov_map() { return _fovmap; }
 
 	void generate_terrain(float frequency, float water_threshold, float terrain_threshold, 
 		Tile::TILE_TYPE water = Tile::WATER, 
@@ -50,6 +50,6 @@ private:
 	int _width, _height;
 	std::vector<Actor*> _actors;
 	std::vector<std::vector<std::vector<Actor*>>> _map;
-	TCODMap _fovmap = TCODMap(0, 0);
+	TCODMap* _fovmap = nullptr;
 	FastNoise _noise;
 };

@@ -25,6 +25,13 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	_noise.SetNoiseType(FastNoise::PerlinFractal);
 	
 	Actor::set_buffer(&_actors);
+	Actor::set_map(&_map);
+
+	_map.resize(_height);
+
+	for (int i = 0; i < _map.size(); i++) {
+		_map[i].resize(_width);
+	}
 	
 	switch (type) {
 	
@@ -55,30 +62,23 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		break;
 	}
 
-	_fovmap = TCODMap(_width, _height);
-	
-	for (int i = 0; i < _actors.size(); i++) {
-		_fovmap.setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
-	}
-
-	_map.resize(_height);
-	
-	for (int i = 0; i < _width; i++) {
-		_map[i].resize(_width);
-	}
-
 	for (int i = 0; i < _actors.size(); i++) {
 		_map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]].push_back(_actors[i]);
 	}
-
-	Actor::set_map(&_map); 
 	
+	_fovmap = new TCODMap(_width, _height);
+	
+	for (int i = 0; i < _actors.size(); i++) {
+		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
+	}
+
+	std::cout << "Buffer status: " << Actor::get_buffer()->size() << std::endl;
 	std::cout << "Size of level: " << _actors.size() << std::endl;
 }
 
 void Level::update() {
 	for (int i = 0; i < _actors.size(); i++) {
-		_fovmap.setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
+		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
 	}
 	_map.clear();
 	for (int i = 0; i < _actors.size(); i++) {

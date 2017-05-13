@@ -105,6 +105,8 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>all.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -142,11 +144,11 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="FastNoise.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjects.cpp" />
     <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="hsvtorgb.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -158,14 +160,15 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="GameEvent.h" />
     <ClInclude Include="FastNoise.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjects.h" />
     <ClInclude Include="GUI.h" />
-    <ClInclude Include="hsvtorgb.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Tile.h" />

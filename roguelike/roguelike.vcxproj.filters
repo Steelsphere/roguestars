@@ -57,10 +57,10 @@
     <ClCompile Include="Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hsvtorgb.cpp">
-      <Filter>Source Files\Third Party</Filter>
-    </ClCompile>
     <ClCompile Include="GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,10 +98,13 @@
     <ClInclude Include="FastNoise.h">
       <Filter>Header Files\Third Party</Filter>
     </ClInclude>
-    <ClInclude Include="hsvtorgb.h">
-      <Filter>Header Files\Third Party</Filter>
-    </ClInclude>
     <ClInclude Include="GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

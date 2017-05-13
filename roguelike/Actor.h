@@ -1,6 +1,5 @@
 #pragma once
 #include <libtcod\libtcod.hpp>
-#include "ASCIICodes.h"
 #include <string>
 #include <map>
 #include <algorithm>

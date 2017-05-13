@@ -1,4 +1,7 @@
 #pragma once
+
+#include "GameEvent.h"
+
 #include <string>
 #include <libtcod\libtcod.hpp>
 #include <vector>
@@ -58,6 +61,7 @@ public:
 		std::string str;
 		TCODColor color;
 		bool selected;
+		GameEvent::GAME_EVENT action;
 	};
 	
 	enum STATE {
@@ -67,8 +71,6 @@ public:
 	Main_Menu();
 
 	void front();
-
-	void update();
 
 	virtual void draw() override;
 

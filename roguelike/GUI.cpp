@@ -1,8 +1,9 @@
 #include "GUI.h"
-#include <algorithm>
 #include "GameObjects.h"
-#include <cstring>
 #include "Input.h"
+
+#include <algorithm>
+#include <cstring>
 
 std::vector<GUI*> GUI::_buffer;
 
@@ -21,6 +22,7 @@ GUI::~GUI()
 	_buffer.erase(std::remove(_buffer.begin(), _buffer.end(), this), _buffer.end());
 	TCODConsole::root->rect(_x, _y, _width, _height, true, TCOD_BKGND_ALPHA(0.0f));
 	GameObjects::update = true;
+	std::cout << "GUIs: " << _buffer.size() << std::endl;
 }
 
 void GUI::draw() {
@@ -85,30 +87,24 @@ Status::Status() : GUI(GameObjects::screen_width / 2, GameObjects::screen_height
 }
 
 Main_Menu::Main_Menu() : GUI(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
-	update();
+	front();
 }
 
 void Main_Menu::front() {
 	_text.clear();
 	
-	static Text title = { (GameObjects::screen_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
+	Text title = { (GameObjects::screen_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
 	_text.push_back(title);
 	
-	static MText n1 = { (GameObjects::screen_width / 2) - 5, 20, 20, 1, "New World", TCODColor::white, 1 };
-	static MText n2 = { (GameObjects::screen_width / 2) - 5, 22, 20, 1, "Load World", TCODColor::white, 0 };
-	static MText n3 = { (GameObjects::screen_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0 };
+	MText n1 = { (GameObjects::screen_width / 2) - 5, 20, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
+	MText n2 = { (GameObjects::screen_width / 2) - 5, 22, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
+	MText n3 = { (GameObjects::screen_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
 	
 	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
 	
 	position_text();
 	set_selector();
-}
-
-void Main_Menu::update() {
-	switch (_state) {
-	case FRONT:
-		front();
-	}
+	Input::set_mode(Input::NONE);
 }
 
 void Main_Menu::draw() {
@@ -144,6 +140,13 @@ void Main_Menu::draw() {
 				}
 				set_selector();
 				break;
+			}
+		}
+	}
+	if (Input::get_last_key().vk == TCODK_ENTER && Input::get_last_key().pressed) {
+		for (int i = 0; i < _mtext.size(); i++) {
+			if (_mtext[i].selected) {
+				GameEvent::set_event(_mtext[i].action);
 			}
 		}
 	}
