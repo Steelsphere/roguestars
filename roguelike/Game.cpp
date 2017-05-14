@@ -124,9 +124,6 @@ void Game::update() {
 //	std::cout << "Number of actors drawn " << _num_actors_drawn << "\r";
 	
 	_num_updates++;
-	if (_num_updates == 70) {
-		new Message_Box("Nuclear missiles launched!");
-	}
 	
 	if (_log != nullptr) {
 		_log->message(std::to_string(_num_updates), TCODColor::white);
@@ -146,9 +143,9 @@ void Game::startup_new_game() {
 	_main_menu.get()->~Main_Menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
-	_level = new Level;
-	_level->generate_level(1024, Level::GRASSLAND);
-//	_level->save_level_image();
+	_world = new World;
+	_world->generate_world();
+	_level = _world->get_current_level();
 	
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();

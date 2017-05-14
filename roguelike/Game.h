@@ -6,6 +6,7 @@
 #include "Level.h"
 #include "Camera.h"
 #include "GUI.h"
+#include "World.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -51,5 +52,6 @@ private:
 	Camera* _camera = nullptr;
 	Log* _log = nullptr;
 	Status* _status = nullptr;
+	World* _world = nullptr;
 	std::shared_ptr<Main_Menu> _main_menu;
 };

@@ -39,11 +39,15 @@ void Player::move(std::string dir) {
 
 void Player::spawn_player_in_world() {
 	std::vector<Actor*>* buffer = Actor::get_buffer();
-	for (int i = 0; i < buffer->size(); i++) {
-		if (buffer->operator[](i)->get_name() == "Grass") {
-			this->set_position(buffer->operator[](i)->get_screen_pos()[0], buffer->operator[](i)->get_screen_pos()[1], 0);
-			this->set_world_position(buffer->operator[](i)->get_world_pos()[0], buffer->operator[](i)->get_world_pos()[1], 0);
-			return;
+	while (true) {
+		int rindex = Random::big_number(Random::generator) % buffer->size();
+		if ((*buffer)[rindex]->is_impassable()) {
+			continue;
 		}
+		int* spos = (*buffer)[rindex]->get_screen_pos();
+		int* rpos = (*buffer)[rindex]->get_world_pos();
+		set_position(spos[0], spos[1], spos[2]);
+		set_world_position(rpos[0], rpos[1], rpos[2]);
+		break;
 	}
 }
