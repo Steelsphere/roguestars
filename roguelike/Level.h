@@ -30,10 +30,11 @@ public:
 
 	TCODMap* get_fov_map() { return _fovmap; }
 
-	void generate_terrain(float frequency, float water_threshold, float terrain_threshold, 
+	void generate_terrain(float frequency, float water_threshold, float terrain_threshold, float beach_size,
 		Tile::TILE_TYPE water = Tile::WATER, 
 		Tile::TILE_TYPE terrain = Tile::GRASS,
-		Tile::TILE_TYPE wall = Tile::DIRT_WALL);
+		Tile::TILE_TYPE wall = Tile::DIRT_WALL,
+		Tile::TILE_TYPE beach = Tile::SAND);
 
 	void generate_trees(std::uniform_int_distribution<int> r);
 

@@ -120,6 +120,8 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 
 		_name = "Sand";
 		break;
+	
 	}
+
 
 }

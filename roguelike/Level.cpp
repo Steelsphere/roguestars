@@ -36,28 +36,44 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	switch (type) {
 	
 	case GRASSLAND:
-		generate_terrain(0.01f, -0.25f, 0.25f);
+		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
+			Tile::WATER,
+			Tile::GRASS,
+			Tile::DIRT_WALL,
+			Tile::DIRT);
 		generate_trees(Random::one_to_one_twenty_eight);
 		generate_items(Random::one_to_one_twenty_eight);
 		
 		break;
 	
 	case HILLS:
-		generate_terrain(0.01f, 0.0f, 0.25f);
+		generate_terrain(0.01f, 0.0f, 0.25f, 0.01f,
+			Tile::WATER,
+			Tile::GRASS,
+			Tile::DIRT_WALL,
+			Tile::DIRT);
 		generate_trees(Random::one_to_sixteen);
 		generate_items(Random::one_to_sixty_four);
 
 		break;
 	
 	case FOREST:
-		generate_terrain(0.01f, -0.25f, 0.25f);
+		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
+			Tile::WATER,
+			Tile::GRASS,
+			Tile::DIRT_WALL,
+			Tile::DIRT);
 		generate_trees(Random::one_to_eight);
 		generate_items(Random::one_to_one_twenty_eight);
 
 		break;
 	
 	case DESERT:
-		generate_terrain(0.01f, -0.25f, 0.25f, Tile::SAND, Tile::SAND);
+		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f, 
+			Tile::SAND, 
+			Tile::SAND,
+			Tile::DIRT_WALL,
+			Tile::SAND);
 		
 		break;
 	}
@@ -86,10 +102,11 @@ void Level::update() {
 	}
 }
 
-void Level::generate_terrain(float frequency, float water_threshold, float terrain_threshold,
+void Level::generate_terrain(float frequency, float water_threshold, float terrain_threshold, float beach_size,
 	Tile::TILE_TYPE water,
 	Tile::TILE_TYPE terrain,
-	Tile::TILE_TYPE wall) {
+	Tile::TILE_TYPE wall,
+	Tile::TILE_TYPE beach) {
 	
 	_noise.SetFrequency(frequency);
 	
@@ -100,12 +117,19 @@ void Level::generate_terrain(float frequency, float water_threshold, float terra
 			c = static_cast<float>(_noise.GetNoise(x, y));
 			if (c < 1.0f && c > terrain_threshold) {
 				new Tile(x, y, 0, water);
+				continue;
 			}
-			if (c < terrain_threshold && c > water_threshold) {
+			if (c < terrain_threshold - beach_size && c > water_threshold) {
 				new Tile(x, y, 0, terrain);
+				continue;
+			}
+			if (c < terrain_threshold + beach_size && c > water_threshold) {
+				new Tile(x, y, 0, beach);
+				continue;
 			}
 			if (c < water_threshold) {
 				new Tile(x, y, 0, wall);
+				continue;
 			}
 		}
 	}

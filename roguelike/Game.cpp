@@ -146,7 +146,7 @@ void Game::startup_new_game() {
 	_world = new World;
 	_world->generate_world();
 	_level = _world->get_current_level();
-	
+
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 
