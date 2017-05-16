@@ -22,6 +22,8 @@ public:
 
 	static std::uniform_int_distribution<int> one_to_one_twenty_eight;
 
+	static std::uniform_int_distribution<int> one_to_two_fifty_six;
+
 	static std::uniform_int_distribution<int> one_to_eight;
 
 };

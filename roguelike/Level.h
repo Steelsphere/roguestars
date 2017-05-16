@@ -19,6 +19,11 @@ public:
 		DESERT,
 	};
 	
+	enum GENERATION_FLAG {
+		TEMPERATE_FLORA,
+		DESERT_FLORA,
+	};
+	
 	Level();
 	~Level();
 
@@ -38,7 +43,7 @@ public:
 
 	void generate_trees(std::uniform_int_distribution<int> r);
 
-	void generate_items(std::uniform_int_distribution<int> r);
+	void generate_flora(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag = Level::TEMPERATE_FLORA);
 
 	void update();
 

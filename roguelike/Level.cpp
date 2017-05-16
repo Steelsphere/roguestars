@@ -42,7 +42,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::DIRT_WALL,
 			Tile::DIRT);
 		generate_trees(Random::one_to_one_twenty_eight);
-		generate_items(Random::one_to_one_twenty_eight);
+		generate_flora(Random::one_to_one_twenty_eight);
 		
 		break;
 	
@@ -53,7 +53,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::DIRT_WALL,
 			Tile::DIRT);
 		generate_trees(Random::one_to_sixteen);
-		generate_items(Random::one_to_sixty_four);
+		generate_flora(Random::one_to_sixty_four);
 
 		break;
 	
@@ -64,7 +64,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::DIRT_WALL,
 			Tile::DIRT);
 		generate_trees(Random::one_to_eight);
-		generate_items(Random::one_to_one_twenty_eight);
+		generate_flora(Random::one_to_two_fifty_six);
 
 		break;
 	
@@ -72,9 +72,10 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f, 
 			Tile::SAND, 
 			Tile::SAND,
-			Tile::DIRT_WALL,
+			Tile::SANDSTONE,
 			Tile::SAND);
-		
+		generate_flora(Random::one_to_two_fifty_six, Level::DESERT_FLORA);
+
 		break;
 	}
 
@@ -148,19 +149,37 @@ void Level::generate_trees(std::uniform_int_distribution<int> r) {
 	}
 }
 
-void Level::generate_items(std::uniform_int_distribution<int> r) {
-	for (int i = 0; i < _actors.size(); i++) {
-		
-		if (_actors.operator[](i)->get_name() == "Grass") {
-			
-			if (r(Random::generator) == 1) {
-				new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::FLOWER);
+void Level::generate_flora(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag) {
+	switch (flag) {
+
+		case TEMPERATE_FLORA:
+			for (int i = 0; i < _actors.size(); i++) {
+				if (_actors.operator[](i)->get_name() == "Grass") {
+
+					if (r(Random::generator) == 1) {
+						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::FLOWER);
+					}
+
+					if (r(Random::generator) == 1) {
+						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::BUSH);
+					}
+				}
 			}
-			
-			if (r(Random::generator) == 1) {
-				new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::BUSH);
+			break;
+		case DESERT_FLORA:
+			for (int i = 0; i < _actors.size(); i++) {
+				if (_actors.operator[](i)->get_name() == "Sand") {
+
+					if (r(Random::generator) == 1) {
+						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::CACTUS);
+					}
+				
+					if (r(Random::generator) == 1) {
+						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::DEAD_BUSH);
+					}
+				}
 			}
-		}
+			break;
 	}
 }
 

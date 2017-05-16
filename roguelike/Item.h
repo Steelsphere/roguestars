@@ -7,6 +7,8 @@ public:
 	enum ITEM_TYPE {
 		FLOWER,
 		BUSH,
+		CACTUS,
+		DEAD_BUSH
 	};
 	
 	Item();

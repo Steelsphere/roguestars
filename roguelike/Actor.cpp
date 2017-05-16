@@ -13,13 +13,34 @@ Actor::Actor()
 }
 
 Actor::Actor(int x, int y, int z, std::string name) :
-	_screen_x(x), _screen_y(y), _screen_z(z), _world_x(x), _world_y(y), _world_z(z), _name(name), _impassable(false), _transparent(true)
+	_screen_x(x), 
+	_screen_y(y), 
+	_screen_z(z), 
+	_world_x(x), 
+	_world_y(y), 
+	_world_z(z), 
+	_name(name), 
+	_impassable(false), 
+	_transparent(true), 
+	_memorized(false)
 {
 	_buffer->push_back(this);
 }
 
 Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, std::string name) : 
-	_screen_x(x), _screen_y(y), _screen_z(z), _c(c), _fcolor(fcolor), _bcolor(bcolor), _world_x(x), _world_y(y), _world_z(z), _name(name), _impassable(false), _transparent(true)
+	_screen_x(x), 
+	_screen_y(y), 
+	_screen_z(z), 
+	_c(c), 
+	_fcolor(fcolor), 
+	_bcolor(bcolor), 
+	_world_x(x), 
+	_world_y(y), 
+	_world_z(z), 
+	_name(name), 
+	_impassable(false), 
+	_transparent(true),
+	_memorized(false)
 {
 	_buffer->push_back(this);
 }
@@ -64,6 +85,12 @@ void Actor::set_world_position(int x, int y, int z) {
 void Actor::draw() {
 	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
 	TCODConsole::root->setCharForeground(_screen_x, _screen_y, _fcolor);
+	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
+}
+
+void Actor::draw_mem() {
+	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
+	TCODConsole::root->setCharForeground(_screen_x, _screen_y, TCODColor::darkCyan);
 	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
 }
 

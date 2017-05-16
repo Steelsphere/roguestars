@@ -15,6 +15,7 @@ public:
 		WATER,
 		TREE,
 		SAND,
+		SANDSTONE,
 	};
 
 	Tile();

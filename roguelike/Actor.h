@@ -20,6 +20,7 @@ public:
 	~Actor();
 
 	virtual void draw();
+	virtual void draw_mem();
 
 	int* get_screen_pos();
 	int* get_world_pos();
@@ -47,9 +48,12 @@ public:
 
 	bool is_impassable() { return _impassable; }
 	bool is_transparent() { return _transparent; }
+	bool is_memorized() { return _memorized; }
 
-	void serialize(TCODZip* zip);
-	void deserialize(TCODZip* zip);
+	void set_memorization(bool b) { _memorized = b; }
+
+	virtual void serialize(TCODZip* zip);
+	virtual void deserialize(TCODZip* zip);
 	
 	friend bool operator== (const Actor &a1, const Actor &a2);
 	friend bool operator!= (const Actor &a1, const Actor &a2);
@@ -63,6 +67,7 @@ protected:
 	std::string _name;
 	bool _impassable;
 	bool _transparent;
+	bool _memorized;
 
 private:
 	static std::vector<Actor*>* _buffer;

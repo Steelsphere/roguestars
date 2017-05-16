@@ -30,6 +30,21 @@ Item::Item(int x, int y, int z, Item::ITEM_TYPE type) : Actor(x, y, z) {
 		_bcolor = TCODColor::black;
 		_name = "Bush";
 		break;
+	
+	case CACTUS:
+		_c = '*';
+		_fcolor = TCODColor::green;
+		_bcolor = TCODColor::black;
+		_impassable = true;
+		_name = "Cactus";
+		break;
+
+	case DEAD_BUSH:
+		_c = '*';
+		_fcolor = TCODColor::desaturatedYellow;
+		_bcolor = TCODColor::black;
+		_name = "Bush";
+		break;
 	}
 }
 

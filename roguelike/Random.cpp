@@ -18,4 +18,6 @@ std::uniform_int_distribution<int> Random::one_to_sixty_four(1, 64);
 
 std::uniform_int_distribution<int> Random::one_to_one_twenty_eight(1, 128);
 
+std::uniform_int_distribution<int> Random::one_to_two_fifty_six(1, 256);
+
 std::uniform_int_distribution<int> Random::one_to_eight(1, 8);

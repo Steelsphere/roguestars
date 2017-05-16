@@ -29,7 +29,7 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 			_fcolor = TCODColor::darkGreen;
 			break;
 		case 2:
-			_fcolor = TCODColor::green;
+			_fcolor = TCODColor::darkestGreen;
 			break;
 		}
 		_bcolor = TCODColor::black;
@@ -115,12 +115,22 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 			_c = '~';
 			break;
 		}
-		_fcolor = TCODColor::yellow;
+		_fcolor = TCODColor::lightYellow;
 		_bcolor = TCODColor::black;
 
 		_name = "Sand";
 		break;
 	
+	case SANDSTONE:
+		_c = 219;
+		_fcolor = TCODColor::desaturatedYellow;
+		_bcolor = TCODColor::desaturatedYellow;
+
+		_impassable = true;
+		_transparent = false;
+
+		_name = "Sandstone";
+		break;
 	}
 
 

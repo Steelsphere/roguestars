@@ -116,7 +116,11 @@ void Game::update() {
 				) {
 				if (fov->isInFov(a->get_world_pos()[0], a->get_world_pos()[1])) {
 					_num_actors_drawn++;
+					a->set_memorization(true);
 					a->draw();
+				}
+				else if (a->is_memorized()) {
+					a->draw_mem();
 				}
 			}
 		}
