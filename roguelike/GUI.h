@@ -19,6 +19,8 @@ public:
 		TCODColor color;
 	};
 	
+	GUI();
+	
 	GUI(int x, int y, int w, int h, std::vector<Text> text);
 	
 	~GUI();
@@ -27,7 +29,7 @@ public:
 
 	static std::vector<GUI*>* get_buffer() { return &_buffer; }
 
-	void position_text();
+	virtual void position_text();
 protected:
 	int _x, _y, _width, _height;
 	std::vector<Text> _text;
@@ -54,7 +56,7 @@ public:
 	Status();
 };
 
-class Main_Menu : public GUI {
+class SelectionBox : public GUI {
 public:
 	struct MText {
 		int x, y, w, h;
@@ -64,18 +66,34 @@ public:
 		GameEvent::GAME_EVENT action;
 	};
 	
+	SelectionBox();
+
+	SelectionBox(int x, int y, int w, int h, std::vector<Text> text);
+
+	virtual void draw() override;
+
+	virtual void position_text() override;
+
+	void set_selector();
+protected:
+	std::vector<MText> _mtext;
+};
+
+class MainMenu : public SelectionBox {
+public:
 	enum STATE {
 		FRONT,
 	};
 	
-	Main_Menu();
+	MainMenu();
 
 	void front();
 
-	virtual void draw() override;
-
-	void set_selector();
 private:
 	STATE _state = FRONT;
-	std::vector<MText> _mtext;
+};
+
+class ESCMenu : public SelectionBox {
+public:
+	ESCMenu();
 };

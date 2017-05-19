@@ -20,9 +20,7 @@ void Game::init() {
 
 void Game::start() {
 	TCODConsole::root->clear();
-
-	_main_menu = std::shared_ptr<Main_Menu>(new Main_Menu);
-
+	new_main_menu();
 	game_loop();
 }
 
@@ -64,11 +62,19 @@ void Game::on_event(TCOD_event_t e) {
 
 void Game::game_event() {
 	switch (GameEvent::get_event()) {
+	case GameEvent::TO_MAIN_MENU:
+		new_main_menu();
 	case GameEvent::STARTUP_NEW_GAME:
 		startup_new_game();
 		break;
 	case GameEvent::STARTUP_LOAD_GAME:
 		startup_load_game();
+		break;
+	case GameEvent::NEW_ESC_MENU:
+		new_esc_menu();
+		break;
+	case GameEvent::DELETE_ESC_MENU:
+		destroy_esc_menu();
 		break;
 	case GameEvent::EXIT:
 		exit_game();
@@ -81,6 +87,10 @@ void Game::exit_game() {
 //	if (_level != NULL) {
 //		_level->save_level_file("Data\\datalevelcompr_1.dat");
 //	}
+//	if (_CrtDumpMemoryLeaks()) {
+//		std::cout << "Memory leak found!\n";
+//	}
+	destroy_garbage();
 	exit(0);
 }
 
@@ -144,7 +154,8 @@ void Game::update_gui() {
 }
 
 void Game::startup_new_game() {
-	_main_menu.get()->~Main_Menu();
+	destroy_main_menu();
+	
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
 	_world = new World;
@@ -167,7 +178,8 @@ void Game::startup_new_game() {
 }
 
 void Game::startup_load_game() {
-	_main_menu.get()->~Main_Menu();
+	destroy_main_menu();
+	
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
 	_level = Level::load_level_file("Data\\datalevelcompr_1.dat");
@@ -187,4 +199,52 @@ void Game::startup_load_game() {
 
 }
 
+void Game::new_main_menu() {
+	destroy_garbage();
+	_MainMenu = new MainMenu;
+}
 
+void Game::destroy_main_menu() {
+	delete _MainMenu;
+	_MainMenu = nullptr;
+}
+
+void Game::new_esc_menu() {
+	_ESCMenu = new ESCMenu;
+}
+
+void Game::destroy_esc_menu() {
+	delete _ESCMenu;
+	_ESCMenu = nullptr;
+}
+
+void Game::destroy_garbage() {
+	if (_level != nullptr) {
+		delete _level;
+		_level = nullptr;
+	}
+	if (_camera != nullptr) {
+		delete _camera;
+		_camera = nullptr;
+	}
+	if (_log != nullptr) {
+		delete _log;
+		_log = nullptr;
+	}
+	if (_status != nullptr) {
+		delete _status;
+		_status = nullptr;
+	}
+	if (_world != nullptr) {
+		delete _world;
+		_world = nullptr;
+	}
+	if (_MainMenu != nullptr) {
+		delete _MainMenu;
+		_MainMenu = nullptr;
+	}
+	if (_ESCMenu != nullptr) {
+		delete _ESCMenu;
+		_ESCMenu = nullptr;
+	}
+}

@@ -31,6 +31,17 @@ public:
 	void startup_new_game();
 
 	void startup_load_game();
+
+	inline void new_main_menu();
+
+	inline void destroy_main_menu();
+
+	inline void new_esc_menu();
+
+	inline void destroy_esc_menu();
+
+	void destroy_garbage();
+
 private:
 	void game_loop();
 
@@ -47,11 +58,13 @@ private:
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
 	TCOD_event_t _event;
+	
 	Level* _level = nullptr;
 	Player* _player = nullptr;
 	Camera* _camera = nullptr;
 	Log* _log = nullptr;
 	Status* _status = nullptr;
 	World* _world = nullptr;
-	std::shared_ptr<Main_Menu> _main_menu;
+	MainMenu* _MainMenu = nullptr;
+	ESCMenu* _ESCMenu = nullptr;
 };

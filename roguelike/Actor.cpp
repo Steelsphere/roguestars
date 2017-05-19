@@ -48,9 +48,6 @@ Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, st
 
 Actor::~Actor()
 {
-	if (std::find(_buffer->begin(), _buffer->end(), this) != _buffer->end()) {
-		_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this), _buffer->end());
-	}
 }
 
 int* Actor::get_screen_pos() {

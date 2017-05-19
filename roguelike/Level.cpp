@@ -8,13 +8,15 @@
 #include <Ctime>
 #include <string>
 
-Level::Level()
-{
-}
+Level::Level() {}
 
-
-Level::~Level()
-{
+Level::~Level() {
+	for (int i = 0; i < _actors.size(); i++) {
+		delete _actors[i];
+	}
+	delete _fovmap;
+	Actor::set_buffer(nullptr);
+	Actor::set_map(nullptr);
 }
 
 void Level::generate_level(int size, LEVEL_TYPE type) {

@@ -7,6 +7,8 @@
 
 std::vector<GUI*> GUI::_buffer;
 
+GUI::GUI() {}
+
 GUI::GUI(int x, int y, int w, int h, std::vector<Text> text) : 
 _x(x), _y(y), _width(w), _height(h), _text(text)
 {
@@ -86,28 +88,11 @@ Status::Status() : GUI(GameObjects::screen_width / 2, GameObjects::screen_height
 	position_text();
 }
 
-Main_Menu::Main_Menu() : GUI(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
-	front();
-}
+SelectionBox::SelectionBox() {}
 
-void Main_Menu::front() {
-	_text.clear();
-	
-	Text title = { (GameObjects::screen_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
-	_text.push_back(title);
-	
-	MText n1 = { (GameObjects::screen_width / 2) - 5, 20, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
-	MText n2 = { (GameObjects::screen_width / 2) - 5, 22, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
-	MText n3 = { (GameObjects::screen_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
-	
-	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
-	
-	position_text();
-	set_selector();
-	Input::set_mode(Input::NONE);
-}
+SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) : GUI(x, y, w, h, text) {}
 
-void Main_Menu::draw() {
+void SelectionBox::draw() {
 	GUI::draw();
 	for (int i = 0; i < _mtext.size(); i++) {
 		TCODConsole::setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
@@ -133,7 +118,7 @@ void Main_Menu::draw() {
 			if (_mtext[i].selected) {
 				_mtext[i].selected = false;
 				if (i == 0) {
-					_mtext[_mtext.size()-1].selected = true;
+					_mtext[_mtext.size() - 1].selected = true;
 				}
 				else {
 					_mtext[i - 1].selected = true;
@@ -152,7 +137,15 @@ void Main_Menu::draw() {
 	}
 }
 
-void Main_Menu::set_selector() {
+void SelectionBox::position_text() {
+	GUI::position_text();
+	for (int i = 0; i < _mtext.size(); i++) {
+		_mtext[i].x += _x;
+		_mtext[i].y += _y;
+	}
+}
+
+void SelectionBox::set_selector() {
 	for (MText& i : _mtext) {
 		if (i.selected) {
 			i.color = TCODColor::yellow;
@@ -161,4 +154,37 @@ void Main_Menu::set_selector() {
 			i.color = TCODColor::white;
 		}
 	}
+}
+
+MainMenu::MainMenu() : SelectionBox(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
+	front();
+}
+
+void MainMenu::front() {
+	_text.clear();
+	_mtext.clear();
+
+	Text title = { (GameObjects::screen_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
+	_text.push_back(title);
+	
+	MText n1 = { (GameObjects::screen_width / 2) - 5, 20, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
+	MText n2 = { (GameObjects::screen_width / 2) - 5, 22, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
+	MText n3 = { (GameObjects::screen_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
+	
+	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
+	
+	position_text();
+	set_selector();
+	Input::set_mode(Input::NONE);
+}
+
+ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObjects::screen_height / 2 - 10, 24, 12, std::vector<Text>()) {
+	MText n1 = { (_width / 2) - 5, 2, _width / 2, 1, "Main Menu", TCODColor::white, 1, GameEvent::TO_MAIN_MENU };
+	MText n2 = { (_width / 2) - 5, 3, _width / 2, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
+
+	_mtext.push_back(n1); _mtext.push_back(n2);
+	
+	position_text();
+	set_selector();
+	Input::set_mode(Input::ESC);
 }

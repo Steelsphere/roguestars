@@ -8,9 +8,10 @@ class Input
 {
 public:
 	enum MODE {
-		NORMAL,
-		ENTER_TO_CONTINUE,
 		NONE,
+		NORMAL,
+		ESC,
+		ENTER_TO_CONTINUE,
 	};
 	
 	static void input(TCOD_key_t key);

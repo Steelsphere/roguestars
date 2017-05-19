@@ -1,4 +1,8 @@
 #include "Input.h"
+#include "GUI.h"
+#include "GameEvent.h"
+
+#include <memory>
 
 Actor* Input::_reciever;
 Input::MODE Input::_mode = NORMAL;
@@ -7,8 +11,11 @@ TCOD_key_t Input::_lastkey;
 void Input::input(TCOD_key_t key) {
 	if (key.pressed) {
 		switch (_mode) {
+		
 		case NORMAL:
 			switch (key.vk) {
+			
+			// Movement
 			case TCODK_KP8:
 				_reciever->move("top");
 				break;
@@ -33,8 +40,21 @@ void Input::input(TCOD_key_t key) {
 			case TCODK_KP3:
 				_reciever->move("bottomright");
 				break;
+		
 			}
-			break;
+		
+		case ESC:
+			switch (key.vk) {
+			case TCODK_ESCAPE:
+				if (GameEvent::get_last_event() == GameEvent::NEW_ESC_MENU) {
+					GameEvent::set_event(GameEvent::DELETE_ESC_MENU);
+					Input::set_mode(Input::NORMAL);
+					break;
+				}
+				GameEvent::set_event(GameEvent::NEW_ESC_MENU);
+				break;
+			}
+		
 		case ENTER_TO_CONTINUE:
 			switch (key.vk) {
 			case TCODK_ENTER:
