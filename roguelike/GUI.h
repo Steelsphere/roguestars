@@ -10,7 +10,9 @@ class GUI
 {
 public:
 	enum GUI_TYPE {
-		MESSAGE_BOX,
+		NO_BACKGROUND,
+		FILLED_BACKGROUND,
+		FILLED_BORDERED_BACKGROUND,
 	};
 	
 	struct Text {
@@ -25,14 +27,18 @@ public:
 	
 	~GUI();
 
-	virtual void draw();
+	virtual void draw(bool all = false);
 
 	static std::vector<GUI*>* get_buffer() { return &_buffer; }
 
 	virtual void position_text();
 protected:
 	int _x, _y, _width, _height;
+	float _transparency;
+	bool _update;
 	std::vector<Text> _text;
+	TCODConsole* _cons;
+	GUI_TYPE _type;
 private:
 	static std::vector<GUI*> _buffer;
 };
@@ -41,7 +47,7 @@ class Message_Box : public GUI {
 public:
 	Message_Box(std::string text);
 
-	virtual void draw() override;
+	virtual void draw(bool all = false) override;
 };
 
 class Log : public GUI {
@@ -70,7 +76,7 @@ public:
 
 	SelectionBox(int x, int y, int w, int h, std::vector<Text> text);
 
-	virtual void draw() override;
+	virtual void draw(bool all = false) override;
 
 	virtual void position_text() override;
 

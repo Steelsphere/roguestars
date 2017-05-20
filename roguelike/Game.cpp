@@ -40,11 +40,11 @@ void Game::game_loop() {
 			exit_game();
 		}
 		
-		update_gui();
-		
 		if (GameObjects::update) {
 			update();
 		}
+		
+		update_gui();
 		
 		Input::refresh();
 		
@@ -64,6 +64,7 @@ void Game::game_event() {
 	switch (GameEvent::get_event()) {
 	case GameEvent::TO_MAIN_MENU:
 		new_main_menu();
+		break;
 	case GameEvent::STARTUP_NEW_GAME:
 		startup_new_game();
 		break;
@@ -139,17 +140,30 @@ void Game::update() {
 	
 	_num_updates++;
 	
-	if (_log != nullptr) {
-		_log->message(std::to_string(_num_updates), TCODColor::white);
+	if (_num_updates == 75) {
+		new Message_Box("Nuclear missiles launched!");
 	}
 	
+//	if (_log != nullptr) {
+//		_log->message(std::to_string(_num_updates), TCODColor::white);
+//	}
+	
+	update_gui(true);
+
 	GameObjects::update = false;
 }
 
-void Game::update_gui() {
+void Game::update_gui(bool all) {
 	std::vector<GUI*>* guis = GUI::get_buffer();
-	for (int i = 0; i < guis->size(); i++) {
-		(*guis)[i]->draw();
+	if (all) {
+		for (int i = 0; i < guis->size(); i++) {
+			(*guis)[i]->draw(true);
+		}
+	}
+	else {
+		for (int i = 0; i < guis->size(); i++) {
+			(*guis)[i]->draw();
+		}
 	}
 }
 
@@ -202,6 +216,7 @@ void Game::startup_load_game() {
 void Game::new_main_menu() {
 	destroy_garbage();
 	_MainMenu = new MainMenu;
+	TCODConsole::root->flush();
 }
 
 void Game::destroy_main_menu() {

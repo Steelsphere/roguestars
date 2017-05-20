@@ -10,28 +10,41 @@ std::vector<GUI*> GUI::_buffer;
 GUI::GUI() {}
 
 GUI::GUI(int x, int y, int w, int h, std::vector<Text> text) : 
-_x(x), _y(y), _width(w), _height(h), _text(text)
+_x(x), _y(y), _width(w), _height(h), _text(text), _transparency(1.0f), _update(true)
 {
-	for (int i = 0; i < _text.size(); i++) {
-		_text[i].x += _x;
-		_text[i].y += _y;
-	}
+	_cons = new TCODConsole(w, h);
 	_buffer.push_back(this);
 }
 
 GUI::~GUI()
 {
+	delete _cons;
+	
 	_buffer.erase(std::remove(_buffer.begin(), _buffer.end(), this), _buffer.end());
+	
 	TCODConsole::root->rect(_x, _y, _width, _height, true, TCOD_BKGND_ALPHA(0.0f));
 	GameObjects::update = true;
 	std::cout << "GUIs: " << _buffer.size() << std::endl;
 }
 
-void GUI::draw() {
-	TCODConsole::root->printFrame(_x, _y, _width, _height, true, TCOD_BKGND_ALPHA(1.0f));
+void GUI::draw(bool all) {
+	switch (_type) {
+	case FILLED_BACKGROUND:
+		_cons->rect(0, 0, _width, _height, true, TCOD_BKGND_ALPHA(1.0f));
+		break;
+	case FILLED_BORDERED_BACKGROUND:
+		_cons->printFrame(0, 0, _width, _height, true, TCOD_BKGND_ALPHA(1.0f));
+		break;
+	}
 	for (int i = 0; i < _text.size(); i++) {
-		TCODConsole::setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
-		TCODConsole::root->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
+		_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	}
+	_cons->flush();
+	
+	if (_update || all) {
+		TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
+		_update = false;
 	}
 }
 
@@ -49,14 +62,13 @@ Message_Box::Message_Box(std::string text) : GUI(GameObjects::screen_width/2 - 1
 	_text.push_back(top);
 	_text.push_back(message);
 	_text.push_back(bottom);
-	for (int i = 0; i < _text.size(); i++) {
-		_text[i].x += _x;
-		_text[i].y += _y;
-	}
+	
+	_transparency = 0.5f;
+	_type = FILLED_BORDERED_BACKGROUND;
 	Input::set_mode(Input::ENTER_TO_CONTINUE);
 }
 
-void Message_Box::draw() {
+void Message_Box::draw(bool all) {
 	GUI::draw();
 	if (Input::get_mode() == Input::NORMAL) {
 		Message_Box::~Message_Box();
@@ -64,40 +76,44 @@ void Message_Box::draw() {
 }
 
 Log::Log() : GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
-	Text name = { (_width/2) - 3, 0, 3, 1, "Log", TCODColor::red };
+	Text name = { 1, 0, 3, 1, "Log", TCODColor::red };
 	_text.push_back(name);
-	position_text();
+	_transparency = 0.5f;
+	_type = FILLED_BORDERED_BACKGROUND;
 }
 
 void Log::message(std::string message, TCODColor color) {
 	for (int i = 1; i < _text.size(); i++) {
 		_text[i].y -= 1;
-		if (_text[i].y <= _y) {
+		if (_text[i].y <= 0) {
 			_text.erase(_text.begin() + i);
 		}
 	}
 	Text m = { 1, _height - 2, _width - 1, 1, message, color };
-	m.x += _x;
-	m.y += _y;
 	_text.push_back(m);
+	_update = true;
 }
 
 Status::Status() : GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
-	Text name = { (_width / 2) - 3, 0, 6, 1, "Status", TCODColor::red };
+	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
 	_text.push_back(name);
-	position_text();
+	_transparency = 0.5f;
+	_type = FILLED_BORDERED_BACKGROUND;
+	_update = true;
 }
 
 SelectionBox::SelectionBox() {}
 
 SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) : GUI(x, y, w, h, text) {}
 
-void SelectionBox::draw() {
-	GUI::draw();
+void SelectionBox::draw(bool all) {
+	
 	for (int i = 0; i < _mtext.size(); i++) {
-		TCODConsole::setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
-		TCODConsole::root->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
+		_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 	}
+	GUI::draw();
+
 	if (Input::get_last_key().vk == TCODK_DOWN && Input::get_last_key().pressed) {
 		for (int i = 0; i < _mtext.size(); i++) {
 			if (_mtext[i].selected) {
@@ -109,6 +125,7 @@ void SelectionBox::draw() {
 					_mtext[i + 1].selected = true;
 				}
 				set_selector();
+				_update = true;
 				break;
 			}
 		}
@@ -124,6 +141,7 @@ void SelectionBox::draw() {
 					_mtext[i - 1].selected = true;
 				}
 				set_selector();
+				_update = true;
 				break;
 			}
 		}
@@ -164,16 +182,15 @@ void MainMenu::front() {
 	_text.clear();
 	_mtext.clear();
 
-	Text title = { (GameObjects::screen_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
+	Text title = { (_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
 	_text.push_back(title);
 	
-	MText n1 = { (GameObjects::screen_width / 2) - 5, 20, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
-	MText n2 = { (GameObjects::screen_width / 2) - 5, 22, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
-	MText n3 = { (GameObjects::screen_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
+	MText n1 = { (_width / 2) - 5, 20, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
+	MText n2 = { (_width / 2) - 5, 22, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
+	MText n3 = { (_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
 	
 	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
-	
-	position_text();
+
 	set_selector();
 	Input::set_mode(Input::NONE);
 }
@@ -183,8 +200,7 @@ ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObject
 	MText n2 = { (_width / 2) - 5, 3, _width / 2, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
 
 	_mtext.push_back(n1); _mtext.push_back(n2);
-	
-	position_text();
+
 	set_selector();
 	Input::set_mode(Input::ESC);
 }

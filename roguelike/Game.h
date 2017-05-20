@@ -51,7 +51,7 @@ private:
 
 	void update();
 
-	void update_gui();
+	void update_gui(bool all = false);
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates;
 	float _time;
