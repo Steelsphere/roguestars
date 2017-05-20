@@ -77,6 +77,12 @@ void Game::game_event() {
 	case GameEvent::DELETE_ESC_MENU:
 		destroy_esc_menu();
 		break;
+	case GameEvent::NEW_INFO_VIEWER:
+		new_info_viewer();
+		break;
+	case GameEvent::DELETE_INFO_VIEWER:
+		destroy_info_viewer();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -127,11 +133,15 @@ void Game::update() {
 				) {
 				if (fov->isInFov(a->get_world_pos()[0], a->get_world_pos()[1])) {
 					_num_actors_drawn++;
+					a->set_fov(true);
 					a->set_memorization(true);
 					a->draw();
 				}
 				else if (a->is_memorized()) {
 					a->draw_mem();
+				}
+				else {
+					a->set_fov(false);
 				}
 			}
 		}
@@ -144,9 +154,9 @@ void Game::update() {
 		new Message_Box("Nuclear missiles launched!");
 	}
 	
-//	if (_log != nullptr) {
-//		_log->message(std::to_string(_num_updates), TCODColor::white);
-//	}
+	if (_log != nullptr) {
+		_log->message(std::to_string(_num_updates), TCODColor::white);
+	}
 	
 	update_gui(true);
 
@@ -262,4 +272,33 @@ void Game::destroy_garbage() {
 		delete _ESCMenu;
 		_ESCMenu = nullptr;
 	}
+	if (_info_viewer != nullptr) {
+		delete _info_viewer;
+		_info_viewer = nullptr;
+	}
+}
+
+void Game::new_info_viewer() {
+	_dummy = new Dummy(_player->get_screen_pos()[0], _player->get_screen_pos()[1], 0, 'X', TCODColor::yellow);
+	_dummy->set_world_position(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
+	
+	_info_viewer = new InfoViewer(_dummy);
+	_dummy->set_info(_info_viewer);
+	
+	Input::set_input_reciever(_dummy);
+	_camera->set_following(_dummy);
+	
+	GameObjects::update = true;
+}
+
+void Game::destroy_info_viewer() {
+	delete _dummy;
+	delete _info_viewer;
+	_dummy = nullptr;
+	_info_viewer = nullptr;
+
+	Input::set_input_reciever(_player);
+	_camera->set_following(_player);
+
+	GameObjects::update = true;
 }

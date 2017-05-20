@@ -1,6 +1,7 @@
 #include "GUI.h"
 #include "GameObjects.h"
 #include "Input.h"
+#include "Actor.h"
 
 #include <algorithm>
 #include <cstring>
@@ -69,7 +70,7 @@ Message_Box::Message_Box(std::string text) : GUI(GameObjects::screen_width/2 - 1
 }
 
 void Message_Box::draw(bool all) {
-	GUI::draw();
+	GUI::draw(all);
 	if (Input::get_mode() == Input::NORMAL) {
 		Message_Box::~Message_Box();
 	}
@@ -78,7 +79,7 @@ void Message_Box::draw(bool all) {
 Log::Log() : GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
 	Text name = { 1, 0, 3, 1, "Log", TCODColor::red };
 	_text.push_back(name);
-	_transparency = 0.5f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
@@ -97,7 +98,7 @@ void Log::message(std::string message, TCODColor color) {
 Status::Status() : GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
 	_text.push_back(name);
-	_transparency = 0.5f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 	_update = true;
 }
@@ -112,7 +113,7 @@ void SelectionBox::draw(bool all) {
 		_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
 		_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 	}
-	GUI::draw();
+	GUI::draw(all);
 
 	if (Input::get_last_key().vk == TCODK_DOWN && Input::get_last_key().pressed) {
 		for (int i = 0; i < _mtext.size(); i++) {
@@ -203,4 +204,55 @@ ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObject
 
 	set_selector();
 	Input::set_mode(Input::ESC);
+}
+
+InfoViewer::InfoViewer(Actor* aref) : GUI(0, (GameObjects::screen_height - GameObjects::screen_height / 4) - 1, 20, 10, std::vector<Text>()) {
+	Text title = { (_width / 2) - 4, 0, _width / 2, 1, "Info", TCODColor::red };
+	Text c1 = { 2, 2, _width - 2, 1, "", TCODColor::white };
+	Text c2 = { 2, 3, _width - 2, 1, "", TCODColor::white };
+	Text c3 = { 2, 4, _width - 2, 1, "", TCODColor::white };
+	Text c4 = { 2, 5, _width - 2, 1, "", TCODColor::white };
+	Text c5 = { 2, 6, _width - 2, 1, "", TCODColor::white };
+	Text c6 = { 2, 7, _width - 2, 1, "", TCODColor::white };
+	_text.push_back(title); 
+	_text.push_back(c1); _text.push_back(c2); _text.push_back(c3);
+	_text.push_back(c4); _text.push_back(c5); _text.push_back(c6);
+	
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0.9;
+	_actor = aref;
+}
+
+void InfoViewer::draw(bool all) {
+	if (_update || all) {
+		GUI::draw(all);
+		std::vector<Actor*> actors = Actor::get_actors(_actor->get_world_pos()[0], _actor->get_world_pos()[1], 0);
+		
+		if (actors.size() == 0) {
+			for (int i = 1; i < _text.size() - 1; i++) {
+				_text[i].str = "";
+				return;
+			}
+		}
+
+		for (int i = actors.size() - 1, j = 1;
+			i >= 0 && j < _text.size();
+			i--, j++) {
+		
+			Actor* a = actors[i];
+
+			if (!a->is_in_fov()) {
+				_text[j].str = "";
+				continue;
+			}
+
+			char c = a->get_char();
+			std::string name = a->get_name();
+
+			_text[j].str = std::string(1, c) + " " + name;
+		}
+		for (int i = _text.size() - 1; i > actors.size(); i--) {
+			_text[i].str = "";
+		}
+	}
 }

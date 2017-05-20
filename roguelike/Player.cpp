@@ -33,7 +33,11 @@ void Player::move(std::string dir) {
 	
 	this->set_position(_screen_x + xm, _screen_y + ym, _screen_z);
 	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
-//	std::cout << "Player position: " << _world_x << " " << _world_y << std::endl;
+	
+	if (_info != nullptr) {
+		_info->draw();
+	}
+	
 	GameObjects::update = true;
 }
 
@@ -50,4 +54,26 @@ void Player::spawn_player_in_world() {
 		set_world_position(rpos[0], rpos[1], rpos[2]);
 		break;
 	}
+}
+
+Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {}
+
+void Dummy::move(std::string dir) {
+	int xm = GameObjects::map_dir.at(dir).first;
+	int ym = GameObjects::map_dir.at(dir).second;
+
+	this->set_position(_screen_x + xm, _screen_y + ym, _screen_z);
+	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
+	
+	if (_info != nullptr) {
+		_info->draw(true);
+	}
+	
+	GameObjects::update = true;
+}
+
+void Dummy::draw_mem() {
+	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
+	TCODConsole::root->setCharForeground(_screen_x, _screen_y, _fcolor);
+	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
 }

@@ -16,6 +16,8 @@ public:
 
 	void set_level(Level* level) { _level = level; }
 
+	void set_following(Actor* actor) { _following = actor; }
+
 private:
 	int _screen_x, _screen_y, _screen_z;
 	int _world_x, _world_y, _world_z;

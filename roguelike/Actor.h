@@ -1,10 +1,12 @@
 #pragma once
+
+#include "Random.h"
+
 #include <libtcod\libtcod.hpp>
 #include <string>
 #include <map>
 #include <algorithm>
 #include <vector>
-#include "Random.h"
 #include <fstream>
 
 
@@ -49,8 +51,10 @@ public:
 	bool is_impassable() { return _impassable; }
 	bool is_transparent() { return _transparent; }
 	bool is_memorized() { return _memorized; }
+	bool is_in_fov() { return _in_fov; }
 
 	void set_memorization(bool b) { _memorized = b; }
+	void set_fov(bool b) { _in_fov = b; }
 
 	virtual void serialize(TCODZip* zip);
 	virtual void deserialize(TCODZip* zip);
@@ -68,6 +72,7 @@ protected:
 	bool _impassable;
 	bool _transparent;
 	bool _memorized;
+	bool _in_fov;
 
 private:
 	static std::vector<Actor*>* _buffer;

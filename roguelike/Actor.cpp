@@ -22,7 +22,8 @@ Actor::Actor(int x, int y, int z, std::string name) :
 	_name(name), 
 	_impassable(false), 
 	_transparent(true), 
-	_memorized(false)
+	_memorized(false),
+	_in_fov(false)
 {
 	_buffer->push_back(this);
 }
@@ -40,7 +41,8 @@ Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, st
 	_name(name), 
 	_impassable(false), 
 	_transparent(true),
-	_memorized(false)
+	_memorized(false),
+	_in_fov(false)
 {
 	_buffer->push_back(this);
 }

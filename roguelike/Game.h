@@ -42,6 +42,10 @@ public:
 
 	void destroy_garbage();
 
+	void new_info_viewer();
+
+	void destroy_info_viewer();
+
 private:
 	void game_loop();
 
@@ -61,10 +65,12 @@ private:
 	
 	Level* _level = nullptr;
 	Player* _player = nullptr;
+	Player* _dummy = nullptr;
 	Camera* _camera = nullptr;
 	Log* _log = nullptr;
 	Status* _status = nullptr;
 	World* _world = nullptr;
 	MainMenu* _MainMenu = nullptr;
 	ESCMenu* _ESCMenu = nullptr;
+	InfoViewer* _info_viewer = nullptr;
 };

@@ -1,8 +1,10 @@
 #pragma once
 #include "Actor.h"
+#include "GUI.h"
 
 #include <libtcod\libtcod.hpp>
 #include <iostream>
+#include <typeinfo>
 
 class Input
 {
@@ -12,6 +14,7 @@ public:
 		NORMAL,
 		ESC,
 		ENTER_TO_CONTINUE,
+		INFO_VIEWER,
 	};
 	
 	static void input(TCOD_key_t key);
@@ -25,6 +28,7 @@ public:
 	static TCOD_key_t get_last_key() { return _lastkey; }
 
 	static void refresh() { _lastkey.pressed = false; }
+
 
 private:
 	static Actor* _reciever;

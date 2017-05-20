@@ -8,8 +8,15 @@ public:
 		STARTUP_LOAD_GAME,
 		NEW_ESC_MENU,
 		DELETE_ESC_MENU,
+		NEW_INFO_VIEWER,
+		DELETE_INFO_VIEWER,
 		EXIT,
 	};
+	enum class GAME_STATUS {
+		NONE,
+		INFO_VIEWER_OPEN,
+	};
+	
 	
 	GameEvent();
 	~GameEvent();
@@ -18,12 +25,17 @@ public:
 	
 	static GAME_EVENT get_last_event() { return _lastevent; }
 
-	static void set_event(GAME_EVENT ev) { _currevent = ev; _lastevent = ev; }
+	static void set_event(GAME_EVENT ev) { if (!_locked) { _currevent = ev; _lastevent = ev; } }
+
+	static void lock_event() { _locked = true; }
+
+	static void unlock_event() { _locked = false; }
 
 	static void reset_event() { _currevent = NONE; }
 
 private:
 	static GAME_EVENT _currevent;
 	static GAME_EVENT _lastevent;
+	static bool _locked;
 };
 

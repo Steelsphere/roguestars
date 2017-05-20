@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameEvent.h"
+#include "Actor.h"
 
 #include <string>
 #include <libtcod\libtcod.hpp>
@@ -102,4 +103,14 @@ private:
 class ESCMenu : public SelectionBox {
 public:
 	ESCMenu();
+};
+
+class InfoViewer : public GUI {
+public:
+	InfoViewer(Actor* aref);
+
+	virtual void draw(bool all = false) override;
+
+protected:
+	Actor* _actor;
 };
