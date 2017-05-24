@@ -56,13 +56,11 @@ void Input::input(TCOD_key_t key) {
 			switch (key.vk) {
 			case TCODK_ESCAPE:
 				if (GameEvent::get_last_event() == GameEvent::NEW_ESC_MENU) {
-					GameEvent::unlock_event();
 					GameEvent::set_event(GameEvent::DELETE_ESC_MENU);
 					_mode = NORMAL;
 					break;
 				}
 				GameEvent::set_event(GameEvent::NEW_ESC_MENU);
-				GameEvent::lock_event();
 				break;
 			}
 		case ENTER_TO_CONTINUE:

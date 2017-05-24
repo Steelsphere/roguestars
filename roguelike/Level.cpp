@@ -185,7 +185,7 @@ void Level::generate_flora(std::uniform_int_distribution<int> r, Level::GENERATI
 	}
 }
 
-void Level::save_level_image() {
+void Level::save_level_image(std::string path) {
 	std::vector<std::vector<TCODColor>> map;
 	map.resize(_height);
 	for (int i = 0; i < map.size(); i++) {
@@ -205,7 +205,7 @@ void Level::save_level_image() {
 		}
 	}
 
-	img.save("level.png");
+	img.save(path.c_str());
 }
 
 void Level::save_level_file(std::string path) {

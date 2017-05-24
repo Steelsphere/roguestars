@@ -24,6 +24,8 @@ public:
 		DESERT_FLORA,
 	};
 	
+	int id;
+
 	Level();
 	~Level();
 
@@ -47,11 +49,11 @@ public:
 
 	void update();
 
-	void save_level_image();
+	void save_level_image(const std::string path);
 
-	void save_level_file(std::string path);
+	void save_level_file(const std::string path);
 
-	static Level* load_level_file(std::string path);
+	static Level* load_level_file(const std::string path);
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;

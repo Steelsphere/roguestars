@@ -150,10 +150,6 @@ void Game::update() {
 	
 	_num_updates++;
 	
-	if (_num_updates == 75) {
-		new Message_Box("Nuclear missiles launched!");
-	}
-	
 	if (_log != nullptr) {
 		_log->message(std::to_string(_num_updates), TCODColor::white);
 	}
@@ -182,9 +178,11 @@ void Game::startup_new_game() {
 	
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
-	_world = new World;
+	_world = new World(1024);
 	_world->generate_world();
+	
 	_level = _world->get_current_level();
+	_level->save_level_image("Data\\Level.png");
 
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -198,6 +196,8 @@ void Game::startup_new_game() {
 
 	_log = new Log;
 	_status = new Status;
+
+	new Message_Box("No errors");
 
 }
 
@@ -244,38 +244,30 @@ void Game::destroy_esc_menu() {
 }
 
 void Game::destroy_garbage() {
-	if (_level != nullptr) {
-		delete _level;
-		_level = nullptr;
-	}
-	if (_camera != nullptr) {
-		delete _camera;
-		_camera = nullptr;
-	}
-	if (_log != nullptr) {
-		delete _log;
-		_log = nullptr;
-	}
-	if (_status != nullptr) {
-		delete _status;
-		_status = nullptr;
-	}
-	if (_world != nullptr) {
-		delete _world;
-		_world = nullptr;
-	}
-	if (_MainMenu != nullptr) {
-		delete _MainMenu;
-		_MainMenu = nullptr;
-	}
-	if (_ESCMenu != nullptr) {
-		delete _ESCMenu;
-		_ESCMenu = nullptr;
-	}
-	if (_info_viewer != nullptr) {
-		delete _info_viewer;
-		_info_viewer = nullptr;
-	}
+	delete _camera;
+	_camera = nullptr;
+	
+	delete _log;
+	_log = nullptr;
+	
+	delete _status;
+	_status = nullptr;
+	
+	delete _MainMenu;
+	_MainMenu = nullptr;
+	
+	delete _ESCMenu;
+	_ESCMenu = nullptr;
+	
+	delete _info_viewer;
+	_info_viewer = nullptr;
+	
+	delete _level;
+	_level = nullptr;
+	
+	delete _world;
+	_world = nullptr;
+	
 }
 
 void Game::new_info_viewer() {

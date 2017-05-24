@@ -29,21 +29,20 @@ GUI::~GUI()
 }
 
 void GUI::draw(bool all) {
-	switch (_type) {
-	case FILLED_BACKGROUND:
-		_cons->rect(0, 0, _width, _height, true, TCOD_BKGND_ALPHA(1.0f));
-		break;
-	case FILLED_BORDERED_BACKGROUND:
-		_cons->printFrame(0, 0, _width, _height, true, TCOD_BKGND_ALPHA(1.0f));
-		break;
-	}
-	for (int i = 0; i < _text.size(); i++) {
-		_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
-		_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	}
-	_cons->flush();
-	
 	if (_update || all) {
+		switch (_type) {
+		case FILLED_BACKGROUND:
+			_cons->rect(0, 0, _width, _height, true);
+			break;
+		case FILLED_BORDERED_BACKGROUND:
+			_cons->printFrame(0, 0, _width, _height, true);
+			break;
+		}
+		for (int i = 0; i < _text.size(); i++) {
+			_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
+			_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		}
+		_cons->flush();
 		TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 		_update = false;
 	}
@@ -64,7 +63,7 @@ Message_Box::Message_Box(std::string text) : GUI(GameObjects::screen_width/2 - 1
 	_text.push_back(message);
 	_text.push_back(bottom);
 	
-	_transparency = 0.5f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 	Input::set_mode(Input::ENTER_TO_CONTINUE);
 }
@@ -109,12 +108,15 @@ SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) :
 
 void SelectionBox::draw(bool all) {
 	
-	for (int i = 0; i < _mtext.size(); i++) {
-		_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
-		_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	}
-	GUI::draw(all);
+	if (_update) {
+		for (int i = 0; i < _mtext.size(); i++) {
+			_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
+			_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		}
 
+		GUI::draw(all);
+	}
+	
 	if (Input::get_last_key().vk == TCODK_DOWN && Input::get_last_key().pressed) {
 		for (int i = 0; i < _mtext.size(); i++) {
 			if (_mtext[i].selected) {
