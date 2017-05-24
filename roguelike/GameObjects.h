@@ -14,6 +14,8 @@ public:
 	static int screen_width, screen_height;
 	
 	static bool update;
+
+	static bool player_controlled;
 	
 	static std::map<std::string, std::pair<int, int>> map_dir;
 

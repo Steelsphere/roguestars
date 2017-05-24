@@ -94,7 +94,7 @@ void Actor::draw_mem() {
 }
 
 Actor* Actor::get_actor(int x, int y, int z) {
-	return _map->operator[](x)[y][0];
+	return _map->operator[](x)[y].back();
 }
 
 std::vector<Actor*> Actor::get_actors(int x, int y, int z) {

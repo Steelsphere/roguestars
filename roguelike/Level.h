@@ -13,6 +13,9 @@ class Level
 public:
 	enum LEVEL_TYPE {
 		NONE,
+		GALAXY,
+		STAR_SECTOR,
+		SOLAR_SYSTEM,
 		GRASSLAND,
 		FOREST,
 		HILLS,
@@ -47,6 +50,10 @@ public:
 
 	void generate_flora(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag = Level::TEMPERATE_FLORA);
 
+	void generate_space();
+
+	void generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE type);
+	
 	void update();
 
 	void save_level_image(const std::string path);

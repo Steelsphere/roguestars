@@ -46,6 +46,8 @@ public:
 
 	void destroy_info_viewer();
 
+	void new_world();
+
 private:
 	void game_loop();
 

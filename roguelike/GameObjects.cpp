@@ -10,6 +10,7 @@ int GameObjects::screen_width = 100;
 int GameObjects::screen_height = 75;
 
 bool GameObjects::update = true;
+bool GameObjects::player_controlled = false;
 
 std::map<std::string, std::pair<int, int>> GameObjects::map_dir = {
 	{ "topleft", std::make_pair(-1, -1) },

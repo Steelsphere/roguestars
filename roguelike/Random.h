@@ -8,6 +8,8 @@ public:
 	
 	static std::mt19937_64 generator;
 	
+	static std::uniform_int_distribution<int> random;
+
 	static std::uniform_int_distribution<int> one_to_four;
 	
 	static std::uniform_int_distribution<int> big_number;

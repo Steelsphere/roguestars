@@ -83,6 +83,9 @@ void Game::game_event() {
 	case GameEvent::DELETE_INFO_VIEWER:
 		destroy_info_viewer();
 		break;
+	case GameEvent::NEW_WORLD:
+		new_world();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -178,14 +181,17 @@ void Game::startup_new_game() {
 	
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
-	_world = new World(1024);
-	_world->generate_world();
-	
-	_level = _world->get_current_level();
-	_level->save_level_image("Data\\Level.png");
+	_level = new Level;
+	_level->generate_level(256, Level::SOLAR_SYSTEM);
 
-	_player = new Player(250, 250, 0, '@', TCODColor::blue);
-	_player->spawn_player_in_world();
+//	_world = new World(1024);
+//	_world->generate_world();
+	
+//	_level = _world->get_current_level();
+//	_level->save_level_image("Data\\Level.png");
+
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+//	_player->spawn_player_in_world();
 
 	Input::set_mode(Input::NORMAL);
 	Input::set_input_reciever(_player);
@@ -291,6 +297,27 @@ void Game::destroy_info_viewer() {
 
 	Input::set_input_reciever(_player);
 	_camera->set_following(_player);
+
+	GameObjects::update = true;
+}
+
+void Game::new_world() {
+	delete _level;
+	_world = new World(1024);
+	_world->generate_world();
+
+	_level = _world->get_current_level();
+	_level->save_level_image("Data\\Level.png");
+
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+	_player->spawn_player_in_world();
+
+	Input::set_input_reciever(_player);
+	Input::set_mode(Input::NORMAL);
+
+	_camera = new Camera(_player);
+	_camera->set_level(_level);
+	_camera->update();
 
 	GameObjects::update = true;
 }

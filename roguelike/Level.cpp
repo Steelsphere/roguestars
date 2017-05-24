@@ -11,7 +11,7 @@
 Level::Level() {}
 
 Level::~Level() {
-	for (int i = 0; i < _actors.size(); i++) {
+	for (int i = 0; i < _actors.size() - 1; i++) {
 		delete _actors[i];
 	}
 	delete _fovmap;
@@ -36,6 +36,11 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	}
 	
 	switch (type) {
+	
+	case SOLAR_SYSTEM:
+		generate_space();
+		generate_space_obj(Random::one_to_thirty_two, SOLAR_SYSTEM);
+		break;
 	
 	case GRASSLAND:
 		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
@@ -93,6 +98,37 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 
 	std::cout << "Buffer status: " << Actor::get_buffer()->size() << std::endl;
 	std::cout << "Size of level: " << _actors.size() << std::endl;
+}
+
+void Level::generate_space() {
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			new Tile(x, y, 0, Tile::SPACE);
+		}
+	}
+}
+
+void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE type) {
+	switch (type) {
+	case SOLAR_SYSTEM:
+		
+		for (int i = 0; i < _actors.size(); i++) {
+			
+			if (r(Random::generator) == 1) {
+				new Tile(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0, Tile::DISTANT_STAR);
+			}
+		}
+		
+		new Tile(_width / 2, _height / 2, 0, Tile::STAR);
+
+		int numplanets = Random::one_to_eight(Random::generator);
+		for (int i = 0; i < numplanets; i++) {
+			Actor* a = _actors[Random::big_number(Random::generator) % _actors.size()];
+			new Planet(a->get_screen_pos()[0], a->get_screen_pos()[1], 0, Planet::TERRA);
+		}
+
+		break;
+	}
 }
 
 void Level::update() {

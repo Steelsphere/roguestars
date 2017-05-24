@@ -1,5 +1,8 @@
 #include "Tile.h"
 #include "Random.h"
+#include "GameEvent.h"
+
+#include <iostream>
 
 Tile::Tile() {
 
@@ -131,7 +134,59 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 
 		_name = "Sandstone";
 		break;
+	
+	case SPACE:
+		_c = 0;
+		_fcolor = TCODColor::black;
+		_bcolor = TCODColor::black;
+
+		_name = "Space";
+		break;
+	
+	case STAR:
+		_c = '*';
+		_fcolor = TCODColor::yellow;
+		_bcolor = TCODColor::black;
+
+		_impassable = true;
+
+		_name = "Star";
+		break;
+
+	case PLANET:
+		_c = 15;
+		_fcolor = TCODColor::green;
+		_bcolor = TCODColor::black;
+
+		_name = "Planet";
+		break;
+
+	case DISTANT_STAR:
+		_c = '.';
+		_fcolor = TCODColor::white;
+		_bcolor = TCODColor::black;
+
+		_name = "Distant Star";
+		break;
+
 	}
 
 
+}
+
+Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
+	_c = 15;
+
+	switch (type) {
+	case TERRA:
+		_fcolor = TCODColor::green;
+		_bcolor = TCODColor::black;
+
+		_name = "Planet";
+	}
+
+}
+
+void Planet::on_down() {
+	GameEvent::set_event(GameEvent::NEW_WORLD);
 }

@@ -10,6 +10,7 @@ public:
 		DELETE_ESC_MENU,
 		NEW_INFO_VIEWER,
 		DELETE_INFO_VIEWER,
+		NEW_WORLD,
 		EXIT,
 	};
 	enum class GAME_STATUS {

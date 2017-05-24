@@ -25,6 +25,8 @@ class Dummy : public Player {
 public:
 	Dummy(int x, int y, int z, char c, TCODColor color);
 
+	~Dummy();
+
 	virtual void move(std::string dir) override;
 
 	virtual void draw_mem() override;

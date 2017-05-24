@@ -1,6 +1,7 @@
 #include "Input.h"
 #include "GUI.h"
 #include "GameEvent.h"
+#include "GameObjects.h"
 
 #include <memory>
 
@@ -50,6 +51,11 @@ void Input::input(TCOD_key_t key) {
 				GameEvent::set_event(GameEvent::NEW_INFO_VIEWER);
 				GameEvent::lock_event();
 				break;
+			
+			case TCODK_PAGEDOWN:
+				if (GameObjects::player_controlled) {
+					Actor::get_actor(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1], 0)->on_down();
+				}
 			}
 
 		case ESC:

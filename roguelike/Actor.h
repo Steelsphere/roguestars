@@ -62,6 +62,8 @@ public:
 	friend bool operator== (const Actor &a1, const Actor &a2);
 	friend bool operator!= (const Actor &a1, const Actor &a2);
 
+	virtual void on_down() {}
+
 protected:
 	int _screen_x, _screen_y, _screen_z;
 	int _world_x, _world_y, _world_z;

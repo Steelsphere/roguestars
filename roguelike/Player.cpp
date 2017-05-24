@@ -7,6 +7,7 @@ Player::Player() {
 
 Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Actor(x, y, z, c, fcolor, TCODColor::black)
 {
+	GameObjects::player_controlled = true;
 }
 
 
@@ -56,7 +57,13 @@ void Player::spawn_player_in_world() {
 	}
 }
 
-Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {}
+Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {
+	GameObjects::player_controlled = false;
+}
+
+Dummy::~Dummy() {
+	GameObjects::player_controlled = true;
+}
 
 void Dummy::move(std::string dir) {
 	int xm = GameObjects::map_dir.at(dir).first;
