@@ -28,7 +28,7 @@ public:
 	
 	~GUI();
 
-	virtual void draw(bool all = false);
+	virtual void draw(bool force = false);
 
 	static std::vector<GUI*>* get_buffer() { return &_buffer; }
 
@@ -48,7 +48,7 @@ class Message_Box : public GUI {
 public:
 	Message_Box(std::string text);
 
-	virtual void draw(bool all = false) override;
+	virtual void draw(bool force = false) override;
 };
 
 class Log : public GUI {
@@ -77,7 +77,7 @@ public:
 
 	SelectionBox(int x, int y, int w, int h, std::vector<Text> text);
 
-	virtual void draw(bool all = false) override;
+	virtual void draw(bool force = false) override;
 
 	virtual void position_text() override;
 
@@ -109,7 +109,7 @@ class InfoViewer : public GUI {
 public:
 	InfoViewer(Actor* aref);
 
-	virtual void draw(bool all = false) override;
+	virtual void draw(bool force = false) override;
 
 protected:
 	Actor* _actor;

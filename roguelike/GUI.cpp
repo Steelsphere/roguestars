@@ -28,8 +28,8 @@ GUI::~GUI()
 	std::cout << "GUIs: " << _buffer.size() << std::endl;
 }
 
-void GUI::draw(bool all) {
-	if (_update || all) {
+void GUI::draw(bool force) {
+	if (_update || force) {
 		switch (_type) {
 		case FILLED_BACKGROUND:
 			_cons->rect(0, 0, _width, _height, true);
@@ -68,14 +68,15 @@ Message_Box::Message_Box(std::string text) : GUI(GameObjects::screen_width/2 - 1
 	Input::set_mode(Input::ENTER_TO_CONTINUE);
 }
 
-void Message_Box::draw(bool all) {
-	GUI::draw(all);
+void Message_Box::draw(bool force) {
+	GUI::draw(force);
 	if (Input::get_mode() == Input::NORMAL) {
 		Message_Box::~Message_Box();
 	}
 }
 
-Log::Log() : GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
+//GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
+Log::Log() : GUI(GameObjects::screen_width - GameObjects::screen_width / 4, 0, GameObjects::screen_width / 4, GameObjects::screen_height / 2, std::vector<Text>()) {
 	Text name = { 1, 0, 3, 1, "Log", TCODColor::red };
 	_text.push_back(name);
 	_transparency = 0.9f;
@@ -84,17 +85,40 @@ Log::Log() : GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8,
 
 void Log::message(std::string message, TCODColor color) {
 	for (int i = 1; i < _text.size(); i++) {
-		_text[i].y -= 1;
+		_text[i].y--;
 		if (_text[i].y <= 0) {
 			_text.erase(_text.begin() + i);
 		}
 	}
-	Text m = { 1, _height - 2, _width - 1, 1, message, color };
+	int h = 1;
+	int str_s = message.length();
+	while (true) {
+		str_s -= _width - 4;
+		if (str_s <= 0) {
+			break;
+		}
+		h++;
+	}
+	Text m = { 1, _height - 2, _width - 2, h, "> " + message, color };
 	_text.push_back(m);
+	while (true) {
+		if (_text.back().y + _text.back().h > _height - 1) {
+			for (int i = 1; i < _text.size(); i++) {
+				_text[i].y -= _text[i].h;
+				if (_text[i].y <= 0) {
+					_text.erase(_text.begin() + i);
+				}
+			}
+		}
+		else {
+			break;
+		}
+	}
 	_update = true;
 }
 
-Status::Status() : GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>()) {
+//GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
+Status::Status() : GUI(GameObjects::screen_width - GameObjects::screen_width / 4, GameObjects::screen_height / 2, GameObjects::screen_width / 4, GameObjects::screen_height / 2, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
 	_text.push_back(name);
 	_transparency = 0.9f;
@@ -106,15 +130,15 @@ SelectionBox::SelectionBox() {}
 
 SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) : GUI(x, y, w, h, text) {}
 
-void SelectionBox::draw(bool all) {
+void SelectionBox::draw(bool force) {
 	
-	if (_update) {
+	if (_update || force) {
 		for (int i = 0; i < _mtext.size(); i++) {
 			_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
 			_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 		}
 
-		GUI::draw(all);
+		GUI::draw(force);
 	}
 	
 	if (Input::get_last_key().vk == TCODK_DOWN && Input::get_last_key().pressed) {
@@ -225,9 +249,9 @@ InfoViewer::InfoViewer(Actor* aref) : GUI(0, (GameObjects::screen_height - GameO
 	_actor = aref;
 }
 
-void InfoViewer::draw(bool all) {
-	if (_update || all) {
-		GUI::draw(all);
+void InfoViewer::draw(bool force) {
+	if (_update || force) {
+		GUI::draw(force);
 		std::vector<Actor*> actors = Actor::get_actors(_actor->get_world_pos()[0], _actor->get_world_pos()[1], 0);
 		
 		if (actors.size() == 0) {

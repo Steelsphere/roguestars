@@ -15,7 +15,7 @@ Game::~Game()
 
 void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
-	TCODConsole::initRoot(_screen_width, _screen_height, "Roguelike", false, TCOD_RENDERER_GLSL);
+	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
 }
 
 void Game::start() {
@@ -157,6 +157,10 @@ void Game::update() {
 		_log->message(std::to_string(_num_updates), TCODColor::white);
 	}
 	
+	if (_num_updates == 20) {
+		_log->message("Did you ever hear the tragedy of Darth Plagueis \"the wise\"? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to", TCODColor::red);
+	}
+
 	update_gui(true);
 
 	GameObjects::update = false;
@@ -204,7 +208,6 @@ void Game::startup_new_game() {
 	_status = new Status;
 
 	new Message_Box("No errors");
-
 }
 
 void Game::startup_load_game() {

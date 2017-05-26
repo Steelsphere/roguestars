@@ -35,12 +35,10 @@ void Camera::update() {
 	int* ar;
 
 	for (int i = 0; i < actors->size(); i++) {
-		a = actors->at(i);
+		a = actors->operator[](i);
 		ar = a->get_screen_pos();
-		if (a != nullptr) {
-			a->set_position(ar[0] - _screen_x + GameObjects::screen_width / 2,
-			ar[1] - _screen_y + GameObjects::screen_height / 2, 0);
-		}
+		a->set_position(ar[0] - _screen_x + GameObjects::screen_width / 2,
+		ar[1] - _screen_y + GameObjects::screen_height / 2, 0);
 	}
 }
 

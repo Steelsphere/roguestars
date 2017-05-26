@@ -6,7 +6,7 @@
 #include <typeinfo>
 #include <string>
 
-int GameObjects::screen_width = 100;
+int GameObjects::screen_width = 125;
 int GameObjects::screen_height = 75;
 
 bool GameObjects::update = true;
