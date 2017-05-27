@@ -4,7 +4,7 @@
 #include "GameEvent.h"
 
 Game::Game() 
-	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height), _time(0)
+	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
 {
 }
 
@@ -51,7 +51,8 @@ void Game::game_loop() {
 		TCODConsole::flush();
 		
 		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
-		_time += 0.01f;
+		GameObjects::time += 0.01f;
+		GameObjects::ticks++;
 	
 	}
 }

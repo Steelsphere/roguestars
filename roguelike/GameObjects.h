@@ -12,7 +12,11 @@ class GameObjects
 {
 public:
 	static int screen_width, screen_height;
-	
+
+	static int ticks;
+
+	static float time;
+
 	static bool update;
 
 	static bool player_controlled;

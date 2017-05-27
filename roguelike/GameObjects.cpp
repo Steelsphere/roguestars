@@ -8,6 +8,9 @@
 
 int GameObjects::screen_width = 125;
 int GameObjects::screen_height = 75;
+int GameObjects::ticks;
+
+float GameObjects::time = 0.0f;
 
 bool GameObjects::update = true;
 bool GameObjects::player_controlled = false;

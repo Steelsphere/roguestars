@@ -96,6 +96,8 @@ public:
 
 	void front();
 
+	virtual void draw(bool force = false) override;
+
 private:
 	STATE _state = FRONT;
 };

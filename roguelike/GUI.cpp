@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cmath>
 
 std::vector<GUI*> GUI::_buffer;
 
@@ -118,7 +119,7 @@ void Log::message(std::string message, TCODColor color) {
 }
 
 //GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
-Status::Status() : GUI(GameObjects::screen_width - GameObjects::screen_width / 4, GameObjects::screen_height / 2, GameObjects::screen_width / 4, GameObjects::screen_height / 2, std::vector<Text>()) {
+Status::Status() : GUI(GameObjects::screen_width - GameObjects::screen_width / 4, GameObjects::screen_height / 2, GameObjects::screen_width / 4, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
 	_text.push_back(name);
 	_transparency = 0.9f;
@@ -209,17 +210,43 @@ void MainMenu::front() {
 	_text.clear();
 	_mtext.clear();
 
-	Text title = { (_width / 2) - 5, 10, 20, 1, "Roguelike!", TCODColor::red };
+	Text title = { (_width / 2) - 5, 10, 20, 1, "Rogue Stars", TCODColor::red };
 	_text.push_back(title);
-	
-	MText n1 = { (_width / 2) - 5, 20, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
-	MText n2 = { (_width / 2) - 5, 22, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
-	MText n3 = { (_width / 2) - 5, 24, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
+
+	Text pic = { (_width / 2) - 5, 14, 20, 15,
+"     #     \n"
+"     #     \n"
+"    ###    \n"
+"   #####   \n"
+"###########\n"
+" ######### \n"
+"  #######  \n"
+"   #####   \n"
+"   #####   \n"
+"   ## ##   \n"
+"  ##   ##  \n",
+	TCODColor::white };
+
+	_text.push_back(pic);
+
+	MText n1 = { (_width / 2) - 5, 28, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
+	MText n2 = { (_width / 2) - 5, 30, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
+	MText n3 = { (_width / 2) - 5, 32, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
 	
 	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
 
 	set_selector();
 	Input::set_mode(Input::NONE);
+}
+
+void MainMenu::draw(bool force) {
+	_update = true;
+	SelectionBox::draw(force);
+	if (TCODSystem::getFps() != 0) {
+		if (GameObjects::ticks % 1000 == 0 && _state == FRONT) {
+			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
+		}
+	}
 }
 
 ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObjects::screen_height / 2 - 10, 24, 12, std::vector<Text>()) {
