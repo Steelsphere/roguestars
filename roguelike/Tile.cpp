@@ -169,9 +169,40 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		_name = "Distant Star";
 		break;
 
+	case STAR_DUST:
+		_c = 0;
+		_fcolor = TCODColor::black;
+		_bcolor = TCODColor(Random::one_to_sixty_four(Random::generator), 0, Random::one_to_sixty_four(Random::generator));
+
+		_name = "Star Dust";
+		break;
 	}
 
 
+}
+
+StarSector::StarSector(int x, int y, int z) : Actor(x, y, z) {
+	_c = '*';
+	_fcolor = TCODColor::white;
+	_bcolor = TCODColor::black;
+
+	_name = "Star Sector";
+}
+
+void StarSector::on_pg_down() {
+	GameEvent::set_event(GameEvent::NEW_STAR_SECTOR);
+}
+
+SolarSystem::SolarSystem(int x, int y, int z) : Actor(x, y, z) {
+	_c = '*';
+	_fcolor = TCODColor::white;
+	_bcolor = TCODColor::black;
+
+	_name = "Star";
+}
+
+void SolarSystem::on_pg_down() {
+	GameEvent::set_event(GameEvent::NEW_SOLAR_SYSTEM);
 }
 
 Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
@@ -187,6 +218,6 @@ Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
 
 }
 
-void Planet::on_down() {
+void Planet::on_pg_down() {
 	GameEvent::set_event(GameEvent::NEW_WORLD);
 }

@@ -20,11 +20,30 @@ public:
 		STAR,
 		PLANET,
 		DISTANT_STAR,
+		STAR_DUST,
 	};
 
 	Tile();
 	
 	Tile(int x, int y, int z, TILE_TYPE type, TCODColor color = TCODColor::black);
+};
+
+class StarSector : public Actor {
+public:
+	StarSector(int x, int y, int z);
+
+	virtual void on_pg_down() override;
+};
+
+class SolarSystem : public Actor {
+public:
+	enum SOLAR_TYPE {
+		MAIN_SEQUENCE,
+	};
+	
+	SolarSystem(int x, int y, int z);
+
+	virtual void on_pg_down() override;
 };
 
 class Planet : public Actor {
@@ -34,5 +53,5 @@ public:
 	};
 	Planet(int x, int y, int z, PLANET_TYPE type);
 
-	virtual void on_down() override;
+	virtual void on_pg_down() override;
 };

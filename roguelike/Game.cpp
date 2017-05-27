@@ -87,6 +87,15 @@ void Game::game_event() {
 	case GameEvent::NEW_WORLD:
 		new_world();
 		break;
+	case GameEvent::NEW_SOLAR_SYSTEM:
+		new_solar_system();
+		break;
+	case GameEvent::NEW_STAR_SECTOR:
+		new_star_sector();
+		break;
+	case GameEvent::NEW_GALAXY:
+		new_galaxy();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -187,16 +196,10 @@ void Game::startup_new_game() {
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 
 	_level = new Level;
-	_level->generate_level(256, Level::SOLAR_SYSTEM);
-
-//	_world = new World(1024);
-//	_world->generate_world();
-	
-//	_level = _world->get_current_level();
-//	_level->save_level_image("Data\\Level.png");
+	_level->generate_level(1024, Level::GALAXY);
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
-//	_player->spawn_player_in_world();
+	_player->spawn_player_in_world();
 
 	Input::set_mode(Input::NORMAL);
 	Input::set_input_reciever(_player);
@@ -324,4 +327,44 @@ void Game::new_world() {
 	_camera->update();
 
 	GameObjects::update = true;
+}
+
+void Game::new_solar_system() {
+	delete _level;
+	_level = new Level;
+	_level->generate_level(256, Level::SOLAR_SYSTEM);
+
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+	_player->spawn_player_in_world();
+
+	Input::set_input_reciever(_player);
+	Input::set_mode(Input::NORMAL);
+	
+	_camera = new Camera(_player);
+	_camera->set_level(_level);
+	_camera->update();
+
+	GameObjects::update = true;
+}
+
+void Game::new_star_sector() {
+	delete _level;
+	_level = new Level;
+	_level->generate_level(512, Level::STAR_SECTOR);
+
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+	_player->spawn_player_in_world();
+
+	Input::set_input_reciever(_player);
+	Input::set_mode(Input::NORMAL);
+
+	_camera = new Camera(_player);
+	_camera->set_level(_level);
+	_camera->update();
+
+	GameObjects::update = true;
+}
+
+void Game::new_galaxy() {
+
 }

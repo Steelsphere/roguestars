@@ -37,9 +37,22 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	
 	switch (type) {
 	
+	case GALAXY:
+		generate_space();
+		generate_space_obj(Random::one_to_sixteen, GALAXY);
+
+		break;
+
+	case STAR_SECTOR:
+		generate_space();
+		generate_space_obj(Random::one_to_thirty_two, STAR_SECTOR);
+
+		break;
+
 	case SOLAR_SYSTEM:
 		generate_space();
 		generate_space_obj(Random::one_to_thirty_two, SOLAR_SYSTEM);
+		
 		break;
 	
 	case GRASSLAND:
@@ -109,6 +122,8 @@ void Level::generate_space() {
 }
 
 void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE type) {
+	int numplanets = Random::one_to_eight(Random::generator);
+	
 	switch (type) {
 	case SOLAR_SYSTEM:
 		
@@ -121,12 +136,39 @@ void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE 
 		
 		new Tile(_width / 2, _height / 2, 0, Tile::STAR);
 
-		int numplanets = Random::one_to_eight(Random::generator);
 		for (int i = 0; i < numplanets; i++) {
 			Actor* a = _actors[Random::big_number(Random::generator) % _actors.size()];
 			new Planet(a->get_screen_pos()[0], a->get_screen_pos()[1], 0, Planet::TERRA);
 		}
 
+		break;
+	
+	case STAR_SECTOR:
+		for (int i = 0; i < _actors.size(); i++) {
+			int rnd = r(Random::generator);
+			if (rnd == 2) {
+				new Tile(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0, Tile::STAR_DUST);
+			}
+			if (rnd == 1) {
+				new SolarSystem(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0);
+			}
+		}
+	
+		break;
+	
+	case GALAXY:
+		TCODImage im = TCODImage::TCODImage("Data\\Galaxy1.png");
+		for (int x = 0; x < _width; x++) {
+			for (int y = 0; y < _height; y++) {
+				if (im.getPixel(x, y).getValue() > 0) {
+					new Tile(x, y, 0, Tile::STAR_DUST);
+					if (r(Random::generator) == 1) {
+						new StarSector(x, y, 0);
+					}
+				}
+			}
+		}
+	
 		break;
 	}
 }

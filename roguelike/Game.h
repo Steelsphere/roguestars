@@ -48,6 +48,12 @@ public:
 
 	void new_world();
 
+	void new_solar_system();
+
+	void new_star_sector();
+
+	void new_galaxy();
+
 private:
 	void game_loop();
 
