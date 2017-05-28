@@ -6,6 +6,12 @@
 
 class World {
 public:
+	struct LevelTile {
+		Level* level;
+		int temp = 0;
+		int height = 0;
+	};
+	
 	World();
 	
 	World(int size);
@@ -15,6 +21,10 @@ public:
 	void generate_world();
 
 	void new_level(int x, int y);
+
+	void generate_temperature();
+
+	void generate_terrain();
 
 	void save_temperature_map(std::string path);
 
@@ -26,7 +36,8 @@ public:
 private:
 	int _width, _height;
 	int _numlevels = 0;
-	std::vector<std::vector<Level*>> _world;
+	int temperature = 300;
+	std::vector<std::vector<LevelTile>> _world;
 	Level* _currlevel;
 	FastNoise _temp_n;
 	FastNoise _terrain_n;

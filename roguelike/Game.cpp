@@ -365,6 +365,4 @@ void Game::new_star_sector() {
 	GameObjects::update = true;
 }
 
-void Game::new_galaxy() {
-
-}
+void Game::new_galaxy() {}

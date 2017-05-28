@@ -28,18 +28,45 @@ void World::generate_world() {
 	_terrain_n.SetSeed(Random::big_number(Random::generator));
 	_terrain_n.SetNoiseType(FastNoise::CubicFractal);
 	
+	generate_temperature();
+	generate_terrain();
+	
 	new_level(256, 256);
 	save_temp_and_terrain_maps("Data\\World.png");
 }
 
 void World::new_level(int x, int y) {
-	_world[x][y] = new Level;
-	_currlevel = _world[x][y];
+	_world[x][y].level = new Level;
+	_currlevel = _world[x][y].level;
 
 	std::shuffle(GameObjects::biomes.begin(), GameObjects::biomes.end(), Random::generator);
 
 	_currlevel->generate_level(1024, GameObjects::biomes[0]);
 	_currlevel->id = _numlevels++;
+}
+
+void World::generate_temperature() {
+	int tmp = temperature;
+	for (int yup = _height / 2, ydn = _height / 2; yup > 0 && ydn < _height; yup--, ydn++) {
+		for (int x = 0; x < _width; x++) {
+			_world[x][yup].temp = tmp;
+		}
+		for (int x = 0; x < _width; x++) {
+			_world[x][ydn].temp = tmp;
+		}
+		tmp--;
+		if (tmp == 0) {
+			break;
+		}
+	}
+}
+
+void World::generate_terrain() {
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			_world[x][y].height = static_cast<int>(_terrain_n.GetNoise(x, y) * 255);
+		}
+	}
 }
 
 void World::save_temperature_map(std::string path) {
@@ -51,7 +78,7 @@ void World::save_temperature_map(std::string path) {
 
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
-			map[x][y] = TCODColor(static_cast<int>(_temp_n.GetNoise(x, y) * 255), 0, 0);
+			map[x][y] = TCODColor(_world[x][y].temp, 0, 0);
 		}
 	}
 
@@ -99,7 +126,11 @@ void World::save_temp_and_terrain_maps(std::string path) {
 
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
-			map[x][y] = TCODColor(static_cast<int>(_temp_n.GetNoise(x, y) * 255), static_cast<int>(_terrain_n.GetNoise(x, y) * 255), 0);
+			if (_world[x][y].temp > 255) {
+			map[x][y] = TCODColor(255, static_cast<int>(_terrain_n.GetNoise(x, y) * 255), 0);
+			continue;
+			}
+			map[x][y] = TCODColor(_world[x][y].temp, static_cast<int>(_terrain_n.GetNoise(x, y) * 255), 0);
 		}
 	}
 
