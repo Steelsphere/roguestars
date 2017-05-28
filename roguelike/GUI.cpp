@@ -102,17 +102,12 @@ void Log::message(std::string message, TCODColor color) {
 	}
 	Text m = { 1, _height - 2, _width - 2, h, "> " + message, color };
 	_text.push_back(m);
-	while (true) {
-		if (_text.back().y + _text.back().h > _height - 1) {
-			for (int i = 1; i < _text.size(); i++) {
-				_text[i].y -= _text[i].h;
+	while (_text.back().y + _text.back().h > _height - 1) {
+		for (int i = 1; i < _text.size(); i++) {
+				_text[i].y -= m.h;
 				if (_text[i].y <= 0) {
 					_text.erase(_text.begin() + i);
 				}
-			}
-		}
-		else {
-			break;
 		}
 	}
 	_update = true;
