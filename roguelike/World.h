@@ -10,6 +10,7 @@ public:
 		Level* level;
 		int temp = 0;
 		int height = 0;
+		float biome_noise = 0;
 	};
 	
 	World();
@@ -26,20 +27,20 @@ public:
 
 	void generate_terrain();
 
-	void save_temperature_map(std::string path);
-
-	void save_terrain_map(std::string path);
+	void generate_biome_map();
 
 	void save_temp_and_terrain_maps(std::string path);
+
+	void save_biome_map(std::string path);
 
 	Level* get_current_level() { return _currlevel; }
 private:
 	int _width, _height;
 	int _numlevels = 0;
-	int temperature = 300;
+	int temperature = 250;
 	std::vector<std::vector<LevelTile>> _world;
 	Level* _currlevel;
-	FastNoise _temp_n;
 	FastNoise _terrain_n;
+	FastNoise _biome_n;
 };
 

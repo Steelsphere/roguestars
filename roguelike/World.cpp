@@ -23,16 +23,18 @@ World::~World() {
 }
 
 void World::generate_world() {
-	_temp_n.SetSeed(Random::big_number(Random::generator));
-	_temp_n.SetNoiseType(FastNoise::CubicFractal);
-	_terrain_n.SetSeed(Random::big_number(Random::generator));
+	_terrain_n.SetSeed(Random::random(Random::generator));
 	_terrain_n.SetNoiseType(FastNoise::CubicFractal);
+	_biome_n.SetSeed(Random::random(Random::generator));
+	_biome_n.SetNoiseType(FastNoise::Cellular);
 	
 	generate_temperature();
 	generate_terrain();
+	generate_biome_map();
 	
 	new_level(256, 256);
 	save_temp_and_terrain_maps("Data\\World.png");
+	save_biome_map("Data\\WorldBiomes.png");
 }
 
 void World::new_level(int x, int y) {
@@ -69,52 +71,14 @@ void World::generate_terrain() {
 	}
 }
 
-void World::save_temperature_map(std::string path) {
-	std::vector<std::vector<TCODColor>> map;
-	map.resize(_height);
-	for (int i = 0; i < map.size(); i++) {
-		map[i].resize(_width);
-	}
-
+void World::generate_biome_map() {
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
-			map[x][y] = TCODColor(_world[x][y].temp, 0, 0);
+			if (_world[x][y].height <= 0) {
+				_world[x][y].biome_noise = _biome_n.GetNoise(x, y);
+			}
 		}
 	}
-
-	TCODImage img(_width, _height);
-
-	for (int x = 0; x < _width; x++) {
-		for (int y = 0; y < _width; y++) {
-			img.putPixel(x, y, map[x][y]);
-		}
-	}
-	
-	img.save(path.c_str());
-}
-
-void World::save_terrain_map(std::string path) {
-	std::vector<std::vector<TCODColor>> map;
-	map.resize(_height);
-	for (int i = 0; i < map.size(); i++) {
-		map[i].resize(_width);
-	}
-
-	for (int x = 0; x < _width; x++) {
-		for (int y = 0; y < _height; y++) {
-			map[x][y] = TCODColor(0, static_cast<int>(_terrain_n.GetNoise(x, y) * 255), 0);
-		}
-	}
-
-	TCODImage img(_width, _height);
-
-	for (int x = 0; x < _width; x++) {
-		for (int y = 0; y < _width; y++) {
-			img.putPixel(x, y, map[x][y]);
-		}
-	}
-
-	img.save(path.c_str());
 }
 
 void World::save_temp_and_terrain_maps(std::string path) {
@@ -142,5 +106,15 @@ void World::save_temp_and_terrain_maps(std::string path) {
 		}
 	}
 
+	img.save(path.c_str());
+}
+
+void World::save_biome_map(std::string path) {
+	TCODImage img(_width, _height);
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			img.putPixel(x, y, TCODColor(static_cast<float>(_world[x][y].biome_noise * 255), 255.0f, 255.0f));
+		}
+	}
 	img.save(path.c_str());
 }
