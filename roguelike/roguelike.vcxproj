@@ -78,6 +78,7 @@
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(SolutionDir)deps\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)deps\include;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)deps\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)deps\include;$(IncludePath)</IncludePath>
@@ -144,10 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\deps\src\FastNoise.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameEvent.cpp" />
-    <ClCompile Include="FastNoise.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjects.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -161,10 +162,10 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\deps\src\FastNoise.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameEvent.h" />
-    <ClInclude Include="FastNoise.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjects.h" />
     <ClInclude Include="GUI.h" />

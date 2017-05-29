@@ -48,9 +48,6 @@
     <ClCompile Include="Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FastNoise.cpp">
-      <Filter>Source Files\Third Party</Filter>
-    </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\deps\src\FastNoise.cpp">
+      <Filter>Source Files\Third Party</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +98,6 @@
     <ClInclude Include="Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FastNoise.h">
-      <Filter>Header Files\Third Party</Filter>
-    </ClInclude>
     <ClInclude Include="GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -112,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\deps\src\FastNoise.h">
+      <Filter>Header Files\Third Party</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

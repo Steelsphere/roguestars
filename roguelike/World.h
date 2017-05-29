@@ -1,7 +1,7 @@
 #pragma once
 #include "Level.h"
-#include "FastNoise.h"
 
+#include <FastNoise\FastNoise.h>
 #include <vector>
 
 class World {

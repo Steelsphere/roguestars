@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Actor.h"
-#include "FastNoise.h"
 #include "Tile.h"
 
+#include <FastNoise\FastNoise.h>
 #include <string>
 #include <iostream>
 #include <vector>
