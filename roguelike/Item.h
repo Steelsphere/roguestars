@@ -8,7 +8,8 @@ public:
 		FLOWER,
 		BUSH,
 		CACTUS,
-		DEAD_BUSH
+		DEAD_BUSH,
+		SNOW_BUSH,
 	};
 	
 	Item();

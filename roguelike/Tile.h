@@ -21,6 +21,9 @@ public:
 		PLANET,
 		DISTANT_STAR,
 		STAR_DUST,
+		SNOW,
+		ICE,
+		SNOWY_TREE
 	};
 
 	Tile();
@@ -39,6 +42,8 @@ class SolarSystem : public Actor {
 public:
 	enum SOLAR_TYPE {
 		MAIN_SEQUENCE,
+		DWARF,
+		GIANT,
 	};
 	
 	SolarSystem(int x, int y, int z);

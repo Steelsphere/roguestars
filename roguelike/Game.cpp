@@ -167,10 +167,6 @@ void Game::update() {
 		_log->message(std::to_string(_num_updates), TCODColor::white);
 	}
 	
-	if (_num_updates == 20) {
-		_log->message("Did you ever hear the tragedy of Darth Plagueis \"the wise\"? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to", TCODColor::red);
-	}
-
 	update_gui(true);
 
 	GameObjects::update = false;

@@ -97,6 +97,15 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_flora(Random::one_to_two_fifty_six, Level::DESERT_FLORA);
 
 		break;
+
+	case SNOWY_TAIGA:
+		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
+			Tile::ICE,
+			Tile::SNOW,
+			Tile::DIRT_WALL,
+			Tile::DIRT);
+		generate_trees(Random::one_to_eight, Level::COLD_FLORA);
+		generate_flora(Random::one_to_two_fifty_six, Level::COLD_FLORA);
 	}
 
 	for (int i = 0; i < _actors.size(); i++) {
@@ -216,15 +225,30 @@ void Level::generate_terrain(float frequency, float water_threshold, float terra
 	}
 }
 
-void Level::generate_trees(std::uniform_int_distribution<int> r) {
-	for (int i = 0; i < _actors.size(); i++) {
-		
-		if (_actors.operator[](i)->get_name() == "Grass") {
-			
-			if (r(Random::generator) == 1) {
-				new Tile(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Tile::TREE);
+void Level::generate_trees(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag) {
+	switch (flag) {
+	case TEMPERATE_FLORA:
+		for (int i = 0; i < _actors.size(); i++) {
+
+			if (_actors.operator[](i)->get_name() == "Grass") {
+
+				if (r(Random::generator) == 1) {
+					new Tile(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Tile::TREE);
+				}
+
 			}
-		
+		}
+		break;
+	case COLD_FLORA:
+		for (int i = 0; i < _actors.size(); i++) {
+
+			if (_actors.operator[](i)->get_name() == "Snow") {
+
+				if (r(Random::generator) == 1) {
+					new Tile(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Tile::SNOWY_TREE);
+				}
+
+			}
 		}
 	}
 }
@@ -260,6 +284,15 @@ void Level::generate_flora(std::uniform_int_distribution<int> r, Level::GENERATI
 				}
 			}
 			break;
+		case COLD_FLORA:
+			for (int i = 0; i < _actors.size(); i++) {
+				if (_actors.operator[](i)->get_name() == "Snow") {
+
+					if (r(Random::generator) == 1) {
+						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::SNOW_BUSH);
+					}
+				}
+			}
 	}
 }
 

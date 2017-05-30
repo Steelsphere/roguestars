@@ -80,3 +80,4 @@ void Input::input(TCOD_key_t key) {
 		_lastkey = key;
 	}
 }
+

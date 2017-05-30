@@ -31,6 +31,7 @@ void World::generate_world() {
 	generate_temperature();
 	generate_terrain();
 	generate_biome_map();
+//	generate_biomes();
 	
 	new_level(256, 256);
 	save_temp_and_terrain_maps("Data\\World.png");
@@ -41,9 +42,9 @@ void World::new_level(int x, int y) {
 	_world[x][y].level = new Level;
 	_currlevel = _world[x][y].level;
 
-	std::shuffle(GameObjects::biomes.begin(), GameObjects::biomes.end(), Random::generator);
+	std::shuffle(biomes.begin(), biomes.end(), Random::generator);
 
-	_currlevel->generate_level(1024, GameObjects::biomes[0]);
+	_currlevel->generate_level(1024, biomes[0]);
 	_currlevel->id = _numlevels++;
 }
 
@@ -72,12 +73,25 @@ void World::generate_terrain() {
 }
 
 void World::generate_biome_map() {
+	float currnoise = 0.0f;
+	float lastnoise = 0.0f;
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			if (_world[x][y].height <= 0) {
 				_world[x][y].biome_noise = _biome_n.GetNoise(x, y);
+				currnoise = _biome_n.GetNoise(x, y);
+				if (currnoise != lastnoise) {
+					_diff_bnoise.push_back(lastnoise);
+				}
+				lastnoise = currnoise;
 			}
 		}
+	}
+}
+
+void World::generate_biomes() {
+	for (int i = 0; i < _diff_bnoise.size(); i++) {
+		std::cout << _diff_bnoise[i] << std::endl;
 	}
 }
 

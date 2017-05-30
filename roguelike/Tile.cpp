@@ -176,6 +176,45 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 
 		_name = "Star Dust";
 		break;
+	
+	case SNOW:
+		switch (Random::one_to_four(Random::generator)) {
+		case 1:
+			_c = '.';
+			break;
+		case 2:
+			_c = ',';
+			break;
+		case 3:
+			_c = '`';
+			break;
+		case 4:
+			_c = '\'';
+			break;
+		}
+		
+		_fcolor = TCODColor::white;
+		_bcolor = TCODColor::black;
+		_name = "Snow";
+		break;
+
+	case ICE:
+		_c = '#';
+		_fcolor = TCODColor::white;
+		_bcolor = TCODColor::black;
+
+		_name = "Ice";
+		break;
+
+	case SNOWY_TREE:
+		_c = 24;
+		_fcolor = TCODColor::white;
+		_bcolor = TCODColor::black;
+
+		_name = "Tree";
+		_impassable = true;
+		_transparent = false;
+		break;
 	}
 
 

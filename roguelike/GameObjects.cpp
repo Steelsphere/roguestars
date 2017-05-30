@@ -32,10 +32,3 @@ std::map<std::string, Actor*(*)()> GameObjects::type_map = {
 	{typeid(Item).name(), create_actor_instance<Item>},
 	{typeid(Player).name(), create_actor_instance<Player>},
 };
-
-std::vector<Level::LEVEL_TYPE> GameObjects::biomes = {
-	Level::GRASSLAND,
-	Level::FOREST,
-	Level::HILLS,
-	Level::DESERT,
-};

@@ -20,11 +20,13 @@ public:
 		FOREST,
 		HILLS,
 		DESERT,
+		SNOWY_TAIGA,
 	};
 	
 	enum GENERATION_FLAG {
 		TEMPERATE_FLORA,
 		DESERT_FLORA,
+		COLD_FLORA,
 	};
 	
 	int id;
@@ -46,7 +48,7 @@ public:
 		Tile::TILE_TYPE wall = Tile::DIRT_WALL,
 		Tile::TILE_TYPE beach = Tile::SAND);
 
-	void generate_trees(std::uniform_int_distribution<int> r);
+	void generate_trees(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag = Level::TEMPERATE_FLORA);
 
 	void generate_flora(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag = Level::TEMPERATE_FLORA);
 

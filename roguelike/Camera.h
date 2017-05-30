@@ -24,4 +24,3 @@ private:
 	Actor* _following;
 	Level* _level;
 };
-

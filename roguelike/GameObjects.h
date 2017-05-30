@@ -27,8 +27,5 @@ public:
 	static Actor* create_actor_instance() { return new T; }
 	
 	static std::map<std::string, Actor*(*)()> type_map;
-
-	static std::vector<Level::LEVEL_TYPE> biomes;
-
 };
 

@@ -45,6 +45,13 @@ Item::Item(int x, int y, int z, Item::ITEM_TYPE type) : Actor(x, y, z) {
 		_bcolor = TCODColor::black;
 		_name = "Bush";
 		break;
+
+	case SNOW_BUSH:
+		_c = '*';
+		_fcolor = TCODColor::white;
+		_bcolor = TCODColor::black;
+		_name = "Bush";
+		break;
 	}
 }
 
