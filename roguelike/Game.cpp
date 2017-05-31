@@ -16,6 +16,7 @@ Game::~Game()
 void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
+	GameObjects::game = this;
 }
 
 void Game::start() {

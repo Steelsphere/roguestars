@@ -11,7 +11,7 @@ public:
 		Level::LEVEL_TYPE biome;
 		int temp = 0;
 		int height = 0;
-		float biome_noise = 0;
+		float biome_noise = 0.0f;
 	};
 	
 	World();
@@ -61,7 +61,6 @@ private:
 	int _numlevels = 0;
 	int temperature = 250;
 	std::vector<std::vector<LevelTile>> _world;
-	std::vector<float> _diff_bnoise;
 	Level* _currlevel;
 	FastNoise _terrain_n;
 	FastNoise _biome_n;

@@ -31,7 +31,7 @@ void World::generate_world() {
 	generate_temperature();
 	generate_terrain();
 	generate_biome_map();
-//	generate_biomes();
+	generate_biomes();
 	
 	new_level(256, 256);
 	save_temp_and_terrain_maps("Data\\World.png");
@@ -73,25 +73,57 @@ void World::generate_terrain() {
 }
 
 void World::generate_biome_map() {
-	float currnoise = 0.0f;
-	float lastnoise = 0.0f;
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			if (_world[x][y].height <= 0) {
 				_world[x][y].biome_noise = _biome_n.GetNoise(x, y);
-				currnoise = _biome_n.GetNoise(x, y);
-				if (currnoise != lastnoise) {
-					_diff_bnoise.push_back(lastnoise);
-				}
-				lastnoise = currnoise;
 			}
 		}
 	}
 }
 
 void World::generate_biomes() {
-	for (int i = 0; i < _diff_bnoise.size(); i++) {
-		std::cout << _diff_bnoise[i] << std::endl;
+	std::vector<float> vals;
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			if (_world[x][y].biome_noise != 0.0f) {
+				if (std::find(vals.begin(), vals.end(), _world[x][y].biome_noise) == vals.end()) {
+					vals.push_back(_world[x][y].biome_noise);
+				}
+			}
+		}
+	}
+	std::vector<LevelTile*> lv;
+	for (int i = 0; i < vals.size(); i++) {
+		for (int x = 0; x < _width; x++) {
+			for (int y = 0; y < _height; y++) {
+				if (_world[x][y].biome_noise == vals[i]) {
+					lv.push_back(&_world[x][y]);
+				}
+			}
+		}
+		int avgtmp = 0;
+		for (int j = 0; j < lv.size(); j++) {
+			avgtmp += lv[j]->temp;
+		}
+		avgtmp = avgtmp / lv.size();
+		Level::LEVEL_TYPE biome = Level::NONE;
+		if (avgtmp == 0) {
+			std::shuffle(cold_biomes.begin(), cold_biomes.end(), Random::generator);
+			biome = cold_biomes[0];
+		}
+		else if (avgtmp > 200) {
+			std::shuffle(hot_biomes.begin(), hot_biomes.end(), Random::generator);
+			biome = hot_biomes[0];
+		}
+		else {
+			std::shuffle(temperate_biomes.begin(), temperate_biomes.end(), Random::generator);
+			biome = temperate_biomes[0];
+		}
+		for (int j = 0; j < lv.size(); j++) {
+			lv[j]->biome = biome;
+		}
+		lv.clear();
 	}
 }
 
@@ -127,7 +159,7 @@ void World::save_biome_map(std::string path) {
 	TCODImage img(_width, _height);
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
-			img.putPixel(x, y, TCODColor(static_cast<float>(_world[x][y].biome_noise * 255), 255.0f, 255.0f));
+			img.putPixel(x, y, TCODColor(static_cast<float>(_world[x][y].biome), 255.0f, 255.0f));
 		}
 	}
 	img.save(path.c_str());

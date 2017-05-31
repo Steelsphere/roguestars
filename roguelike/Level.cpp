@@ -106,6 +106,13 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::DIRT);
 		generate_trees(Random::one_to_eight, Level::COLD_FLORA);
 		generate_flora(Random::one_to_two_fifty_six, Level::COLD_FLORA);
+	
+	case OCEAN:
+		generate_terrain(0.01f, 1.0f, 0.0f, 0.0f,
+			Tile::WATER,
+			Tile::WATER,
+			Tile::WATER,
+			Tile::WATER);
 	}
 
 	for (int i = 0; i < _actors.size(); i++) {

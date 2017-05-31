@@ -21,6 +21,7 @@ public:
 		HILLS,
 		DESERT,
 		SNOWY_TAIGA,
+		OCEAN,
 	};
 	
 	enum GENERATION_FLAG {
