@@ -3,7 +3,6 @@
 #include <libtcod\libtcod.hpp>
 
 #include "Actor.h"
-#include "Level.h"
 
 class Tile : public Actor {
 public:
@@ -57,13 +56,6 @@ public:
 		TERRA,
 	};
 	Planet(int x, int y, int z, PLANET_TYPE type);
-
-	virtual void on_pg_down() override;
-};
-
-class Biome : public Actor {
-public:
-	Biome(int x, int y, int z, Level::LEVEL_TYPE type);
 
 	virtual void on_pg_down() override;
 };
