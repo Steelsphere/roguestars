@@ -96,6 +96,9 @@ void Game::game_event() {
 	case GameEvent::NEW_GALAXY:
 		new_galaxy();
 		break;
+	case GameEvent::NEW_WORLD_MAP:
+		new_world_map();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -362,3 +365,21 @@ void Game::new_star_sector() {
 }
 
 void Game::new_galaxy() {}
+
+void Game::new_world_map() {
+	if (_world != nullptr && _level != nullptr) {
+		delete _level;
+		_level = _world->generate_world_map();
+
+		_player = new Player(0, 0, 0, '@', TCODColor::blue);
+		_player->spawn_player_in_world();
+
+		Input::set_input_reciever(_player);
+		Input::set_mode(Input::NORMAL);
+
+		_camera = new Camera(_player);
+		_camera->set_level(_level);
+		_camera->update();
+	}
+	GameObjects::update = true;
+}

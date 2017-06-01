@@ -125,6 +125,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
 	}
 
+	std::cout << "LEVEL UPDATED\n";
 	std::cout << "Buffer status: " << Actor::get_buffer()->size() << std::endl;
 	std::cout << "Size of level: " << _actors.size() << std::endl;
 }
@@ -194,9 +195,16 @@ void Level::update() {
 		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
 	}
 	_map.clear();
+	_map.resize(_height);
+	for (int i = 0; i < _map.size(); i++) {
+		_map[i].resize(_width);
+	}
 	for (int i = 0; i < _actors.size(); i++) {
 		_map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]].push_back(_actors[i]);
 	}
+	std::cout << "LEVEL UPDATED\n";
+	std::cout << "Buffer status: " << Actor::get_buffer()->size() << std::endl;
+	std::cout << "Size of level: " << _actors.size() << std::endl;
 }
 
 void Level::generate_terrain(float frequency, float water_threshold, float terrain_threshold, float beach_size,

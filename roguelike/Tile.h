@@ -4,6 +4,8 @@
 
 #include "Actor.h"
 
+enum LEVEL_TYPE;
+
 class Tile : public Actor {
 public:
 	enum TILE_TYPE {
@@ -56,6 +58,13 @@ public:
 		TERRA,
 	};
 	Planet(int x, int y, int z, PLANET_TYPE type);
+
+	virtual void on_pg_down() override;
+};
+
+class Biome : public Actor {
+public:
+	Biome(int x, int y, int z, int type);
 
 	virtual void on_pg_down() override;
 };

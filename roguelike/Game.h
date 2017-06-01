@@ -54,6 +54,8 @@ public:
 
 	void new_galaxy();
 
+	void new_world_map();
+
 private:
 	void game_loop();
 

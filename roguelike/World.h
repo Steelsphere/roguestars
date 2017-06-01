@@ -37,6 +37,8 @@ public:
 	void save_biome_map(std::string path);
 
 	Level* get_current_level() { return _currlevel; }
+
+	Level* generate_world_map();
 private:
 	std::vector<Level::LEVEL_TYPE> biomes = {
 		Level::GRASSLAND,

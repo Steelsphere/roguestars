@@ -6,4 +6,3 @@ bool GameEvent::_locked = false;
 
 GameEvent::GameEvent() {}
 GameEvent::~GameEvent() {}
-

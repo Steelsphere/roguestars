@@ -1,6 +1,7 @@
 #include "Tile.h"
 #include "Random.h"
 #include "GameEvent.h"
+#include "Level.h"
 
 #include <iostream>
 
@@ -259,4 +260,72 @@ Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
 
 void Planet::on_pg_down() {
 	GameEvent::set_event(GameEvent::NEW_WORLD);
+}
+
+Biome::Biome(int x, int y, int z, int type) : Actor(x, y, z) {
+	switch (type) {
+	case 0:
+		_c = '#';
+		_fcolor = TCODColor::blue;
+		_bcolor = TCODColor::black;
+		_name = "Ocean";
+		_impassable = true;
+		break;
+	case Level::GRASSLAND:
+		switch (Random::one_to_four(Random::generator)) {
+		case 1:
+			_c = '.';
+			break;
+		case 2:
+			_c = ',';
+			break;
+		case 3:
+			_c = '`';
+			break;
+		case 4:
+			_c = '\'';
+			break;
+		}
+		switch (Random::coinflip(Random::generator)) {
+		case 1:
+			_fcolor = TCODColor::darkGreen;
+			break;
+		case 2:
+			_fcolor = TCODColor::darkestGreen;
+			break;
+		}
+		_bcolor = TCODColor::black;
+		_name = "Grasslands";
+		break;
+	case Level::FOREST:
+		_c = 24;
+		_fcolor = TCODColor::lightGreen;
+		_bcolor = TCODColor::black;
+
+		_name = "Forest";
+		break;
+	case Level::HILLS:
+		_c = '^';
+		_fcolor = TCODColor::sepia;
+		_bcolor = TCODColor::black;
+
+		_name = "Hills";
+		break;
+	case Level::DESERT:
+		_c = '~';
+		_fcolor = TCODColor::yellow;
+		_bcolor = TCODColor::black;
+		_name = "Desert";
+		break;
+	case Level::SNOWY_TAIGA:
+		_c = 24;
+		_fcolor = TCODColor::white;
+		_bcolor = TCODColor::black;
+		_name = "Taiga";
+		break;
+	}
+}
+
+void Biome::on_pg_down() {
+
 }

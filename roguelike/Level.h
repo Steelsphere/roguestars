@@ -56,7 +56,7 @@ public:
 	void generate_space();
 
 	void generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE type);
-	
+
 	void update();
 
 	void save_level_image(const std::string path);

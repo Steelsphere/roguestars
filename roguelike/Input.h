@@ -29,10 +29,8 @@ public:
 
 	static void refresh() { _lastkey.pressed = false; }
 
-
 private:
 	static Actor* _reciever;
 	static MODE _mode;
 	static TCOD_key_t _lastkey;
 };
-

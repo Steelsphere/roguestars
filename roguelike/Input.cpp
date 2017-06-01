@@ -15,7 +15,6 @@ void Input::input(TCOD_key_t key) {
 
 		case NORMAL:
 			switch (key.vk) {
-
 				// Movement
 			case TCODK_KP8:
 				_reciever->move("top");
@@ -56,6 +55,17 @@ void Input::input(TCOD_key_t key) {
 				if (GameObjects::player_controlled) {
 					Actor::get_actor(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1], 0)->on_pg_down();
 				}
+				break;
+
+			case TCODK_CHAR:
+				switch (key.c) {
+				case 't':
+					if (key.shift) {
+						GameEvent::set_event(GameEvent::NEW_WORLD_MAP);
+					}
+					break;
+				}
+				break;
 			}
 
 		case ESC:

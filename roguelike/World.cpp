@@ -2,6 +2,7 @@
 #include "Random.h"
 #include "GameObjects.h"
 #include "Level.h"
+#include "Tile.h"
 
 #include <algorithm>
 #include <ctime>
@@ -163,4 +164,16 @@ void World::save_biome_map(std::string path) {
 		}
 	}
 	img.save(path.c_str());
+}
+
+Level* World::generate_world_map() {
+	Level* level = new Level;
+	level->generate_level(_width + _height, Level::NONE);
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			new Biome(x, y, 0, _world[x][y].biome);
+		}
+	}
+	level->update();
+	return level;
 }
