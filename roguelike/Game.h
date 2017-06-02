@@ -32,13 +32,13 @@ public:
 
 	void startup_load_game();
 
-	inline void new_main_menu();
+	void new_main_menu();
 
-	inline void destroy_main_menu();
+	void destroy_main_menu();
 
-	inline void new_esc_menu();
+	void new_esc_menu();
 
-	inline void destroy_esc_menu();
+	void destroy_esc_menu();
 
 	void destroy_garbage();
 
@@ -56,6 +56,8 @@ public:
 
 	void new_world_map();
 
+	void enter_world_tile();
+
 private:
 	void game_loop();
 
@@ -66,6 +68,8 @@ private:
 	void update();
 
 	void update_gui(bool all = false);
+
+	void level_setup();
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates;
 	TCOD_key_t _key;

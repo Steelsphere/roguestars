@@ -327,5 +327,5 @@ Biome::Biome(int x, int y, int z, int type) : Actor(x, y, z) {
 }
 
 void Biome::on_pg_down() {
-
+	GameEvent::set_event(GameEvent::ENTER_WORLD_TILE);
 }

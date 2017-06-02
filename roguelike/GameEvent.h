@@ -15,6 +15,7 @@ public:
 		NEW_STAR_SECTOR,
 		NEW_GALAXY,
 		NEW_WORLD_MAP,
+		ENTER_WORLD_TILE,
 		EXIT,
 	};
 	enum class GAME_STATUS {

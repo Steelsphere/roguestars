@@ -99,6 +99,9 @@ void Game::game_event() {
 	case GameEvent::NEW_WORLD_MAP:
 		new_world_map();
 		break;
+	case GameEvent::ENTER_WORLD_TILE:
+		enter_world_tile();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -191,45 +194,24 @@ void Game::update_gui(bool all) {
 
 void Game::startup_new_game() {
 	destroy_main_menu();
-	
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
-
 	_level = new Level;
 	_level->generate_level(1024, Level::GALAXY);
-
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
-
-	Input::set_mode(Input::NORMAL);
-	Input::set_input_reciever(_player);
-	
-	_camera = new Camera(_player);
-	_camera->set_level(_level);
-	_camera->update();
-
+	level_setup();
 	_log = new Log;
 	_status = new Status;
-
 	new Message_Box("No errors");
 }
 
 void Game::startup_load_game() {
 	destroy_main_menu();
-	
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
-
 	_level = Level::load_level_file("Data\\datalevelcompr_1.dat");
-	
 	_player = new Player(250, 250, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
-
-	Input::set_input_reciever(_player);
-	Input::set_mode(Input::NORMAL);
-
-	_camera = new Camera(_player);
-	_camera->set_level(_level);
-	_camera->update();
-
+	level_setup();
 	_log = new Log;
 	_status = new Status;
 
@@ -257,41 +239,30 @@ void Game::destroy_esc_menu() {
 
 void Game::destroy_garbage() {
 	delete _camera;
+	delete	_log;
+	delete	_status;
+	delete	_MainMenu;
+	delete	_ESCMenu;
+	delete	_info_viewer;
+	delete	_level;
+	delete	_world;
 	_camera = nullptr;
-	
-	delete _log;
 	_log = nullptr;
-	
-	delete _status;
 	_status = nullptr;
-	
-	delete _MainMenu;
 	_MainMenu = nullptr;
-	
-	delete _ESCMenu;
 	_ESCMenu = nullptr;
-	
-	delete _info_viewer;
 	_info_viewer = nullptr;
-	
-	delete _level;
 	_level = nullptr;
-	
-	delete _world;
 	_world = nullptr;
-	
 }
 
 void Game::new_info_viewer() {
 	_dummy = new Dummy(_player->get_screen_pos()[0], _player->get_screen_pos()[1], 0, 'X', TCODColor::yellow);
 	_dummy->set_world_position(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
-	
 	_info_viewer = new InfoViewer(_dummy);
 	_dummy->set_info(_info_viewer);
-	
 	Input::set_input_reciever(_dummy);
 	_camera->set_following(_dummy);
-	
 	GameObjects::update = true;
 }
 
@@ -300,10 +271,8 @@ void Game::destroy_info_viewer() {
 	delete _info_viewer;
 	_dummy = nullptr;
 	_info_viewer = nullptr;
-
 	Input::set_input_reciever(_player);
 	_camera->set_following(_player);
-
 	GameObjects::update = true;
 }
 
@@ -311,20 +280,11 @@ void Game::new_world() {
 	delete _level;
 	_world = new World(1024);
 	_world->generate_world();
-
 	_level = _world->get_current_level();
 	_level->save_level_image("Data\\Level.png");
-
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
-
-	Input::set_input_reciever(_player);
-	Input::set_mode(Input::NORMAL);
-
-	_camera = new Camera(_player);
-	_camera->set_level(_level);
-	_camera->update();
-
+	level_setup();
 	GameObjects::update = true;
 }
 
@@ -332,17 +292,9 @@ void Game::new_solar_system() {
 	delete _level;
 	_level = new Level;
 	_level->generate_level(256, Level::SOLAR_SYSTEM);
-
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
-
-	Input::set_input_reciever(_player);
-	Input::set_mode(Input::NORMAL);
-	
-	_camera = new Camera(_player);
-	_camera->set_level(_level);
-	_camera->update();
-
+	level_setup();
 	GameObjects::update = true;
 }
 
@@ -350,17 +302,9 @@ void Game::new_star_sector() {
 	delete _level;
 	_level = new Level;
 	_level->generate_level(512, Level::STAR_SECTOR);
-
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
-
-	Input::set_input_reciever(_player);
-	Input::set_mode(Input::NORMAL);
-
-	_camera = new Camera(_player);
-	_camera->set_level(_level);
-	_camera->update();
-
+	level_setup();
 	GameObjects::update = true;
 }
 
@@ -371,15 +315,28 @@ void Game::new_world_map() {
 		delete _level;
 		_level = _world->generate_world_map();
 
-		_player = new Player(0, 0, 0, '@', TCODColor::blue);
-		_player->spawn_player_in_world();
-
-		Input::set_input_reciever(_player);
-		Input::set_mode(Input::NORMAL);
-
-		_camera = new Camera(_player);
-		_camera->set_level(_level);
+		_player = new Player(_world->get_current_pos().first, _world->get_current_pos().second, 0, '@', TCODColor::blue);
+		
+		level_setup();
 		_camera->update();
 	}
 	GameObjects::update = true;
+}
+
+void Game::enter_world_tile() {
+	delete _level;
+	_world->new_level(_player->get_world_pos()[0], _player->get_world_pos()[1]);
+	_level = _world->get_current_level();
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+	_player->spawn_player_in_world();
+	level_setup();
+	GameObjects::update = true;
+}
+
+void Game::level_setup() {
+	Input::set_input_reciever(_player);
+	Input::set_mode(Input::NORMAL);
+	_camera = new Camera(_player);
+	_camera->set_level(_level);
+	_camera->update();
 }

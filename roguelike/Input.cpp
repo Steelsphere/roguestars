@@ -57,14 +57,8 @@ void Input::input(TCOD_key_t key) {
 				}
 				break;
 
-			case TCODK_CHAR:
-				switch (key.c) {
-				case 't':
-					if (key.shift) {
-						GameEvent::set_event(GameEvent::NEW_WORLD_MAP);
-					}
-					break;
-				}
+			case TCODK_PAGEUP:
+				GameEvent::set_event(GameEvent::NEW_WORLD_MAP);
 				break;
 			}
 

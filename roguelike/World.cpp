@@ -34,7 +34,7 @@ void World::generate_world() {
 	generate_biome_map();
 	generate_biomes();
 	
-	new_level(256, 256);
+	spawn();
 	save_temp_and_terrain_maps("Data\\World.png");
 	save_biome_map("Data\\WorldBiomes.png");
 }
@@ -43,14 +43,25 @@ void World::new_level(int x, int y) {
 	_world[x][y].level = new Level;
 	_currlevel = _world[x][y].level;
 
-	std::shuffle(biomes.begin(), biomes.end(), Random::generator);
-
-	_currlevel->generate_level(1024, biomes[0]);
+	_currlevel->generate_level(1024, _world[x][y].biome);
 	_currlevel->id = _numlevels++;
+	_currpos.first = x;
+	_currpos.second = y;
+}
+
+void World::spawn() {
+	while (true) {
+		int rx = Random::randc(1, _width-1);
+		int ry = Random::randc(1, _height-1);
+		if (_world[rx][ry].biome != 0) {
+			new_level(rx, ry);
+			return;
+		}
+	}
 }
 
 void World::generate_temperature() {
-	int tmp = temperature;
+	int tmp = _temperature;
 	for (int yup = _height / 2, ydn = _height / 2; yup > 0 && ydn < _height; yup--, ydn++) {
 		for (int x = 0; x < _width; x++) {
 			_world[x][yup].temp = tmp;
@@ -109,7 +120,7 @@ void World::generate_biomes() {
 		}
 		avgtmp = avgtmp / lv.size();
 		Level::LEVEL_TYPE biome = Level::NONE;
-		if (avgtmp == 0) {
+		if (avgtmp < 50) {
 			std::shuffle(cold_biomes.begin(), cold_biomes.end(), Random::generator);
 			biome = cold_biomes[0];
 		}

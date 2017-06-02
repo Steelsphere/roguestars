@@ -24,6 +24,8 @@ public:
 
 	void new_level(int x, int y);
 
+	void spawn();
+
 	void generate_temperature();
 
 	void generate_terrain();
@@ -39,14 +41,9 @@ public:
 	Level* get_current_level() { return _currlevel; }
 
 	Level* generate_world_map();
+
+	std::pair<int, int> get_current_pos() { return _currpos; }
 private:
-	std::vector<Level::LEVEL_TYPE> biomes = {
-		Level::GRASSLAND,
-		Level::FOREST,
-		Level::HILLS,
-		Level::DESERT,
-		Level::SNOWY_TAIGA,
-	};
 	std::vector<Level::LEVEL_TYPE> hot_biomes = {
 		Level::DESERT,
 	};
@@ -61,7 +58,8 @@ private:
 	
 	int _width, _height;
 	int _numlevels = 0;
-	int temperature = 250;
+	int _temperature = 250;
+	std::pair<int, int> _currpos;
 	std::vector<std::vector<LevelTile>> _world;
 	Level* _currlevel;
 	FastNoise _terrain_n;
