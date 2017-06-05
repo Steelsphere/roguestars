@@ -148,6 +148,7 @@
     <ClCompile Include="..\deps\src\FastNoise.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjects.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\deps\src\FastNoise.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="GameEvent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjects.h" />

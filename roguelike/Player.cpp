@@ -5,7 +5,7 @@ Player::Player() {
 
 }
 
-Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Actor(x, y, z, c, fcolor, TCODColor::black)
+Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, z, c, fcolor)
 {
 	GameObjects::player_controlled = true;
 }
@@ -16,7 +16,7 @@ Player::~Player()
 }
 
 
-void Player::move(std::string dir) {
+void Player::move(const std::string& dir) {
 	int xm = GameObjects::map_dir.at(dir).first;
 	int ym = GameObjects::map_dir.at(dir).second;
 	
@@ -65,7 +65,7 @@ Dummy::~Dummy() {
 	GameObjects::player_controlled = true;
 }
 
-void Dummy::move(std::string dir) {
+void Dummy::move(const std::string& dir) {
 	int xm = GameObjects::map_dir.at(dir).first;
 	int ym = GameObjects::map_dir.at(dir).second;
 

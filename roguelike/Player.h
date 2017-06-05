@@ -1,18 +1,17 @@
 #pragma once
-#include "Actor.h"
+#include "Character.h"
 #include "GUI.h"
+
 #include <iostream>
 
 
-class Player : public Actor {
+class Player : public Character {
 public:
 	Player();
-	
 	Player(int x, int y, int z, char c, TCODColor color);
-	
 	~Player();
 
-	virtual void move(std::string dir) override;
+	virtual void move(const std::string& dir) override;
 
 	void spawn_player_in_world();
 
@@ -27,7 +26,7 @@ public:
 
 	~Dummy();
 
-	virtual void move(std::string dir) override;
+	virtual void move(const std::string& dir) override;
 
 	virtual void draw_mem() override;
 };

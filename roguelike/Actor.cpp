@@ -6,13 +6,13 @@
 #include <iostream>
 
 std::vector<Actor*>* Actor::_buffer;
-std::vector<std::vector<std::vector<Actor*>>>* Actor::_map;
+std::vector<std::vector<std::vector<Actor*>>>* Actor::_map = nullptr;
 
 Actor::Actor()
 {
 }
 
-Actor::Actor(int x, int y, int z, std::string name) :
+Actor::Actor(int x, int y, int z, const std::string& name) :
 	_screen_x(x), 
 	_screen_y(y), 
 	_screen_z(z), 
@@ -26,9 +26,12 @@ Actor::Actor(int x, int y, int z, std::string name) :
 	_in_fov(false)
 {
 	_buffer->push_back(this);
+	if (_map != nullptr) {
+		_map->operator[](x)[y].push_back(this);
+	}
 }
 
-Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, std::string name) : 
+Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, const std::string& name) : 
 	_screen_x(x), 
 	_screen_y(y), 
 	_screen_z(z), 
@@ -45,6 +48,9 @@ Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, st
 	_in_fov(false)
 {
 	_buffer->push_back(this);
+	if (_map != nullptr) {
+		_map->operator[](x)[y].push_back(this);
+	}
 }
 
 
@@ -124,7 +130,7 @@ std::map<std::string, Actor*> Actor::get_adjacent_actors() {
 	return m;
 }
 
-void Actor::move(std::string dir) {
+void Actor::move(const std::string& dir) {
 	int xm = GameObjects::map_dir.at(dir).first;
 	int ym = GameObjects::map_dir.at(dir).second;
 

@@ -15,9 +15,9 @@ class Actor
 public:
 	Actor();
 	
-	Actor(int x, int y, int z, std::string name = "Actor");
+	Actor(int x, int y, int z, const std::string& name = "Actor");
 
-	Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, std::string name = "Actor");
+	Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, const std::string& name = "Actor");
 	
 	~Actor();
 
@@ -36,10 +36,10 @@ public:
 	void set_char(char c) { _c = c; }
 
 	std::string get_name() { return _name; }
-	void set_name(std::string name) { _name = name; }
+	void set_name(const std::string& name) { _name = name; }
 
 	std::map<std::string, Actor*> get_adjacent_actors();
-	virtual void move(std::string dir);
+	virtual void move(const std::string& dir);
 	
 	static void set_buffer(std::vector<Actor*>* buffer) { _buffer = buffer; }
 	static std::vector<Actor*>* get_buffer() { return _buffer; }

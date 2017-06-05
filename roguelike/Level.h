@@ -59,6 +59,8 @@ public:
 
 	void update();
 
+	void update_tile(int x, int y, int z);
+
 	void save_level_image(const std::string path);
 
 	void save_level_file(const std::string path);

@@ -284,6 +284,10 @@ void Game::new_world() {
 	_level->save_level_image("Data\\Level.png");
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
+	
+	new Monster(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
+	_level->update_tile(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
+	
 	level_setup();
 	GameObjects::update = true;
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Actor.h"
+#include "Character.h"
 #include "GUI.h"
 
 #include <libtcod\libtcod.hpp>
