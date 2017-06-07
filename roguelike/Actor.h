@@ -43,7 +43,9 @@ public:
 	
 	static void set_buffer(std::vector<Actor*>* buffer) { _buffer = buffer; }
 	static std::vector<Actor*>* get_buffer() { return _buffer; }
+	
 	static void set_map(std::vector<std::vector<std::vector<Actor*>>>* map) { _map = map; }
+	static std::vector<std::vector<std::vector<Actor*>>>* get_map() { return _map; }
 
 	static Actor* get_actor(int x, int y, int z);
 	static std::vector<Actor*> get_actors(int x, int y, int z);

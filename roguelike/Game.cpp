@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include "Input.h"
 #include "GameEvent.h"
+#include "AI.h"
+#include "Character.h"
 
 Game::Game() 
 	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
@@ -121,6 +123,8 @@ void Game::exit_game() {
 }
 
 void Game::update() {
+	update_characters();
+	
 	_num_actors_drawn = 0;
 	std::vector<Actor*>* actors = _level->get_actors();
 	TCODMap* fov = nullptr;
@@ -189,6 +193,14 @@ void Game::update_gui(bool all) {
 		for (int i = 0; i < guis->size(); i++) {
 			(*guis)[i]->draw();
 		}
+	}
+}
+
+void Game::update_characters() {
+	std::vector<Character*> b = Character::get_chbuff();
+	for (Character* c : b) {
+		c->update();
+		_level->update_tile(c->get_world_pos()[0], c->get_world_pos()[1], 0);
 	}
 }
 
@@ -338,6 +350,7 @@ void Game::enter_world_tile() {
 }
 
 void Game::level_setup() {
+	AI::setup(_player);
 	Input::set_input_reciever(_player);
 	Input::set_mode(Input::NORMAL);
 	_camera = new Camera(_player);

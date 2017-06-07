@@ -8,6 +8,8 @@
 #include <Ctime>
 #include <string>
 
+TCODMap* Level::_fovmap = nullptr;
+
 Level::Level() {}
 
 Level::~Level() {

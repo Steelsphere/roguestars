@@ -5,7 +5,7 @@ Player::Player() {
 
 }
 
-Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, z, c, fcolor)
+Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, z, c, fcolor, "Player", true)
 {
 	GameObjects::player_controlled = true;
 }
@@ -39,6 +39,7 @@ void Player::move(const std::string& dir) {
 		_info->draw();
 	}
 	
+	_playertime = _speed;
 	GameObjects::update = true;
 }
 
