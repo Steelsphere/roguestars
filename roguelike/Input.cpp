@@ -18,33 +18,42 @@ void Input::input(TCOD_key_t key) {
 				// Movement
 			case TCODK_KP8:
 				_reciever->move("top");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP7:
 				_reciever->move("topleft");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP9:
 				_reciever->move("topright");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP4:
 				_reciever->move("left");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP6:
 				_reciever->move("right");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP1:
 				_reciever->move("bottomleft");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP2:
 				_reciever->move("bottom");
+				GameObjects::new_turn = true;
 				break;
 			case TCODK_KP3:
 				_reciever->move("bottomright");
+				GameObjects::new_turn = true;
 				break;
 
 			case TCODK_TAB:
 				if (GameEvent::get_last_event() == GameEvent::NEW_INFO_VIEWER) {
 					GameEvent::unlock_event();
 					GameEvent::set_event(GameEvent::DELETE_INFO_VIEWER);
+					GameObjects::player_controlled = true;
 					break;
 				}
 				GameEvent::set_event(GameEvent::NEW_INFO_VIEWER);

@@ -65,6 +65,8 @@ public:
 
 	void save_level_file(const std::string path);
 
+	int get_size() { return _width + _height; }
+
 	static Level* load_level_file(const std::string path);
 private:
 	int _width, _height;

@@ -28,6 +28,12 @@ public:
 	int* get_world_pos();
 
 	void get_color(float* h, float* s, float* v);
+	TCODColor get_color_obj() { return _fcolor; }
+	
+	void set_color(int r, int g, int b) { _fcolor = TCODColor(r, g, b); }
+	void set_color_obj(TCODColor color) { _fcolor = color; }
+
+	void set_bcolor_obj(TCODColor color) { _bcolor = color; }
 	
 	void set_position(int x, int y, int z);
 	void set_world_position(int x, int y, int z);

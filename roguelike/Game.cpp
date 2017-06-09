@@ -123,7 +123,11 @@ void Game::exit_game() {
 }
 
 void Game::update() {
-	update_characters();
+	if (GameObjects::new_turn && GameObjects::player_controlled) {
+		update_characters();
+		_turn++;
+		GameObjects::new_turn = false;
+	}
 	
 	_num_actors_drawn = 0;
 	std::vector<Actor*>* actors = _level->get_actors();
@@ -301,6 +305,7 @@ void Game::new_world() {
 	_level->update_tile(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
 	
 	level_setup();
+	_lightsystem.set_global_lighting(_level, 10, 10, 0);
 	GameObjects::update = true;
 }
 
@@ -346,6 +351,7 @@ void Game::enter_world_tile() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	level_setup();
+	_lightsystem.set_global_lighting(_level, 10, 10, 0);
 	GameObjects::update = true;
 }
 

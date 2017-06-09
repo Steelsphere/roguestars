@@ -19,6 +19,8 @@ public:
 	static bool update;
 
 	static bool player_controlled;
+
+	static bool new_turn;
 	
 	static std::map<std::string, std::pair<int, int>> map_dir;
 

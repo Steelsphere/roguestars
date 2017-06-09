@@ -14,6 +14,7 @@ float GameObjects::time = 0.0f;
 
 bool GameObjects::update = true;
 bool GameObjects::player_controlled = false;
+bool GameObjects::new_turn = false;
 
 std::map<std::string, std::pair<int, int>> GameObjects::map_dir = {
 	{ "topleft", std::make_pair(-1, -1) },

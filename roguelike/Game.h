@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "GUI.h"
 #include "World.h"
+#include "Light.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -73,28 +74,25 @@ private:
 
 	void level_setup();
 	
-	int _screen_width, _screen_height, _num_actors_drawn, _num_updates;
+	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
 	TCOD_event_t _event;
 	
+	// Level stuff
 	Level* _level = nullptr;
-	
 	Player* _player = nullptr;
-	
 	Player* _dummy = nullptr;
-	
 	Camera* _camera = nullptr;
-	
-	Log* _log = nullptr;
-	
-	Status* _status = nullptr;
-	
 	World* _world = nullptr;
 	
+	// Systems
+	Light::LightSystem _lightsystem;
+	
+	// GUI stuff
+	Log* _log = nullptr;
+	Status* _status = nullptr;
 	MainMenu* _MainMenu = nullptr;
-	
 	ESCMenu* _ESCMenu = nullptr;
-	
 	InfoViewer* _info_viewer = nullptr;
 };
