@@ -216,6 +216,16 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		_impassable = true;
 		_transparent = false;
 		break;
+	
+	case WOOD:
+		_c = '#';
+		_fcolor = TCODColor::lightSepia;
+		_bcolor = TCODColor::black;
+
+		_name = "Wood Wall";
+		_impassable = true;
+		_transparent = false;
+		break;
 	}
 
 

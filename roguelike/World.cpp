@@ -28,6 +28,7 @@ void World::generate_world() {
 	_terrain_n.SetNoiseType(FastNoise::CubicFractal);
 	_biome_n.SetSeed(Random::random(Random::generator));
 	_biome_n.SetNoiseType(FastNoise::Cellular);
+	_biome_n.SetFrequency(0.03f);
 	
 	generate_temperature();
 	generate_terrain();

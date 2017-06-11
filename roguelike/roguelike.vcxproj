@@ -161,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Structure.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Structure.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

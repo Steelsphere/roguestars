@@ -2,6 +2,8 @@
 #include "Tile.h"
 #include "Item.h"
 #include "GameObjects.h"
+#include "Structure.h"
+#include "Character.h"
 
 #include <fstream>
 #include <cstdlib>
@@ -17,6 +19,7 @@ Level::~Level() {
 		delete _actors[i];
 	}
 	delete _fovmap;
+	Character::get_chbuff().clear();
 	Actor::set_buffer(nullptr);
 	Actor::set_map(nullptr);
 }
@@ -42,19 +45,16 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	case GALAXY:
 		generate_space();
 		generate_space_obj(Random::one_to_sixteen, GALAXY);
-
 		break;
 
 	case STAR_SECTOR:
 		generate_space();
 		generate_space_obj(Random::one_to_thirty_two, STAR_SECTOR);
-
 		break;
 
 	case SOLAR_SYSTEM:
 		generate_space();
 		generate_space_obj(Random::one_to_thirty_two, SOLAR_SYSTEM);
-		
 		break;
 	
 	case GRASSLAND:
@@ -65,7 +65,6 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::DIRT);
 		generate_trees(Random::one_to_one_twenty_eight);
 		generate_flora(Random::one_to_one_twenty_eight);
-		
 		break;
 	
 	case HILLS:
@@ -76,7 +75,6 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::DIRT);
 		generate_trees(Random::one_to_sixteen);
 		generate_flora(Random::one_to_sixty_four);
-
 		break;
 	
 	case FOREST:
@@ -85,9 +83,9 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::GRASS,
 			Tile::DIRT_WALL,
 			Tile::DIRT);
+		generate_structures(Random::randc(0, 250));
 		generate_trees(Random::one_to_eight);
 		generate_flora(Random::one_to_two_fifty_six);
-
 		break;
 	
 	case DESERT:
@@ -97,7 +95,6 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 			Tile::SANDSTONE,
 			Tile::SAND);
 		generate_flora(Random::one_to_two_fifty_six, Level::DESERT_FLORA);
-
 		break;
 
 	case SNOWY_TAIGA:
@@ -109,6 +106,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_trees(Random::one_to_eight, Level::COLD_FLORA);
 		generate_flora(Random::one_to_two_fifty_six, Level::COLD_FLORA);
 		break;
+	
 	case OCEAN:
 		generate_terrain(0.01f, 1.0f, 0.0f, 0.0f,
 			Tile::WATER,
@@ -320,6 +318,26 @@ void Level::generate_flora(std::uniform_int_distribution<int> r, Level::GENERATI
 					}
 				}
 			}
+	}
+}
+
+void Level::generate_structures(int num) {
+	for (int i = 0; i < num; i++) {
+		
+		int rnd = 0;
+		while (true) {
+			rnd = Random::randc(0, _actors.size());
+			if (_actors[rnd]->is_impassable()) {
+				continue;
+			}
+			if (_actors[rnd]->get_screen_pos()[0] > _width - 9 || _actors[rnd]->get_screen_pos()[1] > _height - 9) {
+				continue;
+			}
+			break;
+		}
+
+		new Structure(_actors[rnd]->get_screen_pos()[0], _actors[rnd]->get_screen_pos()[1], 9, 9, Structure::CABIN, Tile::WOOD, Tile::DIRT);
+		std::cout << "Structure generated at: " << _actors[rnd]->get_screen_pos()[0] << " " << _actors[rnd]->get_screen_pos()[1] << std::endl;
 	}
 }
 

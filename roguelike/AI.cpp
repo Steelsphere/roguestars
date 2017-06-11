@@ -30,7 +30,6 @@ void AI::simple_follow(Character* c) {
 	TCODPath path = TCODPath(Level::get_fov_map(), 1.0f);
 	path.compute(sposx, sposy, _player->get_world_pos()[0], _player->get_world_pos()[1]);
 	
-	std::cout << path.size() << std::endl;
 	if (path.size() == 0) {
 		return;
 	}
@@ -65,5 +64,4 @@ void AI::simple_follow(Character* c) {
 	else if (x > sposx && y > sposy) {
 		c->move("bottomright");
 	}
-	std::cout << c->get_name() << " moved" << std::endl;
 }

@@ -24,7 +24,8 @@ public:
 		STAR_DUST,
 		SNOW,
 		ICE,
-		SNOWY_TREE
+		SNOWY_TREE,
+		WOOD,
 	};
 
 	Tile();

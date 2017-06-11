@@ -57,6 +57,8 @@ public:
 
 	void generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE type);
 
+	void generate_structures(int num);
+
 	void update();
 
 	void update_tile(int x, int y, int z);
