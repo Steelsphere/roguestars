@@ -19,7 +19,7 @@ Game::~Game()
 void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
-	TCODSystem::setFps(1000);
+//	TCODSystem::setFps(1000);
 }
 
 void Game::start() {
@@ -105,6 +105,9 @@ void Game::game_event() {
 		break;
 	case GameEvent::ENTER_WORLD_TILE:
 		enter_world_tile();
+		break;
+	case GameEvent::ENTER_SPACESHIP:
+		enter_spaceship();
 		break;
 	case GameEvent::EXIT:
 		exit_game();
@@ -303,7 +306,7 @@ void Game::new_world() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	
-	new Monster(20, 20, 0);
+	new Monster(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
 	
 	_level->update_tile(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
 	
@@ -369,4 +372,22 @@ void Game::level_setup() {
 	_camera = new Camera(_player);
 	_camera->set_level(_level);
 	_camera->update();
+}
+
+void Game::enter_spaceship() {
+	if (_spaceship == nullptr) {
+		_spaceship = new Level;
+		_spaceship->generate_level(1028, Level::SPACE);
+		_level = _spaceship;
+		
+		new Structure(216, 216, Structure::TINY_SPACESHIP);
+
+		_player = new Player(218, 217, 0, '@', TCODColor::blue);
+		
+		level_setup();
+		GameObjects::update = true;
+	}
+	else {
+		_level = _spaceship;
+	}
 }

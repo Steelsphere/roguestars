@@ -59,6 +59,8 @@ public:
 
 	void enter_world_tile();
 
+	void enter_spaceship();
+
 private:
 	void game_loop();
 
@@ -81,11 +83,14 @@ private:
 	
 	// Level stuff
 	Level* _level = nullptr;
-	Player* _player = nullptr;
-	Player* _dummy = nullptr;
 	Camera* _camera = nullptr;
 	World* _world = nullptr;
 	
+	// Player stuff
+	Player* _player = nullptr;
+	Player* _dummy = nullptr;
+	Level* _spaceship = nullptr;
+
 	// Systems
 	Light::LightSystem _lightsystem;
 	

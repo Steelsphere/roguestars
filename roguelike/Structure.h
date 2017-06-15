@@ -4,6 +4,7 @@
 class Structure {
 public:
 	enum S_TYPE {
+		NONE,
 		CABIN,
 		TINY_SPACESHIP,
 	};

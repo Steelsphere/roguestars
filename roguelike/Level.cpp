@@ -57,6 +57,11 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_space_obj(Random::one_to_thirty_two, SOLAR_SYSTEM);
 		break;
 	
+	case SPACE:
+		generate_space();
+		generate_space_obj(Random::one_to_thirty_two, SPACE);
+		break;
+	
 	case GRASSLAND:
 		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
 			Tile::WATER,
@@ -143,6 +148,16 @@ void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE 
 	int numplanets = Random::one_to_eight(Random::generator);
 	
 	switch (type) {
+	case SPACE:
+		for (int i = 0; i < _actors.size(); i++) {
+
+			if (r(Random::generator) == 1) {
+				new Tile(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0, Tile::DISTANT_STAR);
+			}
+		}
+		
+		break;
+	
 	case SOLAR_SYSTEM:
 		
 		for (int i = 0; i < _actors.size(); i++) {

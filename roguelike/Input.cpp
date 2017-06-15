@@ -69,6 +69,10 @@ void Input::input(TCOD_key_t key) {
 			case TCODK_PAGEUP:
 				GameEvent::set_event(GameEvent::NEW_WORLD_MAP);
 				break;
+			
+			case TCODK_HOME:
+				GameEvent::set_event(GameEvent::ENTER_SPACESHIP);
+				break;
 			}
 
 		case ESC:
