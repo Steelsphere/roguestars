@@ -26,6 +26,9 @@ public:
 		ICE,
 		SNOWY_TREE,
 		WOOD,
+		GLASS,
+		STEEL_WALL,
+		STEEL_FLOOR,
 	};
 
 	Tile();

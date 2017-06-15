@@ -226,6 +226,34 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		_impassable = true;
 		_transparent = false;
 		break;
+	
+	case GLASS:
+		_c = '#';
+		_fcolor = TCODColor::lightBlue;
+		_bcolor = TCODColor::black;
+
+		_name = "Glass";
+		_impassable = true;
+		_transparent = true;
+		break;
+
+	case STEEL_WALL:
+		_c = '#';
+		_fcolor = TCODColor::lighterGrey;
+		_bcolor = TCODColor::black;
+
+		_name = "Steel Wall";
+		_impassable = true;
+		_transparent = false;
+		break;
+
+	case STEEL_FLOOR:
+		_c = '.';
+		_fcolor = TCODColor::grey;
+		_bcolor = TCODColor::black;
+
+		_name = "Steel Floor";
+		break;
 	}
 
 

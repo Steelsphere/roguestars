@@ -336,7 +336,7 @@ void Level::generate_structures(int num) {
 			break;
 		}
 
-		new Structure(_actors[rnd]->get_screen_pos()[0], _actors[rnd]->get_screen_pos()[1], 9, 9, Structure::CABIN, Tile::WOOD, Tile::DIRT);
+		new Structure(_actors[rnd]->get_screen_pos()[0], _actors[rnd]->get_screen_pos()[1], Structure::CABIN);
 		std::cout << "Structure generated at: " << _actors[rnd]->get_screen_pos()[0] << " " << _actors[rnd]->get_screen_pos()[1] << std::endl;
 	}
 }

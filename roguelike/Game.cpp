@@ -4,6 +4,7 @@
 #include "GameEvent.h"
 #include "AI.h"
 #include "Character.h"
+#include "Structure.h"
 
 Game::Game() 
 	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
@@ -18,6 +19,7 @@ Game::~Game()
 void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
+	TCODSystem::setFps(1000);
 }
 
 void Game::start() {
@@ -301,7 +303,8 @@ void Game::new_world() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	
-	new Monster(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
+	new Monster(20, 20, 0);
+	
 	_level->update_tile(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
 	
 	level_setup();
@@ -313,8 +316,12 @@ void Game::new_solar_system() {
 	delete _level;
 	_level = new Level;
 	_level->generate_level(256, Level::SOLAR_SYSTEM);
+	
+	new Structure(20, 20, Structure::TINY_SPACESHIP);
+
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
+	
 	level_setup();
 	GameObjects::update = true;
 }

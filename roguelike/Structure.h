@@ -5,9 +5,10 @@ class Structure {
 public:
 	enum S_TYPE {
 		CABIN,
+		TINY_SPACESHIP,
 	};
 	
-	Structure(int x, int y, int w, int h, S_TYPE type, Tile::TILE_TYPE wall, Tile::TILE_TYPE floor);
+	Structure(int x, int y, S_TYPE type);
 	~Structure();
 };
 
