@@ -77,14 +77,14 @@ void Message_Box::draw(bool force) {
 }
 
 //GUI(0, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
-Log::Log() : GUI(GameObjects::screen_width - GameObjects::screen_width / 4, 0, GameObjects::screen_width / 4, GameObjects::screen_height / 2, std::vector<Text>()) {
+Log::Log() : GUI(GameObjects::screen_width - 30, 0, 30, GameObjects::screen_height / 2, std::vector<Text>()) {
 	Text name = { 1, 0, 3, 1, "Log", TCODColor::red };
 	_text.push_back(name);
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
-void Log::message(std::string message, TCODColor color) {
+void Log::message(const std::string& message, TCODColor color) {
 	for (int i = 1; i < _text.size(); i++) {
 		_text[i].y--;
 		if (_text[i].y <= 0) {
@@ -114,7 +114,7 @@ void Log::message(std::string message, TCODColor color) {
 }
 
 //GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
-Status::Status() : GUI(GameObjects::screen_width - GameObjects::screen_width / 4, GameObjects::screen_height / 2, GameObjects::screen_width / 4, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
+Status::Status() : GUI(GameObjects::screen_width - 30, GameObjects::screen_height / 2, 30, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
 	_text.push_back(name);
 	_transparency = 0.9f;
@@ -238,7 +238,7 @@ void MainMenu::draw(bool force) {
 	_update = true;
 	SelectionBox::draw(force);
 	if (TCODSystem::getFps() != 0) {
-		if (GameObjects::ticks % 500 == 0 && _state == FRONT) {
+		if (GameObjects::ticks % 1000 == 0 && _state == FRONT) {
 			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
 		}
 	}
@@ -254,7 +254,7 @@ ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObject
 	Input::set_mode(Input::ESC);
 }
 
-InfoViewer::InfoViewer(Actor* aref) : GUI(0, (GameObjects::screen_height - GameObjects::screen_height / 4) - 1, 20, 10, std::vector<Text>()) {
+InfoViewer::InfoViewer(Actor* aref) : GUI(0, (GameObjects::screen_height - 10), 20, 10, std::vector<Text>()) {
 	Text title = { (_width / 2) - 4, 0, _width / 2, 1, "Info", TCODColor::red };
 	Text c1 = { 2, 2, _width - 2, 1, "", TCODColor::white };
 	Text c2 = { 2, 3, _width - 2, 1, "", TCODColor::white };

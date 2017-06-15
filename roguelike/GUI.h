@@ -55,7 +55,7 @@ class Log : public GUI {
 public:
 	Log();
 
-	void message(std::string message, TCODColor color);
+	void message(const std::string& message, TCODColor color);
 };
 
 class Status : public GUI {
