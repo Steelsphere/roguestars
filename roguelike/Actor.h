@@ -33,6 +33,7 @@ public:
 	void set_color(int r, int g, int b) { _fcolor = TCODColor(r, g, b); }
 	void set_color_obj(TCODColor color) { _fcolor = color; }
 
+	void set_bcolor(int r, int g, int b) { _bcolor = TCODColor(r, g, b); }
 	void set_bcolor_obj(TCODColor color) { _bcolor = color; }
 	
 	void set_position(int x, int y, int z);

@@ -15,6 +15,8 @@ public:
 
 	void spawn_player_in_world();
 
+	void spawn_player_in_galaxy();
+
 	void set_info(InfoViewer* info) { _info = info; }
 protected:
 	InfoViewer* _info = nullptr;;

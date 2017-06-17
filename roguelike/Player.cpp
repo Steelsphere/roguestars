@@ -46,7 +46,7 @@ void Player::move(const std::string& dir) {
 void Player::spawn_player_in_world() {
 	std::vector<Actor*>* buffer = Actor::get_buffer();
 	while (true) {
-		int rindex = Random::big_number(Random::generator) % buffer->size();
+		int rindex = Random::randc(0, buffer->size());
 		if ((*buffer)[rindex]->is_impassable()) {
 			continue;
 		}
@@ -55,6 +55,20 @@ void Player::spawn_player_in_world() {
 		set_position(spos[0], spos[1], spos[2]);
 		set_world_position(rpos[0], rpos[1], rpos[2]);
 		break;
+	}
+}
+
+void Player::spawn_player_in_galaxy() {
+	std::vector<Actor*>* buffer = Actor::get_buffer();
+	while (true) {
+		int rindex = Random::randc(0, buffer->size());
+		if ((*buffer)[rindex]->get_name() == "Star Sector") {
+			int* spos = (*buffer)[rindex]->get_screen_pos();
+			int* rpos = (*buffer)[rindex]->get_world_pos();
+			set_position(spos[0], spos[1], spos[2]);
+			set_world_position(rpos[0], rpos[1], rpos[2]);
+			break;
+		}
 	}
 }
 

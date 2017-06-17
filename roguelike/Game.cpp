@@ -216,11 +216,7 @@ void Game::update_characters() {
 void Game::startup_new_game() {
 	destroy_main_menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
-	_level = new Level;
-	_level->generate_level(1024, Level::GALAXY);
-	_player = new Player(0, 0, 0, '@', TCODColor::blue);
-	_player->spawn_player_in_world();
-	level_setup();
+	new_galaxy();
 	_log = new Log;
 	_status = new Status;
 	new Message_Box("No errors");
@@ -339,7 +335,15 @@ void Game::new_star_sector() {
 	GameObjects::update = true;
 }
 
-void Game::new_galaxy() {}
+void Game::new_galaxy() {
+	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
+	_level = new Level;
+	_level->generate_level(1024, Level::GALAXY);
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+	_player->spawn_player_in_galaxy();
+	level_setup();
+	GameObjects::update = true;
+}
 
 void Game::new_world_map() {
 	if (_world != nullptr && _level != nullptr) {
