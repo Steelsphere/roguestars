@@ -6,6 +6,8 @@ Current version: 0
 
 This project was born on: 4/10/2017
 
+If you would like to contribute, pm this guy on reddit ---> https://www.reddit.com/user/pepperonion
+
 ![pic](devpics/World.png)
 
 ![pic](devpics/WorldBiomes.png)
