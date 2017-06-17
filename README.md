@@ -1,4 +1,4 @@
-Rogue Stars is a space roguelike that will (is planned to) include vast space exploration, dynamic simulation, factional warfare,  randomly generated **everything**, and complex roguelike mechanics.
+Rogue Stars is a space roguelike that will (is planned to) include vast space exploration, dynamic simulation, factional warfare,  randomly generated **everything**™, and complex roguelike mechanics.
 
 Current progress to a completed game: 1%
 
