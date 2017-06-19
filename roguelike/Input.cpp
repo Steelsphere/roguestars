@@ -9,10 +9,101 @@ Actor* Input::_reciever;
 Input::MODE Input::_mode = NORMAL;
 TCOD_key_t Input::_lastkey;
 
+
 void Input::input(TCOD_key_t key) {
 	if (key.pressed) {
+		std::vector<Actor*> actors;
 		switch (_mode) {
 
+		case ESC:
+			switch (key.vk) {
+			case TCODK_ESCAPE:
+				if (GameEvent::get_last_event() == GameEvent::NEW_ESC_MENU) {
+					GameEvent::set_event(GameEvent::DELETE_ESC_MENU);
+					_mode = NORMAL;
+					break;
+				}
+				break;
+			}
+			break;
+		
+		case ENTER_TO_CONTINUE:
+			switch (key.vk) {
+			case TCODK_ENTER:
+				_mode = NORMAL;
+				break;
+			}
+			break;
+			
+		case CLOSE:
+			switch (key.vk) {
+			case TCODK_KP8:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1] - 1, 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP7:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0] - 1, _reciever->get_world_pos()[1] - 1, 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP9:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0] + 1, _reciever->get_world_pos()[1] - 1, 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP4:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0] - 1, _reciever->get_world_pos()[1], 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP6:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0] + 1, _reciever->get_world_pos()[1], 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP1:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0] - 1, _reciever->get_world_pos()[1] + 1, 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP2:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1] + 1, 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			case TCODK_KP3:
+				actors = Actor::get_actors(_reciever->get_world_pos()[0] + 1, _reciever->get_world_pos()[1] + 1, 0);
+				for (Actor* a : actors) {
+					a->on_keypress_c();
+
+				}
+				_mode = NORMAL;
+				break;
+			}
+			break;
+		
 		case NORMAL:
 			switch (key.vk) {
 				// Movement
@@ -59,7 +150,7 @@ void Input::input(TCOD_key_t key) {
 				GameEvent::set_event(GameEvent::NEW_INFO_VIEWER);
 				GameEvent::lock_event();
 				break;
-			
+
 			case TCODK_PAGEDOWN:
 				if (GameObjects::player_controlled) {
 					Actor::get_actor(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1], 0)->on_pg_down();
@@ -69,27 +160,22 @@ void Input::input(TCOD_key_t key) {
 			case TCODK_PAGEUP:
 				GameEvent::set_event(GameEvent::NEW_WORLD_MAP);
 				break;
-			
+
 			case TCODK_HOME:
 				GameEvent::set_event(GameEvent::ENTER_SPACESHIP);
 				break;
-			}
 
-		case ESC:
-			switch (key.vk) {
 			case TCODK_ESCAPE:
-				if (GameEvent::get_last_event() == GameEvent::NEW_ESC_MENU) {
-					GameEvent::set_event(GameEvent::DELETE_ESC_MENU);
-					_mode = NORMAL;
-					break;
-				}
+				_mode = ESC;
 				GameEvent::set_event(GameEvent::NEW_ESC_MENU);
 				break;
-			}
-		case ENTER_TO_CONTINUE:
-			switch (key.vk) {
-			case TCODK_ENTER:
-				_mode = NORMAL;
+
+			case TCODK_CHAR:
+				switch (key.c) {
+				case 'c':
+					_mode = CLOSE;
+					break;
+				}
 				break;
 			}
 			break;

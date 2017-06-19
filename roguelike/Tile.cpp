@@ -2,6 +2,7 @@
 #include "Random.h"
 #include "GameEvent.h"
 #include "Level.h"
+#include "GameObjects.h"
 
 #include <iostream>
 
@@ -366,4 +367,52 @@ Biome::Biome(int x, int y, int z, int type) : Actor(x, y, z) {
 
 void Biome::on_pg_down() {
 	GameEvent::set_event(GameEvent::ENTER_WORLD_TILE);
+}
+
+Door::Door(int x, int y, int z, int type) : Actor(x, y, z) {
+	switch (type) {
+	case WOOD:
+		_c = '\\';
+		_fcolor = TCODColor::sepia;
+		_bcolor = TCODColor::black;
+		_name = "Wood Door";
+		_transparent = false;
+		_impassable = true;
+		break;
+	case STEEL:
+		_c = '\\';
+		_fcolor = TCODColor::grey;
+		_bcolor = TCODColor::black;
+		_name = "Steel Door";
+		_transparent = false;
+		_impassable = true;
+		break;
+	}
+}
+
+void Door::on_collide() {
+	if (!_isopen) {
+		_c = '.';
+		_transparent = true;
+		_impassable = false;
+		_isopen = true;
+		GameObjects::update = true;
+	}
+}
+
+void Door::on_keypress_c() {
+	if (_isopen) {
+		_c = '\\';
+		_transparent = false;
+		_impassable = true;
+		_isopen = false;
+		GameObjects::update = true;
+	}
+	else {
+		_c = '.';
+		_transparent = true;
+		_impassable = false;
+		_isopen = true;
+		GameObjects::update = true;
+	}
 }

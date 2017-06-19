@@ -72,3 +72,18 @@ public:
 
 	virtual void on_pg_down() override;
 };
+
+class Door : public Actor {
+public:
+	enum DOOR_TYPE {
+		WOOD,
+		STEEL,
+	};
+	
+	Door(int x, int y, int z, int type);
+
+	virtual void on_collide() override;
+	virtual void on_keypress_c() override;
+private:
+	bool _isopen = false;
+};

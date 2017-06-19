@@ -71,7 +71,9 @@ public:
 	friend bool operator== (const Actor &a1, const Actor &a2);
 	friend bool operator!= (const Actor &a1, const Actor &a2);
 
+	virtual void on_collide() {}
 	virtual void on_pg_down() {}
+	virtual void on_keypress_c() {}
 
 protected:
 	int _screen_x, _screen_y, _screen_z;

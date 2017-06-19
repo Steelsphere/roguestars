@@ -135,8 +135,10 @@ void Actor::move(const std::string& dir) {
 	int ym = GameObjects::map_dir.at(dir).second;
 
 	std::vector<Actor*> checkvec = Actor::get_actors(_screen_x + xm, _screen_y + ym, _screen_z);
+	
 	for (int i = 0; i < checkvec.size(); i++) {
 		if (checkvec[i]->is_impassable()) {
+			checkvec[i]->on_collide();
 			return;
 		}
 	}

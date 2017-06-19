@@ -19,7 +19,7 @@ Game::~Game()
 void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
-//	TCODSystem::setFps(1000);
+	TCODSystem::setFps(60);
 }
 
 void Game::start() {
@@ -123,7 +123,6 @@ void Game::exit_game() {
 //	if (_CrtDumpMemoryLeaks()) {
 //		std::cout << "Memory leak found!\n";
 //	}
-	destroy_garbage();
 	exit(0);
 }
 

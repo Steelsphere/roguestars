@@ -14,7 +14,7 @@ Structure::Structure(int x, int y, S_TYPE type) {
 			"WdddddddW\n"
 			"WdddddddW\n"
 			"WdddddddW\n"
-			"ddddddddW\n"
+			"!WdddddddW\n"
 			"WdddddddW\n"
 			"WdddddddW\n"
 			"WdddddddW\n"
@@ -28,7 +28,7 @@ Structure::Structure(int x, int y, S_TYPE type) {
 			"SsssS\n"
 			"SsssS\n"
 			"SsssS\n"
-			"SSsSS\n";
+			"SS!SSS\n";
 		w = 5;
 		h = 4;
 	}
@@ -41,6 +41,19 @@ Structure::Structure(int x, int y, S_TYPE type) {
 		}
 		else {
 			switch (s[i]) {
+			case '!':
+				switch (s[i + 1]) {
+				case 'W':
+				case 'w':
+					new Door(x + xs, y + ys, 0, Door::WOOD);
+					break;
+				case 'S':
+				case 's':
+					new Door(x + xs, y + ys, 0, Door::STEEL);
+					break;
+				}
+				i++;
+				break;
 			case 'W':
 				new Tile(x + xs, y + ys, 0, Tile::WOOD);
 				break;

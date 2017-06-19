@@ -28,6 +28,7 @@ void Player::move(const std::string& dir) {
 
 	for (int i = 0; i < checkvec.size(); i++) {
 		if (checkvec[i]->is_impassable()) {
+			checkvec[i]->on_collide();
 			return;
 		}
 	}

@@ -15,6 +15,7 @@ public:
 		ESC,
 		ENTER_TO_CONTINUE,
 		INFO_VIEWER,
+		CLOSE,
 	};
 	
 	static void input(TCOD_key_t key);
