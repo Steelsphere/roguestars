@@ -4,7 +4,9 @@ Current progress to a completed game: 1%
 
 Current version: 0
 
-This project was born on: 4/10/2017
+This project was born on: 4/20/2017
+
+If you would like to contribute, pm this guy on reddit ---> https://www.reddit.com/user/pepperonion
 
 ![pic](devpics/World.png)
 
