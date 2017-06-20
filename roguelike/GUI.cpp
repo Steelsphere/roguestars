@@ -205,7 +205,16 @@ void MainMenu::front() {
 	_text.clear();
 	_mtext.clear();
 
-	Text title = { (_width / 2) - 5, 10, 20, 1, "Rogue Stars", TCODColor::red };
+	Text title = { (_width / 2) - 50, 5, 100, 50, 
+		"`#######                                                `#####    `##\n"
+		"`##    `##                                            `##    `##  `##\n"
+		"`##    `##     `##       `##   `##  `##  `###          `##      `######   `###     `### `####\n"
+		"`##`##       `##  `##  `##  `##`##  `## `#  `##          `##      `##   `##  `##  `##   `##\n"
+		"`##  `##    `##    `##`##   `##`##  `##`##### `#            `##   `##  `##   `##  `##     `###\n"
+		"`##    `##   `##  `##  `##  `##`##  `##`#             `##    `##  `##  `##   `##  `##       `##\n"
+		"`##      `##   `##         `##   `##`## `#####          `#####     `##   `## `###`###   `## `##\n"
+		"`##                       `##                                                             `##\n",
+		TCODColor::red };
 	_text.push_back(title);
 
 	Text pic = { (_width / 2) - 5, 14, 20, 15,
@@ -238,7 +247,7 @@ void MainMenu::draw(bool force) {
 	_update = true;
 	SelectionBox::draw(force);
 	if (TCODSystem::getFps() != 0) {
-		if (GameObjects::ticks % 1000 == 0 && _state == FRONT) {
+		if (GameObjects::ticks % 60 == 0 && _state == FRONT) {
 			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
 		}
 	}
