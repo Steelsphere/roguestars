@@ -130,6 +130,11 @@ void Game::update() {
 	if (GameObjects::new_turn && GameObjects::player_controlled) {
 		update_characters();
 		_turn++;
+		
+		if (_log != nullptr) {
+			_log->message(std::to_string(_turn), TCODColor::white);
+		}
+		
 		GameObjects::new_turn = false;
 	}
 	
@@ -181,10 +186,6 @@ void Game::update() {
 	
 	_num_updates++;
 	
-	if (_log != nullptr) {
-		_log->message(std::to_string(_num_updates), TCODColor::white);
-	}
-	
 	update_gui(true);
 
 	GameObjects::update = false;
@@ -205,8 +206,8 @@ void Game::update_gui(bool all) {
 }
 
 void Game::update_characters() {
-	std::vector<Character*> b = Character::get_chbuff();
-	for (Character* c : b) {
+	std::vector<Character*>* b = Character::get_chbuff();
+	for (Character* c : (*b)) {
 		c->update();
 		_level->update_tile(c->get_world_pos()[0], c->get_world_pos()[1], 0);
 	}
@@ -293,6 +294,8 @@ void Game::destroy_info_viewer() {
 }
 
 void Game::new_world() {
+	loading_screen();
+	
 	delete _level;
 	_world = new World(1024);
 	_world->generate_world();
@@ -301,12 +304,11 @@ void Game::new_world() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	
-	new Monster(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
-	
-	_level->update_tile(_player->get_screen_pos()[0]-1, _player->get_screen_pos()[1]-1, 0);
+	new Monster(_player->get_screen_pos()[0]-10, _player->get_screen_pos()[1]-10, 0);
 	
 	level_setup();
-	_lightsystem.set_global_lighting(_level, 10, 10, 0);
+	_lightsystem.set_global_lighting(_level, 15, 15, 0);
+	
 	GameObjects::update = true;
 }
 
@@ -345,6 +347,8 @@ void Game::new_galaxy() {
 }
 
 void Game::new_world_map() {
+	loading_screen();
+
 	if (_world != nullptr && _level != nullptr) {
 		delete _level;
 		_level = _world->generate_world_map();
@@ -354,17 +358,24 @@ void Game::new_world_map() {
 		level_setup();
 		_camera->update();
 	}
+	
 	GameObjects::update = true;
 }
 
 void Game::enter_world_tile() {
+	loading_screen();
+
 	delete _level;
 	_world->new_level(_player->get_world_pos()[0], _player->get_world_pos()[1]);
 	_level = _world->get_current_level();
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
+	
+	new Monster(_player->get_screen_pos()[0] - 10, _player->get_screen_pos()[1] - 10, 0);
+
 	level_setup();
-	_lightsystem.set_global_lighting(_level, 10, 10, 0);
+	_lightsystem.set_global_lighting(_level, 15, 15, 0);
+	
 	GameObjects::update = true;
 }
 
@@ -393,4 +404,11 @@ void Game::enter_spaceship() {
 	else {
 		_level = _spaceship;
 	}
+}
+
+void Game::loading_screen() {
+	Message_Box* mb = new Message_Box("Loading...", true);
+	update();
+	TCODConsole::flush();
+	delete mb;
 }

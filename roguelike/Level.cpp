@@ -19,7 +19,7 @@ Level::~Level() {
 		delete _actors[i];
 	}
 	delete _fovmap;
-	Character::get_chbuff().clear();
+	(*Character::get_chbuff()).clear();
 	Actor::set_buffer(nullptr);
 	Actor::set_map(nullptr);
 }

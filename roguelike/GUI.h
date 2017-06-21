@@ -46,7 +46,7 @@ private:
 
 class Message_Box : public GUI {
 public:
-	Message_Box(std::string text);
+	Message_Box(std::string text, bool nocontinue = false);
 
 	virtual void draw(bool force = false) override;
 };

@@ -9,7 +9,12 @@ public:
 	Character(int x, int y, int z, char c, TCODColor color, const std::string& name = "Character", bool notinbuf = false);
 	~Character();
 
-	static std::vector<Character*> get_chbuff() { return _chbuf; }
+	static std::vector<Character*>* get_chbuff() { return &_chbuf; }
+
+	int get_selftime() { return _selftime; }
+	void set_selftime(int s) { _selftime = s; }
+
+	int get_speed() { return _speed; }
 
 	virtual void update();
 

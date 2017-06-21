@@ -8,6 +8,7 @@ Player::Player() {
 Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, z, c, fcolor, "Player", true)
 {
 	GameObjects::player_controlled = true;
+	_speed = 1000;
 }
 
 
@@ -40,8 +41,14 @@ void Player::move(const std::string& dir) {
 		_info->draw();
 	}
 	
+	std::vector<Character*>* ch = Character::get_chbuff();
+	for (Character* c : (*ch)) {
+		c->set_selftime(_playertime / c->get_speed());
+	}
+	
 	_playertime = _speed;
 	GameObjects::update = true;
+	GameObjects::new_turn = true;
 }
 
 void Player::spawn_player_in_world() {

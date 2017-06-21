@@ -75,6 +75,8 @@ private:
 	void update_characters();
 
 	void level_setup();
+
+	void loading_screen();
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
 	TCOD_key_t _key;
