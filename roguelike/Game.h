@@ -61,6 +61,10 @@ public:
 
 	void enter_spaceship();
 
+	void open_inventory();
+
+	void close_inventory();
+
 private:
 	void game_loop();
 
@@ -102,4 +106,5 @@ private:
 	MainMenu* _MainMenu = nullptr;
 	ESCMenu* _ESCMenu = nullptr;
 	InfoViewer* _info_viewer = nullptr;
+	InventoryPanel* _inv_panel = nullptr;
 };

@@ -2,6 +2,7 @@
 
 #include "GameEvent.h"
 #include "Actor.h"
+#include "Character.h"
 
 #include <string>
 #include <libtcod\libtcod.hpp>
@@ -115,4 +116,9 @@ public:
 
 protected:
 	Actor* _actor;
+};
+
+class InventoryPanel : public SelectionBox {
+public:
+	InventoryPanel(Character* c);
 };

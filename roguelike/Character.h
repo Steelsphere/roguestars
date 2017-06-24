@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "Item.h"
 
 class Character : public Actor {
 public:
@@ -16,6 +17,9 @@ public:
 
 	int get_speed() { return _speed; }
 
+	std::vector<Item*>* get_inventory() { return &_inventory; }
+	void add_to_inventory(Item* i);
+
 	virtual void update();
 
 	virtual void move(const std::string& dir);
@@ -27,6 +31,7 @@ protected:
 	int _speed;
 	int _selftime;
 	bool _action_available;
+	std::vector<Item*> _inventory;
 	
 private:
 	static std::vector<Character*> _chbuf;

@@ -104,6 +104,24 @@ void Input::input(TCOD_key_t key) {
 			}
 			break;
 		
+		case INVENTORY_PANEL:
+			switch (key.vk) {
+			case TCODK_ESCAPE:
+				GameEvent::unlock_event();
+				GameEvent::set_event(GameEvent::CLOSE_INVENTORY);
+				_mode = NORMAL;
+				break;
+			case TCODK_CHAR:
+				switch (key.c) {
+				case 'i':
+					GameEvent::unlock_event();
+					GameEvent::set_event(GameEvent::CLOSE_INVENTORY);
+					_mode = NORMAL;
+					break;
+				}
+			}
+			break;
+
 		case NORMAL:
 			switch (key.vk) {
 				// Movement
@@ -174,6 +192,11 @@ void Input::input(TCOD_key_t key) {
 				switch (key.c) {
 				case 'c':
 					_mode = CLOSE;
+					break;
+				case 'i':
+					GameEvent::set_event(GameEvent::OPEN_INVENTORY);
+					GameEvent::lock_event();
+					_mode = INVENTORY_PANEL;
 					break;
 				}
 				break;

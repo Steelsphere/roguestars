@@ -42,6 +42,11 @@ void Character::move(const std::string& dir) {
 	Actor::move(dir);
 }
 
+void Character::add_to_inventory(Item* i) {
+	i->set_in_inventory(true);
+	_inventory.push_back(i);
+}
+
 Monster::Monster(int x, int y, int z) : Character(x, y, z) {
 	_c = 'M';
 	_fcolor = TCODColor::brass;

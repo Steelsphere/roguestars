@@ -43,7 +43,6 @@ void GUI::draw(bool force) {
 			_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
 			_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 		}
-		_cons->flush();
 		TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 		_update = false;
 	}
@@ -136,12 +135,12 @@ SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) :
 void SelectionBox::draw(bool force) {
 	
 	if (_update || force) {
+		GUI::draw(force);
 		for (int i = 0; i < _mtext.size(); i++) {
 			_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
 			_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 		}
-
-		GUI::draw(force);
+		TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 	}
 	
 	if (Input::get_last_key().vk == TCODK_DOWN && Input::get_last_key().pressed) {
@@ -319,4 +318,25 @@ void InfoViewer::draw(bool force) {
 			_text[i].str = "";
 		}
 	}
+}
+
+InventoryPanel::InventoryPanel(Character* c) : SelectionBox(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
+	Text title = { (GameObjects::screen_width - 31) - c->get_name().length() - 10, 0, 30, 1, c->get_name() + " Inventory", TCODColor::red };
+	_text.push_back(title);
+
+	std::vector<Item*>* inv = c->get_inventory();
+	
+	int ypos = 2;
+	for (Item* i : (*inv)) {
+		MText item = { 3, ypos, 10, 1, i->get_name(), TCODColor::white };
+		_mtext.push_back(item);
+		ypos++;
+		std::cout << _mtext.size() << " " << i->get_name() << std::endl;
+	}
+	
+	_mtext[0].selected = true;
+	set_selector();
+	
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0.9;
 }

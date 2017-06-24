@@ -56,6 +56,10 @@ Item::Item(int x, int y, int z, Item::ITEM_TYPE type) : Actor(x, y, z) {
 }
 
 
-Item::~Item() {
+Item::~Item() {}
 
+void Item::draw() {
+	if (!_is_in_inv) {
+		Actor::draw();
+	}
 }

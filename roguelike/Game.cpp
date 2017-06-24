@@ -19,7 +19,7 @@ Game::~Game()
 void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
-	TCODSystem::setFps(60);
+	TCODSystem::setFps(180);
 }
 
 void Game::start() {
@@ -57,7 +57,7 @@ void Game::game_loop() {
 		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
 		GameObjects::time += 0.01f;
 		GameObjects::ticks++;
-	
+
 	}
 }
 
@@ -108,6 +108,12 @@ void Game::game_event() {
 		break;
 	case GameEvent::ENTER_SPACESHIP:
 		enter_spaceship();
+		break;
+	case GameEvent::OPEN_INVENTORY:
+		open_inventory();
+		break;
+	case GameEvent::CLOSE_INVENTORY:
+		close_inventory();
 		break;
 	case GameEvent::EXIT:
 		exit_game();
@@ -342,6 +348,12 @@ void Game::new_galaxy() {
 	_level->generate_level(1024, Level::GALAXY);
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_galaxy();
+	
+	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
+	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
+	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
+	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
+
 	level_setup();
 	GameObjects::update = true;
 }
@@ -411,4 +423,13 @@ void Game::loading_screen() {
 	update();
 	TCODConsole::flush();
 	delete mb;
+}
+
+void Game::open_inventory() {
+	_inv_panel = new InventoryPanel(_player);
+}
+
+void Game::close_inventory() {
+	delete _inv_panel;
+	_inv_panel = nullptr;
 }
