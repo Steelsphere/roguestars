@@ -29,6 +29,7 @@ public:
 
 	void get_color(float* h, float* s, float* v);
 	TCODColor get_color_obj() { return _fcolor; }
+	TCODColor get_bcolor_obj() { return _bcolor; }
 	
 	void set_color(int r, int g, int b) { _fcolor = TCODColor(r, g, b); }
 	void set_color_obj(TCODColor color) { _fcolor = color; }
@@ -46,6 +47,8 @@ public:
 	void set_name(const std::string& name) { _name = name; }
 
 	std::map<std::string, Actor*> get_adjacent_actors();
+	std::vector<Actor*> get_adjacent_actors_vec();
+	
 	virtual void move(const std::string& dir);
 	
 	static void set_buffer(std::vector<Actor*>* buffer) { _buffer = buffer; }

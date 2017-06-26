@@ -118,6 +118,12 @@ void Game::game_event() {
 	case GameEvent::UPWARDS:
 		upwards();
 		break;
+	case GameEvent::HIGHLIGHT_PLAYER:
+		highlight_player();
+		break;
+	case GameEvent::DEHIGHLIGHT_PLAYER:
+		dehighlight_player();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -330,6 +336,7 @@ void Game::new_solar_system() {
 	_player->spawn_player_in_world();
 	
 	level_setup();
+
 	GameObjects::update = true;
 }
 
@@ -373,6 +380,7 @@ void Game::new_world_map() {
 	
 	loading_screen();
 
+	_lightsystem.clear_cache();
 	if (_world != nullptr && _level != nullptr) {
 		delete _level;
 		_level = _world->generate_world_map();
@@ -507,5 +515,19 @@ void Game::to_solar_system() {
 
 	level_setup();
 
+	GameObjects::update = true;
+}
+
+void Game::highlight_player() {
+	for (Actor* a : _player->get_adjacent_actors_vec()) {
+		_lightsystem.set_light(a, TCODColor(30, 30, 30));
+	}
+	GameObjects::update = true;
+}
+
+void Game::dehighlight_player() {
+	for (Actor* a : _player->get_adjacent_actors_vec()) {
+		_lightsystem.remove_light(a);
+	}
 	GameObjects::update = true;
 }

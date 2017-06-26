@@ -73,6 +73,10 @@ public:
 
 	void to_solar_system();
 
+	void highlight_player();
+
+	void dehighlight_player();
+
 private:
 	void game_loop();
 

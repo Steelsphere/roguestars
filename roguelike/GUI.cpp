@@ -203,6 +203,16 @@ void SelectionBox::set_selector() {
 	}
 }
 
+SelectionBoxEx::SelectionBoxEx(int x, int y, int w, int h) : SelectionBox(x, y, w, h, std::vector<Text>()) {}
+
+void SelectionBoxEx::update_mtext() {
+	for (int i = 0; i < _mtext.size(); i++) {
+		_mtext[i].str.insert(0, 1, alphabet[i]);
+		_mtext[i].str.insert(1, " - ");
+		std::cout << _mtext[i].str << std::endl;
+	}
+}
+
 MainMenu::MainMenu() : SelectionBox(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
 	front();
 }
@@ -320,7 +330,7 @@ void InfoViewer::draw(bool force) {
 	}
 }
 
-InventoryPanel::InventoryPanel(Character* c) : SelectionBox(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
+InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height) {
 	Text title = { (GameObjects::screen_width - 31) - c->get_name().length() - 10, 0, 30, 1, c->get_name() + " Inventory", TCODColor::red };
 	_text.push_back(title);
 
@@ -328,7 +338,7 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBox(0, 0, GameObjects::s
 	
 	int ypos = 2;
 	for (Item* i : (*inv)) {
-		MText item = { 3, ypos, 10, 1, i->get_name(), TCODColor::white };
+		MText item = { 3, ypos, 50, 1, i->get_name(), TCODColor::white };
 		_mtext.push_back(item);
 		ypos++;
 		std::cout << _mtext.size() << " " << i->get_name() << std::endl;
@@ -336,7 +346,8 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBox(0, 0, GameObjects::s
 	
 	_mtext[0].selected = true;
 	set_selector();
-	
+	update_mtext();
+
 	_type = FILLED_BORDERED_BACKGROUND;
 	_transparency = 0.9;
 }

@@ -119,15 +119,29 @@ std::vector<Actor*> Actor::get_actors(int x, int y, int z) {
 
 std::map<std::string, Actor*> Actor::get_adjacent_actors() {
 	std::map<std::string, Actor*> m;
-	m["topleft"] = get_actor(_screen_x - 1, _screen_y - 1, _screen_z);
-	m["top"] = get_actor(_screen_x, _screen_y - 1, _screen_z);
-	m["topright"] = get_actor(_screen_x + 1, _screen_y - 1, _screen_z);
-	m["left"] = get_actor(_screen_x - 1, _screen_y, _screen_z);
-	m["right"] = get_actor(_screen_x + 1, _screen_y, _screen_z);
-	m["bottomleft"] = get_actor(_screen_x - 1, _screen_y + 1, _screen_z);
-	m["bottom"] = get_actor(_screen_x, _screen_y + 1, _screen_z);
-	m["bottomright"] = get_actor(_screen_x + 1, _screen_y + 1, _screen_z);
+	m["topleft"] = get_actor(_world_x - 1, _world_y - 1, _world_z);
+	m["top"] = get_actor(_world_x, _world_y - 1, _world_z);
+	m["topright"] = get_actor(_world_x + 1, _world_y - 1, _world_z);
+	m["left"] = get_actor(_world_x - 1, _world_y, _world_z);
+	m["right"] = get_actor(_world_x + 1, _world_y, _world_z);
+	m["bottomleft"] = get_actor(_world_x - 1, _world_y + 1, _world_z);
+	m["bottom"] = get_actor(_world_x, _world_y + 1, _world_z);
+	m["bottomright"] = get_actor(_world_x + 1, _world_y + 1, _world_z);
 	return m;
+}
+
+std::vector<Actor*> Actor::get_adjacent_actors_vec() {
+	std::vector<Actor*> v;
+	v.resize(8);
+	v[0] = get_actor(_world_x - 1, _world_y - 1, _world_z);
+	v[1] = get_actor(_world_x, _world_y - 1, _world_z);
+	v[2] = get_actor(_world_x + 1, _world_y - 1, _world_z);
+	v[3] = get_actor(_world_x - 1, _world_y, _world_z);
+	v[4] = get_actor(_world_x + 1, _world_y, _world_z);
+	v[5] = get_actor(_world_x - 1, _world_y + 1, _world_z);
+	v[6] = get_actor(_world_x, _world_y + 1, _world_z);
+	v[7] = get_actor(_world_x + 1, _world_y + 1, _world_z);
+	return v;
 }
 
 void Actor::move(const std::string& dir) {

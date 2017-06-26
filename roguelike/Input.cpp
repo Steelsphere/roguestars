@@ -43,6 +43,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP7:
@@ -51,6 +52,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP9:
@@ -59,6 +61,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP4:
@@ -67,6 +70,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP6:
@@ -75,6 +79,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP1:
@@ -83,6 +88,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP2:
@@ -91,6 +97,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			case TCODK_KP3:
@@ -99,6 +106,7 @@ void Input::input(TCOD_key_t key) {
 					a->on_keypress_c();
 
 				}
+				GameEvent::set_event(GameEvent::DEHIGHLIGHT_PLAYER);
 				_mode = NORMAL;
 				break;
 			}
@@ -192,6 +200,7 @@ void Input::input(TCOD_key_t key) {
 				switch (key.c) {
 				case 'c':
 					_mode = CLOSE;
+					GameEvent::set_event(GameEvent::HIGHLIGHT_PLAYER);
 					break;
 				case 'i':
 					GameEvent::set_event(GameEvent::OPEN_INVENTORY);

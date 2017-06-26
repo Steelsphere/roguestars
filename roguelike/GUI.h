@@ -87,6 +87,15 @@ protected:
 	std::vector<MText> _mtext;
 };
 
+class SelectionBoxEx : public SelectionBox {
+public:
+	const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	
+	SelectionBoxEx(int x, int y, int w, int h);
+
+	void update_mtext();
+};
+
 class MainMenu : public SelectionBox {
 public:
 	enum STATE {
@@ -118,7 +127,7 @@ protected:
 	Actor* _actor;
 };
 
-class InventoryPanel : public SelectionBox {
+class InventoryPanel : public SelectionBoxEx {
 public:
 	InventoryPanel(Character* c);
 };
