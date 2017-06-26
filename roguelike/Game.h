@@ -65,6 +65,14 @@ public:
 
 	void close_inventory();
 
+	void upwards();
+
+	void to_galaxy();
+
+	void to_star_sector();
+
+	void to_solar_system();
+
 private:
 	void game_loop();
 
@@ -83,6 +91,7 @@ private:
 	void loading_screen();
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
+	
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
 	TCOD_event_t _event;
@@ -91,6 +100,9 @@ private:
 	Level* _level = nullptr;
 	Camera* _camera = nullptr;
 	World* _world = nullptr;
+	Level* _galaxy = nullptr;
+	Level* _star_sector = nullptr;
+	Level* _solar_system = nullptr;
 	
 	// Player stuff
 	Player* _player = nullptr;

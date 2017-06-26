@@ -19,6 +19,7 @@ public:
 		ENTER_SPACESHIP,
 		OPEN_INVENTORY,
 		CLOSE_INVENTORY,
+		UPWARDS,
 		EXIT,
 	};
 	enum class GAME_STATUS {

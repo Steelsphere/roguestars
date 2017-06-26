@@ -176,7 +176,7 @@ void Input::input(TCOD_key_t key) {
 				break;
 
 			case TCODK_PAGEUP:
-				GameEvent::set_event(GameEvent::NEW_WORLD_MAP);
+				GameEvent::set_event(GameEvent::UPWARDS);
 				break;
 
 			case TCODK_HOME:

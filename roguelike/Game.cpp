@@ -115,6 +115,9 @@ void Game::game_event() {
 	case GameEvent::CLOSE_INVENTORY:
 		close_inventory();
 		break;
+	case GameEvent::UPWARDS:
+		upwards();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -302,7 +305,6 @@ void Game::destroy_info_viewer() {
 void Game::new_world() {
 	loading_screen();
 	
-	delete _level;
 	_world = new World(1024);
 	_world->generate_world();
 	_level = _world->get_current_level();
@@ -319,11 +321,10 @@ void Game::new_world() {
 }
 
 void Game::new_solar_system() {
-	delete _level;
-	_level = new Level;
-	_level->generate_level(256, Level::SOLAR_SYSTEM);
+	_solar_system = new Level;
+	_solar_system->generate_level(256, Level::SOLAR_SYSTEM);
 	
-	new Structure(20, 20, Structure::TINY_SPACESHIP);
+	_level = _solar_system;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -333,22 +334,29 @@ void Game::new_solar_system() {
 }
 
 void Game::new_star_sector() {
-	delete _level;
-	_level = new Level;
-	_level->generate_level(512, Level::STAR_SECTOR);
+	_star_sector = new Level;
+	_star_sector->generate_level(512, Level::STAR_SECTOR);
+	
+	_level = _star_sector;
+
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
+	
 	level_setup();
 	GameObjects::update = true;
 }
 
 void Game::new_galaxy() {
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
-	_level = new Level;
-	_level->generate_level(1024, Level::GALAXY);
+	
+	_galaxy = new Level;
+	_galaxy->generate_level(1024, Level::GALAXY);
+	
+	_level = _galaxy;
+	
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_galaxy();
-	
+
 	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
 	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
 	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
@@ -359,6 +367,10 @@ void Game::new_galaxy() {
 }
 
 void Game::new_world_map() {
+	if (_level->get_type() == Level::WORLD_MAP) {
+		return;
+	}
+	
 	loading_screen();
 
 	if (_world != nullptr && _level != nullptr) {
@@ -392,6 +404,7 @@ void Game::enter_world_tile() {
 }
 
 void Game::level_setup() {
+	delete _camera;
 	AI::setup(_player);
 	Input::set_input_reciever(_player);
 	Input::set_mode(Input::NORMAL);
@@ -432,4 +445,67 @@ void Game::open_inventory() {
 void Game::close_inventory() {
 	delete _inv_panel;
 	_inv_panel = nullptr;
+}
+
+void Game::upwards() {
+	if (_level->get_type() == Level::GALAXY) {
+		return;
+	}
+	else if (_level->get_type() == Level::STAR_SECTOR) {
+		to_galaxy();
+	}
+	else if (_level->get_type() == Level::SOLAR_SYSTEM) {
+		to_star_sector();
+	}
+	else if (_level->get_type() == Level::WORLD_MAP) {
+		to_solar_system();
+	}
+	else if (_level->get_type() != Level::SPACE) {
+		new_world_map();
+	}
+}
+
+void Game::to_galaxy() {
+	_level = _galaxy;
+	
+	Actor::set_buffer(_level->get_actors());
+	Actor::set_map(_level->get_actor_map());
+	
+	_level->update();
+	
+	_player = static_cast<Player*>(GameObjects::find_player());
+		
+	level_setup();
+
+	GameObjects::update = true;
+}
+
+void Game::to_star_sector() {
+	_level = _star_sector;
+	
+	Actor::set_buffer(_level->get_actors());
+	Actor::set_map(_level->get_actor_map());
+
+	_level->update();
+	
+	_player = static_cast<Player*>(GameObjects::find_player());
+
+	level_setup();
+
+	GameObjects::update = true;
+}
+
+void Game::to_solar_system() {
+	_level = _solar_system;
+	
+	Actor::set_buffer(_level->get_actors());
+	Actor::set_map(_level->get_actor_map());
+
+	_level->update();
+	
+	_player = static_cast<Player*>(GameObjects::find_player());
+
+	level_setup();
+
+	GameObjects::update = true;
 }

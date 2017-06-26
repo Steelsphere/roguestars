@@ -23,6 +23,7 @@ public:
 		DESERT,
 		SNOWY_TAIGA,
 		OCEAN,
+		WORLD_MAP
 	};
 	
 	enum GENERATION_FLAG {
@@ -71,10 +72,14 @@ public:
 	int get_size() { return _width + _height; }
 
 	static Level* load_level_file(const std::string path);
+
+	LEVEL_TYPE get_type() { return _type; }
+
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;
 	std::vector<std::vector<std::vector<Actor*>>> _map;
 	static TCODMap* _fovmap;
 	FastNoise _noise;
+	LEVEL_TYPE _type;
 };

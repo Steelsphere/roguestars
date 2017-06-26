@@ -36,6 +36,8 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 
 	_map.resize(_height);
 
+	_type = type;
+
 	for (int i = 0; i < _map.size(); i++) {
 		_map[i].resize(_width);
 	}

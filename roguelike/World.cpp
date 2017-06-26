@@ -29,7 +29,8 @@ void World::generate_world() {
 	_biome_n.SetSeed(Random::random(Random::generator));
 	_biome_n.SetNoiseType(FastNoise::Cellular);
 	_biome_n.SetFrequency(0.03f);
-	
+	_biome_n.SetCellularDistanceFunction(FastNoise::CellularDistanceFunction::Natural);
+
 	generate_temperature();
 	generate_terrain();
 	generate_biome_map();
@@ -180,7 +181,7 @@ void World::save_biome_map(std::string path) {
 
 Level* World::generate_world_map() {
 	Level* level = new Level;
-	level->generate_level(_width + _height, Level::NONE);
+	level->generate_level(_width + _height, Level::WORLD_MAP);
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			new Biome(x, y, 0, _world[x][y].biome);

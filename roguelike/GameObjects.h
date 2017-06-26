@@ -28,5 +28,13 @@ public:
 	static Actor* create_actor_instance() { return new T; }
 	
 	static std::map<std::string, Actor*(*)()> type_map;
+
+	static Actor* find_player() {
+		for (Actor* i : (*Actor::get_buffer())) {
+			if (i->get_name() == "Player") {
+				return i;
+			}
+		}
+	}
 };
 
