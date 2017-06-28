@@ -22,6 +22,7 @@ public:
 		UPWARDS,
 		HIGHLIGHT_PLAYER,
 		DEHIGHLIGHT_PLAYER,
+		SAVE_SCREEN,
 		EXIT,
 	};
 	enum class GAME_STATUS {

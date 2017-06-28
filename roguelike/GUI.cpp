@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <cstring>
 #include <cmath>
+#include <iostream>
+#include <filesystem>
+
 
 std::vector<GUI*> GUI::_buffer;
 
@@ -250,7 +253,7 @@ void MainMenu::front() {
 	_text.push_back(pic);
 
 	MText n1 = { (_width / 2) - 5, 28, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
-	MText n2 = { (_width / 2) - 5, 30, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
+	MText n2 = { (_width / 2) - 5, 30, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::SAVE_SCREEN };
 	MText n3 = { (_width / 2) - 5, 32, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
 	
 	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
@@ -259,11 +262,37 @@ void MainMenu::front() {
 	Input::set_mode(Input::NONE);
 }
 
+void MainMenu::save_screen() {
+	_mtext.clear();
+	
+//	MText ng = { (_width / 2) - 5, 28, 20, 1, "New Save", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
+//	_mtext.push_back(ng);
+
+	int y = 29;
+	try {
+		for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
+			if (std::experimental::filesystem::is_directory(f.status())) {
+				MText s = { (_width / 2) - 5, y, 20, 1, f.path().string(), TCODColor::white, 0, GameEvent::STARTUP_LOAD_GAME };
+				_mtext.push_back(s);
+				y++;
+			}
+			std::cout << f << std::endl;
+		}
+	}
+	catch (std::experimental::filesystem::filesystem_error e) {
+		std::cerr << e.what() << std::endl;
+	}
+	set_selector();
+	Input::set_mode(Input::NONE);
+
+	_cons->clear();
+}
+
 void MainMenu::draw(bool force) {
 	_update = true;
 	SelectionBox::draw(force);
 	if (TCODSystem::getFps() != 0) {
-		if (GameObjects::ticks % 60 == 0 && _state == FRONT) {
+		if (GameObjects::ticks % 180 == 0 && _state == FRONT) {
 			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
 		}
 	}

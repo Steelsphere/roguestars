@@ -124,6 +124,9 @@ void Game::game_event() {
 	case GameEvent::DEHIGHLIGHT_PLAYER:
 		dehighlight_player();
 		break;
+	case GameEvent::SAVE_SCREEN:
+		save_screen();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -530,4 +533,8 @@ void Game::dehighlight_player() {
 		_lightsystem.remove_light(a);
 	}
 	GameObjects::update = true;
+}
+
+void Game::save_screen() {
+	_MainMenu->save_screen();
 }

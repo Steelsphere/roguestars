@@ -77,6 +77,8 @@ public:
 
 	void dehighlight_player();
 
+	void save_screen();
+
 private:
 	void game_loop();
 

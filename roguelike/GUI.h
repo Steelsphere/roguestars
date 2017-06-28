@@ -106,6 +106,8 @@ public:
 
 	void front();
 
+	void save_screen();
+
 	virtual void draw(bool force = false) override;
 
 private:
