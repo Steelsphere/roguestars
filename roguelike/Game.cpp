@@ -6,6 +6,8 @@
 #include "Character.h"
 #include "Structure.h"
 
+#include <filesystem>
+
 Game::Game() 
 	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
 {
@@ -232,6 +234,14 @@ void Game::update_characters() {
 }
 
 void Game::startup_new_game() {
+	int num = 1;
+	for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
+		num++;
+	}
+	std::string gname = "Game " + std::to_string(num);
+	std::experimental::filesystem::create_directory("Data\\Save\\" + gname);
+	_savegame_directory = "Data\\Save\\" + gname;
+
 	destroy_main_menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 	new_galaxy();

@@ -102,6 +102,8 @@ private:
 	TCOD_mouse_t _mouse;
 	TCOD_event_t _event;
 	
+	std::string _savegame_directory;
+
 	// Level stuff
 	Level* _level = nullptr;
 	Camera* _camera = nullptr;

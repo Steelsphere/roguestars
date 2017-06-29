@@ -265,6 +265,9 @@ void MainMenu::front() {
 void MainMenu::save_screen() {
 	_mtext.clear();
 	
+	MText back = { (_width / 2) - 5, 28, 20, 1, "Back", TCODColor::white, 1, GameEvent::TO_MAIN_MENU };
+	_mtext.push_back(back);
+
 //	MText ng = { (_width / 2) - 5, 28, 20, 1, "New Save", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
 //	_mtext.push_back(ng);
 
