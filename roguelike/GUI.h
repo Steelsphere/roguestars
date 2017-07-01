@@ -34,12 +34,15 @@ public:
 	static std::vector<GUI*>* get_buffer() { return &_buffer; }
 
 	virtual void position_text();
+
+	void make_transparency_work();
 protected:
 	int _x, _y, _width, _height;
 	float _transparency;
 	bool _update;
 	std::vector<Text> _text;
 	TCODConsole* _cons;
+	TCODConsole* _screencons = nullptr;
 	GUI_TYPE _type;
 private:
 	static std::vector<GUI*> _buffer;

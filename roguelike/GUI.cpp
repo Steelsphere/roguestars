@@ -8,7 +8,7 @@
 #include <cmath>
 #include <iostream>
 #include <filesystem>
-
+#include <tuple>
 
 std::vector<GUI*> GUI::_buffer;
 
@@ -55,6 +55,34 @@ void GUI::position_text() {
 	for (int i = 0; i < _text.size(); i++) {
 		_text[i].x += _x;
 		_text[i].y += _y;
+	}
+}
+
+void GUI::make_transparency_work() {
+	if (_screencons == nullptr) {
+		std::vector<std::vector<std::vector<std::tuple<char, TCODColor, TCODColor>>>> screen;
+		screen.resize(_width);
+		for (int y = 0; y < _width; y++) {
+			screen[y].resize(_height);
+		}
+
+		for (int x = _x; x < _width; x++) {
+			for (int y = _y; y < _height; y++) {
+				screen[x][y].push_back(std::make_tuple(TCODConsole::root->getChar(x, y),
+					TCODConsole::root->getCharForeground(x, y),
+					TCODConsole::root->getCharBackground(x, y)));
+			}
+		}
+		_screencons = new TCODConsole(_width, _height);
+		for (int x = 0; x < _width; x++) {
+			for (int y = 0; y < _height; y++) {
+				_screencons->putCharEx(x, y, std::get<0>(screen[x][y][0]), std::get<1>(screen[x][y][0]), std::get<2>(screen[x][y][0]));
+			}
+		}
+		TCODConsole::blit(_screencons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, 1.0f);
+	}
+	else {
+		TCODConsole::blit(_screencons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, 1.0f);
 	}
 }
 
@@ -138,10 +166,19 @@ SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) :
 void SelectionBox::draw(bool force) {
 	
 	if (_update || force) {
+		if (_transparency != 1.0f) {
+			make_transparency_work();
+		}
+		
 		GUI::draw(force);
+		
 		for (int i = 0; i < _mtext.size(); i++) {
 			_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
 			_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		}
+		
+		if (_transparency != 1.0f) {
+			make_transparency_work();
 		}
 		TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 	}
@@ -376,7 +413,10 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 		std::cout << _mtext.size() << " " << i->get_name() << std::endl;
 	}
 	
-	_mtext[0].selected = true;
+	if (_mtext.size() > 0) {
+		_mtext[0].selected = true;
+	}
+
 	set_selector();
 	update_mtext();
 
