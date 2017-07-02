@@ -24,6 +24,7 @@ _x(x), _y(y), _width(w), _height(h), _text(text), _transparency(1.0f), _update(t
 GUI::~GUI()
 {
 	delete _cons;
+	delete _screencons;
 	
 	_buffer.erase(std::remove(_buffer.begin(), _buffer.end(), this), _buffer.end());
 	
