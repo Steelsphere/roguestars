@@ -79,6 +79,10 @@ public:
 
 	void save_screen();
 
+	void load_level();
+
+	void save_level();
+
 private:
 	void game_loop();
 

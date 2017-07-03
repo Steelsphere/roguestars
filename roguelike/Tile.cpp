@@ -264,28 +264,61 @@ StarSector::StarSector(int x, int y, int z) : Actor(x, y, z) {
 	_c = '*';
 	_fcolor = TCODColor::white;
 	_bcolor = TCODColor::black;
+	id = Random::random(Random::generator);
 
 	_name = "Star Sector";
 }
 
 void StarSector::on_pg_down() {
+	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
+		GameObjects::level_id_to_load = id;
+		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+	}
+	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::NEW_STAR_SECTOR);
+}
+
+void StarSector::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(id);
+}
+
+void StarSector::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	id = zip->getInt();
 }
 
 SolarSystem::SolarSystem(int x, int y, int z) : Actor(x, y, z) {
 	_c = '*';
 	_fcolor = TCODColor::white;
 	_bcolor = TCODColor::black;
+	id = Random::random(Random::generator);
 
 	_name = "Star";
 }
 
 void SolarSystem::on_pg_down() {
+	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
+		GameObjects::level_id_to_load = id;
+		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+	}
+	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::NEW_SOLAR_SYSTEM);
+}
+
+void SolarSystem::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(id);
+}
+
+void SolarSystem::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	id = zip->getInt();
 }
 
 Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
 	_c = 15;
+	id = Random::random(Random::generator);
 
 	switch (type) {
 	case TERRA:
@@ -298,10 +331,28 @@ Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
 }
 
 void Planet::on_pg_down() {
+	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
+		GameObjects::level_id_to_load = id;
+		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+	}
+	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::NEW_WORLD);
 }
 
+void Planet::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(id);
+}
+
+void Planet::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	id = zip->getInt();
+}
+
+
 Biome::Biome(int x, int y, int z, int type) : Actor(x, y, z) {
+	id = Random::random(Random::generator);
+	
 	switch (type) {
 	case 0:
 		_c = '#';
@@ -365,7 +416,22 @@ Biome::Biome(int x, int y, int z, int type) : Actor(x, y, z) {
 	}
 }
 
+void Biome::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(id);
+}
+
+void Biome::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	id = zip->getInt();
+}
+
 void Biome::on_pg_down() {
+	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
+		GameObjects::level_id_to_load = id;
+		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+	}
+	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::ENTER_WORLD_TILE);
 }
 

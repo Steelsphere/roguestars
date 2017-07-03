@@ -28,3 +28,12 @@ int Random::randc(int min, int max) {
 	std::uniform_int_distribution<int> r(min, max);
 	return r(Random::generator);
 }
+
+std::string Random::rand_string(int size) {
+	std::string str = "";
+	for (int i = 0; i < size; i++) {
+		char rnd = static_cast<char>(randc(65, 90));
+		str += rnd;
+	}
+	return str;
+}

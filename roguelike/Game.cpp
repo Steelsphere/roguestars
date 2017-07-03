@@ -241,7 +241,14 @@ void Game::startup_new_game() {
 	std::string gname = "Game " + std::to_string(num);
 	std::experimental::filesystem::create_directory("Data\\Save\\" + gname);
 	_savegame_directory = "Data\\Save\\" + gname;
-
+	GameObjects::savegame_path = _savegame_directory;
+	
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\Galaxy");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\StarSector");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\SolarSystem");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\Planet");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\Biome");
+	
 	destroy_main_menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 	new_galaxy();
@@ -322,12 +329,17 @@ void Game::destroy_info_viewer() {
 }
 
 void Game::new_world() {
+	save_level();
+	
 	loading_screen();
 	
 	_world = new World(1024);
 	_world->generate_world();
+	
 	_level = _world->get_current_level();
 	_level->save_level_image("Data\\Level.png");
+	_level->id = GameObjects::new_level_id;
+
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	
@@ -340,10 +352,11 @@ void Game::new_world() {
 }
 
 void Game::new_solar_system() {
-	_solar_system = new Level;
-	_solar_system->generate_level(256, Level::SOLAR_SYSTEM);
+	save_level();
 	
-	_level = _solar_system;
+	_level = new Level;
+	_level->generate_level(256, Level::SOLAR_SYSTEM);
+	_level->id = GameObjects::new_level_id;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -354,10 +367,11 @@ void Game::new_solar_system() {
 }
 
 void Game::new_star_sector() {
-	_star_sector = new Level;
-	_star_sector->generate_level(512, Level::STAR_SECTOR);
+	save_level();
 	
-	_level = _star_sector;
+	_level = new Level;
+	_level->generate_level(512, Level::STAR_SECTOR);
+	_level->id = GameObjects::new_level_id;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -369,10 +383,11 @@ void Game::new_star_sector() {
 void Game::new_galaxy() {
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 	
-	_galaxy = new Level;
-	_galaxy->generate_level(1024, Level::GALAXY);
-	
-	_level = _galaxy;
+	GameObjects::new_level_id = Random::random(Random::generator);
+
+	_level = new Level;
+	_level->generate_level(1024, Level::GALAXY);
+	_level->id = GameObjects::new_level_id;
 	
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_galaxy();
@@ -392,6 +407,7 @@ void Game::new_world_map() {
 	}
 	
 	loading_screen();
+	save_level();
 
 	_lightsystem.clear_cache();
 	if (_world != nullptr && _level != nullptr) {
@@ -409,6 +425,8 @@ void Game::new_world_map() {
 
 void Game::enter_world_tile() {
 	loading_screen();
+	GameObjects::new_level_id = Random::random(Random::generator);
+	save_level();
 
 	delete _level;
 	_world->new_level(_player->get_world_pos()[0], _player->get_world_pos()[1]);
@@ -487,45 +505,77 @@ void Game::upwards() {
 }
 
 void Game::to_galaxy() {
-	_level = _galaxy;
 	
-	Actor::set_buffer(_level->get_actors());
-	Actor::set_map(_level->get_actor_map());
+	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\Galaxy")) {
+		std::string name = f.path().string();
+		int idx = 0;
+		int tobreak = 0;
+		for (char c : name) {
+			std::cout << c << std::endl;
+			if (c == '\\') {
+				tobreak++;
+			}
+			idx++;
+			if (tobreak == 4) {
+				break;
+			}
+		}
+		name.erase(0, idx);
+		GameObjects::level_id_to_load = std::stoi(name);
+	}
 	
-	_level->update();
-	
+	load_level();
 	_player = static_cast<Player*>(GameObjects::find_player());
-		
 	level_setup();
 
 	GameObjects::update = true;
 }
 
 void Game::to_star_sector() {
-	_level = _star_sector;
+	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\StarSector")) {
+		std::string name = f.path().string();
+		int idx = 0;
+		int tobreak = 0;
+		for (char c : name) {
+			if (c == '\\') {
+				tobreak++;
+			}
+			idx++;
+			if (tobreak == 4) {
+				break;
+			}
+		}
+		name.erase(0, idx);
+		GameObjects::level_id_to_load = std::stoi(name);
+	}
 	
-	Actor::set_buffer(_level->get_actors());
-	Actor::set_map(_level->get_actor_map());
-
-	_level->update();
-	
+	load_level();
 	_player = static_cast<Player*>(GameObjects::find_player());
-
 	level_setup();
 
 	GameObjects::update = true;
 }
 
 void Game::to_solar_system() {
-	_level = _solar_system;
+	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\SolarSystem")) {
+		std::string name = f.path().string();
+		int idx = 0;
+		int tobreak = 0;
+		for (char c : name) {
+			if (c == '\\') {
+				tobreak++;
+			}
+			idx++;
+			if (tobreak == 4) {
+				break;
+			}
+		}
+		name.erase(0, idx);
+		GameObjects::level_id_to_load = std::stoi(name);
+	}
 	
-	Actor::set_buffer(_level->get_actors());
-	Actor::set_map(_level->get_actor_map());
-
-	_level->update();
-	
+	load_level();
 	_player = static_cast<Player*>(GameObjects::find_player());
-
 	level_setup();
 
 	GameObjects::update = true;
@@ -547,4 +597,56 @@ void Game::dehighlight_player() {
 
 void Game::save_screen() {
 	_MainMenu->save_screen();
+}
+
+void Game::load_level() {
+	if (GameObjects::level_id_to_load == 0) {
+		return;
+	}
+	
+	for (auto f : std::experimental::filesystem::recursive_directory_iterator(_savegame_directory)) {
+		std::string dname = f.path().string();
+		char fname[50];
+		_splitpath_s(dname.c_str(), 0, 0, 0, 0, fname, 50, 0, 0);
+		
+		if (fname != 0) {
+			std::cout << fname << std::endl;
+
+			if (std::string(fname) == std::to_string(GameObjects::level_id_to_load)) {
+				_level = Level::load_level_file(f.path().string());
+				_level->id = GameObjects::level_id_to_load;
+
+				_player = new Player(0, 0, 0, '@', TCODColor::blue);
+				_player->spawn_player_in_world();
+
+				level_setup();
+
+				_log = new Log;
+				_status = new Status;
+				GameObjects::level_id_to_load = 0;
+				return;
+			}
+		
+		}
+	}
+	GameObjects::level_id_to_load = 0;
+}
+
+void Game::save_level() {
+	std::string name = std::to_string(_level->id);
+	switch (_level->get_type()) {
+	case Level::GALAXY:
+		name.insert(0, "Galaxy\\");
+		break;
+	case Level::STAR_SECTOR:
+		name.insert(0, "StarSector\\");
+		break;
+	case Level::SOLAR_SYSTEM:
+		name.insert(0, "SolarSystem\\");
+		break;
+	case Level::WORLD_MAP:
+		name.insert(0, "Planet\\");
+		break;
+	}
+	_level->save_level_file(_savegame_directory + "\\" + name);
 }

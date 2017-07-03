@@ -38,39 +38,64 @@ public:
 
 class StarSector : public Actor {
 public:
+	int id;
+	
+	StarSector() {}
 	StarSector(int x, int y, int z);
 
 	virtual void on_pg_down() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 };
 
 class SolarSystem : public Actor {
 public:
+	int id;
+	
 	enum SOLAR_TYPE {
 		MAIN_SEQUENCE,
 		DWARF,
 		GIANT,
 	};
 	
+	SolarSystem() {}
 	SolarSystem(int x, int y, int z);
 
 	virtual void on_pg_down() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 };
 
 class Planet : public Actor {
 public:
+	int id;
+	
 	enum PLANET_TYPE {
 		TERRA,
 	};
+	
+	Planet() {}
 	Planet(int x, int y, int z, PLANET_TYPE type);
 
 	virtual void on_pg_down() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 };
 
 class Biome : public Actor {
 public:
+	int id;
+	
+	Biome() {}
 	Biome(int x, int y, int z, int type);
 
 	virtual void on_pg_down() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 };
 
 class Door : public Actor {

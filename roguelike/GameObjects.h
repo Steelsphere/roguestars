@@ -14,6 +14,10 @@ public:
 
 	static int ticks;
 
+	static int level_id_to_load;
+
+	static int new_level_id;
+
 	static float time;
 
 	static bool update;
@@ -21,6 +25,8 @@ public:
 	static bool player_controlled;
 
 	static bool new_turn;
+
+	static std::string savegame_path;
 
 	static std::map<std::string, std::pair<int, int>> map_dir;
 
@@ -36,5 +42,7 @@ public:
 			}
 		}
 	}
+
+	static bool file_in_filesystem(const std::string& path, const std::string& file);
 };
 

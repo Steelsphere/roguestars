@@ -5,16 +5,21 @@
 
 #include <typeinfo>
 #include <string>
+#include <filesystem>
 
 int GameObjects::screen_width = 125;
 int GameObjects::screen_height = 75;
 int GameObjects::ticks;
+int GameObjects::level_id_to_load = 0;
+int GameObjects::new_level_id = 0;
 
 float GameObjects::time = 0.0f;
 
 bool GameObjects::update = true;
 bool GameObjects::player_controlled = false;
 bool GameObjects::new_turn = false;
+
+std::string GameObjects::savegame_path;
 
 std::map<std::string, std::pair<int, int>> GameObjects::map_dir = {
 	{ "topleft", std::make_pair(-1, -1) },
@@ -28,8 +33,21 @@ std::map<std::string, std::pair<int, int>> GameObjects::map_dir = {
 };
 
 std::map<std::string, Actor*(*)()> GameObjects::type_map = {
-	{typeid(Actor).name(), create_actor_instance<Actor>},
-	{typeid(Tile).name(), create_actor_instance<Tile>},
-	{typeid(Item).name(), create_actor_instance<Item>},
-	{typeid(Player).name(), create_actor_instance<Player>},
+	{ typeid(Actor).name(), create_actor_instance<Actor> },
+	{ typeid(Tile).name(), create_actor_instance<Tile> },
+	{ typeid(Item).name(), create_actor_instance<Item> },
+	{ typeid(Player).name(), create_actor_instance<Player> },
+	{ typeid(StarSector).name(), create_actor_instance<StarSector> },
+	{ typeid(SolarSystem).name(), create_actor_instance<SolarSystem> },
+	{ typeid(Planet).name(), create_actor_instance<Planet> },
+	{ typeid(Biome).name(), create_actor_instance<Biome> },
 };
+
+bool GameObjects::file_in_filesystem(const std::string& path, const std::string& file) {
+	for (auto f : std::experimental::filesystem::directory_iterator(path)) {
+		if (f.path().string() == (path + "\\" + file)) {
+			return true;
+		}
+	}
+	return false;
+}

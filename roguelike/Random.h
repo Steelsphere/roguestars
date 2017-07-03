@@ -29,4 +29,6 @@ public:
 	static std::uniform_int_distribution<int> one_to_eight;
 
 	static int randc(int min, int max);
+
+	static std::string rand_string(int size);
 };
