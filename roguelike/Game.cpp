@@ -333,6 +333,7 @@ void Game::new_world() {
 	
 	loading_screen();
 	
+	delete _level;
 	_world = new World(1024);
 	_world->generate_world();
 	
@@ -354,6 +355,7 @@ void Game::new_world() {
 void Game::new_solar_system() {
 	save_level();
 	
+	delete _level;
 	_level = new Level;
 	_level->generate_level(256, Level::SOLAR_SYSTEM);
 	_level->id = GameObjects::new_level_id;
@@ -369,6 +371,7 @@ void Game::new_solar_system() {
 void Game::new_star_sector() {
 	save_level();
 	
+	delete _level;
 	_level = new Level;
 	_level->generate_level(512, Level::STAR_SECTOR);
 	_level->id = GameObjects::new_level_id;
@@ -525,6 +528,8 @@ void Game::to_galaxy() {
 	}
 	
 	load_level();
+	_level->update();
+
 	_player = static_cast<Player*>(GameObjects::find_player());
 	level_setup();
 
@@ -550,6 +555,8 @@ void Game::to_star_sector() {
 	}
 	
 	load_level();
+	_level->update();
+
 	_player = static_cast<Player*>(GameObjects::find_player());
 	level_setup();
 
@@ -575,6 +582,8 @@ void Game::to_solar_system() {
 	}
 	
 	load_level();
+	_level->update();
+	
 	_player = static_cast<Player*>(GameObjects::find_player());
 	level_setup();
 
@@ -613,6 +622,8 @@ void Game::load_level() {
 			std::cout << fname << std::endl;
 
 			if (std::string(fname) == std::to_string(GameObjects::level_id_to_load)) {
+				delete _level;
+				
 				_level = Level::load_level_file(f.path().string());
 				_level->id = GameObjects::level_id_to_load;
 
