@@ -20,6 +20,8 @@ public:
 	std::vector<Item*>* get_inventory() { return &_inventory; }
 	void add_to_inventory(Item* i);
 
+	bool is_item_in_inventory(const std::string& item);
+
 	virtual void update();
 
 	virtual void move(const std::string& dir);

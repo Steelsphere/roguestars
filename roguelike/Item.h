@@ -10,6 +10,7 @@ public:
 		CACTUS,
 		DEAD_BUSH,
 		SNOW_BUSH,
+		DIGITAL_WATCH,
 	};
 	
 	Item();

@@ -19,7 +19,7 @@ public:
 
 	void set_info(InfoViewer* info) { _info = info; }
 protected:
-	InfoViewer* _info = nullptr;;
+	InfoViewer* _info = nullptr;
 };
 
 class Dummy : public Player {

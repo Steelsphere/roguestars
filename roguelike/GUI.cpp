@@ -2,6 +2,7 @@
 #include "GameObjects.h"
 #include "Input.h"
 #include "Actor.h"
+#include "Player.h"
 
 #include <algorithm>
 #include <cstring>
@@ -152,12 +153,32 @@ void Log::message(const std::string& message, TCODColor color) {
 }
 
 //GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
-Status::Status() : GUI(GameObjects::screen_width - 30, GameObjects::screen_height / 2, 30, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
+Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30, GameObjects::screen_height / 2, 30, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
+	Text texttime = { 1, 2, 20, 1, "Time: Unknown", TCODColor::red };
+	
 	_text.push_back(name);
+	_text.push_back(texttime);
+
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
+	_player = player;
+	_time = time;
 	_update = true;
+}
+
+void Status::draw(bool force) {
+	if (_player != nullptr || _player != NULL) {
+		if (_player->is_item_in_inventory("Digital Watch")) {
+			_text[1].str = "Time: " + _time->format_time("%M/%D/%Y %H:%m:%S");
+			_text[1].color = TCODColor::green;
+		}
+		else {
+			_text[1].str = "Time: Unknown";
+			_text[1].color = TCODColor::red;
+		}
+	}
+	GUI::draw(force);
 }
 
 SelectionBox::SelectionBox() {}

@@ -163,6 +163,7 @@
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Structure.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Time.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

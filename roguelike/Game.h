@@ -8,6 +8,7 @@
 #include "GUI.h"
 #include "World.h"
 #include "Light.h"
+#include "Time.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -123,6 +124,7 @@ private:
 
 	// Systems
 	Light::LightSystem _lightsystem;
+	Time _time;
 	
 	// GUI stuff
 	Log* _log = nullptr;

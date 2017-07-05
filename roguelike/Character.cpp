@@ -2,6 +2,7 @@
 #include "Level.h"
 #include "AI.h"
 #include "GameObjects.h"
+#include "Item.h"
 
 int Character::_playertime = 0;
 std::vector<Character*> Character::_chbuf;
@@ -45,6 +46,17 @@ void Character::move(const std::string& dir) {
 void Character::add_to_inventory(Item* i) {
 	i->set_in_inventory(true);
 	_inventory.push_back(i);
+}
+
+bool Character::is_item_in_inventory(const std::string& item) {
+	if (_inventory.size() != 0) {
+		for (Item* i : _inventory) {
+			if (i->get_name() == item) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 Monster::Monster(int x, int y, int z) : Character(x, y, z) {

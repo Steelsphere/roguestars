@@ -1,12 +1,14 @@
 #pragma once
 
 #include "GameEvent.h"
-#include "Actor.h"
 #include "Character.h"
+#include "Time.h"
 
 #include <string>
 #include <libtcod\libtcod.hpp>
 #include <vector>
+
+class Player;
 
 class GUI
 {
@@ -64,7 +66,13 @@ public:
 
 class Status : public GUI {
 public:
-	Status();
+	Status(Player* player, Time* time);
+
+	virtual void draw(bool force = false) override;
+
+private:
+	Player* _player;
+	Time* _time;
 };
 
 class SelectionBox : public GUI {

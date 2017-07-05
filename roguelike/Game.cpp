@@ -22,6 +22,12 @@ void Game::init() {
 	TCODConsole::setCustomFont("terminal12x12_gs_ro.png", TCOD_FONT_LAYOUT_ASCII_INROW);
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
 	TCODSystem::setFps(180);
+
+	_time = Time(3000, 1, 1, 1, 1, 1);
+	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
+
+	_time.pass_time(0, 24, 0, 0, 0, 0);
+	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 }
 
 void Game::start() {
@@ -253,7 +259,7 @@ void Game::startup_new_game() {
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 	new_galaxy();
 	_log = new Log;
-	_status = new Status;
+	_status = new Status(_player, &_time);
 	new Message_Box("No errors");
 }
 
@@ -265,7 +271,7 @@ void Game::startup_load_game() {
 	_player->spawn_player_in_world();
 	level_setup();
 	_log = new Log;
-	_status = new Status;
+	_status = new Status(_player, &_time);
 
 }
 
@@ -398,7 +404,7 @@ void Game::new_galaxy() {
 	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
 	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
 	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
-	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
+	_player->add_to_inventory(new Item(0, 0, 0, Item::DIGITAL_WATCH));
 
 	level_setup();
 	GameObjects::update = true;
@@ -633,7 +639,7 @@ void Game::load_level() {
 				level_setup();
 
 				_log = new Log;
-				_status = new Status;
+				_status = new Status(_player, &_time);
 				GameObjects::level_id_to_load = 0;
 				return;
 			}
