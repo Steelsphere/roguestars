@@ -14,6 +14,7 @@ Character::Character(int x, int y, int z) : Actor(x, y, z) {
 	_transparent = false;
 	_action_available = true;
 	_selftime = 0;
+	_inventory = std::vector<Item*>();
 	_chbuf.push_back(this);
 }
 
@@ -22,6 +23,7 @@ Character::Character(int x, int y, int z, char c, TCODColor color, const std::st
 	_transparent = false;
 	_action_available = true;
 	_selftime = 0;
+	_inventory = std::vector<Item*>();
 	if (!notinbuf) {
 		_chbuf.push_back(this);
 	}
@@ -50,8 +52,8 @@ void Character::add_to_inventory(Item* i) {
 
 bool Character::is_item_in_inventory(const std::string& item) {
 	if (_inventory.size() != 0) {
-		for (Item* i : _inventory) {
-			if (i->get_name() == item) {
+		for (int i = 0; i < _inventory.size(); i++) {
+			if (_inventory[i]->get_name() == item) {
 				return true;
 			}
 		}

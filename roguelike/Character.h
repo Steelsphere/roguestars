@@ -4,7 +4,11 @@
 
 class Character : public Actor {
 public:
-	
+	struct Bodypart {
+		std::string name;
+		int health;
+	};
+
 	Character();
 	Character(int x, int y, int z);
 	Character(int x, int y, int z, char c, TCODColor color, const std::string& name = "Character", bool notinbuf = false);
@@ -29,11 +33,12 @@ public:
 protected:
 	static int _playertime;
 	
-	int _health;
-	int _speed;
+	int _health = 100;
+	int _speed = 100;
 	int _selftime;
-	bool _action_available;
-	std::vector<Item*> _inventory;
+	bool _action_available = true;
+	std::vector<Item*> _inventory = std::vector<Item*>();
+	std::vector<Bodypart> _bodyparts;
 	
 private:
 	static std::vector<Character*> _chbuf;

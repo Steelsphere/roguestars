@@ -9,6 +9,20 @@ Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, 
 {
 	GameObjects::player_controlled = true;
 	_speed = 1000;
+
+	Bodypart head = { "Head", 25 };
+	Bodypart left_arm = { "Left Arm", 50 };
+	Bodypart torso = { "Torso", 100 };
+	Bodypart right_arm = { "Right Arm", 50 };
+	Bodypart left_leg = { "Left Leg", 50 };
+	Bodypart right_leg = { "Right Leg", 50 };
+
+	_bodyparts.push_back(head);
+	_bodyparts.push_back(left_arm);
+	_bodyparts.push_back(torso);
+	_bodyparts.push_back(right_arm);
+	_bodyparts.push_back(left_leg);
+	_bodyparts.push_back(right_leg);
 }
 
 

@@ -51,3 +51,10 @@ bool GameObjects::file_in_filesystem(const std::string& path, const std::string&
 	}
 	return false;
 }
+
+bool GameObjects::is_directory_empty(const std::string& path) {
+	for (auto f : std::experimental::filesystem::directory_iterator(path)) {
+		return false;
+	}
+	return true;
+}

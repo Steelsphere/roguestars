@@ -257,7 +257,10 @@ void Game::startup_new_game() {
 	
 	destroy_main_menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
-	new_galaxy();
+	
+	GameObjects::new_level_id = Random::random(Random::generator);
+
+	new_world();
 	_log = new Log;
 	_status = new Status(_player, &_time);
 	new Message_Box("No errors");
@@ -390,10 +393,11 @@ void Game::new_star_sector() {
 }
 
 void Game::new_galaxy() {
-	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
+	save_level();
 	
-	GameObjects::new_level_id = Random::random(Random::generator);
+//	GameObjects::new_level_id = Random::random(Random::generator);
 
+	delete _level;
 	_level = new Level;
 	_level->generate_level(1024, Level::GALAXY);
 	_level->id = GameObjects::new_level_id;
@@ -421,6 +425,8 @@ void Game::new_world_map() {
 	_lightsystem.clear_cache();
 	if (_world != nullptr && _level != nullptr) {
 		delete _level;
+		_player = nullptr;
+
 		_level = _world->generate_world_map();
 
 		_player = new Player(_world->get_current_pos().first, _world->get_current_pos().second, 0, '@', TCODColor::blue);
@@ -515,6 +521,11 @@ void Game::upwards() {
 
 void Game::to_galaxy() {
 	
+	if (GameObjects::is_directory_empty(_savegame_directory + "\\Galaxy")) {
+		new_galaxy();
+		return;
+	}
+	
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\Galaxy")) {
 		std::string name = f.path().string();
 		int idx = 0;
@@ -543,6 +554,12 @@ void Game::to_galaxy() {
 }
 
 void Game::to_star_sector() {
+	
+	if (GameObjects::is_directory_empty(_savegame_directory + "\\StarSector")) {
+		new_star_sector();
+		return;
+	}
+	
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\StarSector")) {
 		std::string name = f.path().string();
 		int idx = 0;
@@ -570,6 +587,12 @@ void Game::to_star_sector() {
 }
 
 void Game::to_solar_system() {
+	
+	if (GameObjects::is_directory_empty(_savegame_directory + "\\SolarSystem")) {
+		new_solar_system();
+		return;
+	}
+	
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\SolarSystem")) {
 		std::string name = f.path().string();
 		int idx = 0;
@@ -650,6 +673,10 @@ void Game::load_level() {
 }
 
 void Game::save_level() {
+	if (_level == nullptr) {
+		return;
+	}
+	
 	std::string name = std::to_string(_level->id);
 	switch (_level->get_type()) {
 	case Level::GALAXY:
