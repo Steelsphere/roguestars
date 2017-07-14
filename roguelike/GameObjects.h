@@ -46,5 +46,7 @@ public:
 	static bool file_in_filesystem(const std::string& path, const std::string& file);
 
 	static bool is_directory_empty(const std::string& path);
+
+	static int num_files_in_directory(const std::string& path);
 };
 

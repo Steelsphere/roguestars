@@ -184,29 +184,36 @@ Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30,
 }
 
 void Status::draw(bool force) {
-	if (_player != nullptr || _player != NULL) {
-		if (_player->is_item_in_inventory("Digital Watch")) {
-			_text[1].str = "Time: " + _time->format_time("%M/%D/%Y %H:%m:%S");
-			_text[1].color = TCODColor::green;
-		}
-		else {
-			_text[1].str = "Time: Unknown";
-			_text[1].color = TCODColor::red;
+	if (force) {
+		if (_player != nullptr || _player != NULL) {
+			if (_player->is_item_in_inventory("Digital Watch")) {
+				_text[1].str = "Time: " + _time->format_time("%M/%D/%Y %H:%m:%S");
+				_text[1].color = TCODColor::green;
+			}
+			else {
+				_text[1].str = "Time: Unknown";
+				_text[1].color = TCODColor::red;
+			}
 		}
 	}
 	GUI::draw(force);
 }
 
-SelectionBox::SelectionBox() {}
+SelectionBox::SelectionBox() {
+	if (_transparency != 1.0f) {
+		make_transparency_work();
+	}
+}
 
-SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) : GUI(x, y, w, h, text) {}
+SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) : GUI(x, y, w, h, text) {
+	if (_transparency != 1.0f) {
+		make_transparency_work();
+	}
+}
 
 void SelectionBox::draw(bool force) {
 	
 	if (_update || force) {
-		if (_transparency != 1.0f) {
-			make_transparency_work();
-		}
 		
 		GUI::draw(force);
 		

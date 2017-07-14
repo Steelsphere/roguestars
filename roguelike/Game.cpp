@@ -279,9 +279,43 @@ void Game::startup_load_game() {
 }
 
 void Game::new_main_menu() {
-	destroy_garbage();
-	_MainMenu = new MainMenu;
+	delete _status;
+	delete _log;
+	delete _ESCMenu;
+	_status = nullptr;
+	_log = nullptr;
+	_ESCMenu = nullptr;
+
+	update();
 	TCODConsole::root->flush();
+
+	if (_level != nullptr) {
+		std::string npath = "Data\\scr\\scr" + std::to_string(GameObjects::num_files_in_directory("Data\\scr") + 1);
+		TCODConsole::root->saveApf(npath.c_str());
+	}
+
+	destroy_garbage();
+
+	int choice = 0;
+	int i = 0;
+	if (GameObjects::num_files_in_directory("Data\\scr") != 0) {
+		choice = Random::randc(1, GameObjects::num_files_in_directory("Data\\scr"));
+		i = 1;
+	}
+	
+	for (auto f : std::experimental::filesystem::directory_iterator("Data\\scr")) {
+		if (i == choice) {
+			TCODConsole* newcons = new TCODConsole(GameObjects::screen_width, GameObjects::screen_height);
+			newcons->loadApf(f.path().string().c_str());
+			
+			TCODConsole::blit(newcons, 0, 0, 0, 0, TCODConsole::root, 0, 0);
+			TCODConsole::root->flush();
+			break;
+		}
+		i++;
+	}
+
+	_MainMenu = new MainMenu;
 }
 
 void Game::destroy_main_menu() {

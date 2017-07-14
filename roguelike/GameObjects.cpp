@@ -58,3 +58,11 @@ bool GameObjects::is_directory_empty(const std::string& path) {
 	}
 	return true;
 }
+
+int GameObjects::num_files_in_directory(const std::string& path) {
+	int num = 0;
+	for (auto f : std::experimental::filesystem::directory_iterator(path)) {
+		num++;
+	}
+	return num;
+}
