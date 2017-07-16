@@ -44,7 +44,7 @@ std::map<std::string, Actor*(*)()> GameObjects::type_map = {
 };
 
 bool GameObjects::file_in_filesystem(const std::string& path, const std::string& file) {
-	for (auto f : std::experimental::filesystem::directory_iterator(path)) {
+	for (auto f : std::experimental::filesystem::recursive_directory_iterator(path)) {
 		if (f.path().string() == (path + "\\" + file)) {
 			return true;
 		}

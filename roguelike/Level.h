@@ -75,6 +75,12 @@ public:
 
 	LEVEL_TYPE get_type() { return _type; }
 
+	void set_type(LEVEL_TYPE type) { _type = type; }
+
+	std::string get_savedir() { return _savedir; }
+
+	void set_savedir(const std::string& dir) { _savedir = dir; }
+
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;
@@ -82,4 +88,5 @@ private:
 	static TCODMap* _fovmap;
 	FastNoise _noise;
 	LEVEL_TYPE _type;
+	std::string _savedir = "";
 };

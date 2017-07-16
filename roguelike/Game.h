@@ -74,6 +74,8 @@ public:
 
 	void to_solar_system();
 
+	void to_world_map();
+
 	void highlight_player();
 
 	void dehighlight_player();
