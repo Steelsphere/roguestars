@@ -80,11 +80,24 @@ void Player::spawn_player_in_world() {
 	}
 }
 
-void Player::spawn_player_in_galaxy() {
+void Player::spawn_player(Level::LEVEL_TYPE type) {
+	std::string spawntile;
+	switch (type) {
+	case Level::GALAXY:
+		spawntile = "Star Sector";
+		break;
+	case Level::STAR_SECTOR:
+		spawntile = "Solar System";
+		break;
+	case Level::SOLAR_SYSTEM:
+		spawntile = "Planet";
+		break;
+	}
+	
 	std::vector<Actor*>* buffer = Actor::get_buffer();
 	while (true) {
 		int rindex = Random::randc(0, buffer->size());
-		if ((*buffer)[rindex]->get_name() == "Star Sector") {
+		if ((*buffer)[rindex]->get_name() == spawntile) {
 			int* spos = (*buffer)[rindex]->get_screen_pos();
 			int* rpos = (*buffer)[rindex]->get_world_pos();
 			set_position(spos[0], spos[1], spos[2]);

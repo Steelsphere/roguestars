@@ -179,7 +179,9 @@ void Input::input(TCOD_key_t key) {
 
 			case TCODK_PAGEDOWN:
 				if (GameObjects::player_controlled) {
-					Actor::get_actor(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1], 0)->on_pg_down();
+					for (Actor* a : Actor::get_actors(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1], 0)) {
+						a->on_pg_down();
+					}
 				}
 				break;
 

@@ -10,8 +10,10 @@
 int GameObjects::screen_width = 125;
 int GameObjects::screen_height = 75;
 int GameObjects::ticks;
+
 int GameObjects::level_id_to_load = 0;
 int GameObjects::new_level_id = 0;
+int GameObjects::old_level_id = 0;
 
 float GameObjects::time = 0.0f;
 
@@ -65,4 +67,14 @@ int GameObjects::num_files_in_directory(const std::string& path) {
 		num++;
 	}
 	return num;
+}
+
+Actor* GameObjects::find_player(Level* level) {
+	for (Actor* i : (*level->get_actors())) {
+		if (i->get_name() == "Player") {
+			std::cout << "Player found\n";
+			return i;
+		}
+	}
+	throw "Player was not found!\n";
 }

@@ -57,7 +57,9 @@ public:
 	static void set_map(std::vector<std::vector<std::vector<Actor*>>>* map) { _map = map; }
 	static std::vector<std::vector<std::vector<Actor*>>>* get_map() { return _map; }
 
+	/*Params in world pos, gets the last actor*/
 	static Actor* get_actor(int x, int y, int z);
+	/*Params in world pos*/
 	static std::vector<Actor*> get_actors(int x, int y, int z);
 
 	bool is_impassable() { return _impassable; }

@@ -22,6 +22,7 @@ Level::~Level() {
 	(*Character::get_chbuff()).clear();
 	Actor::set_buffer(nullptr);
 	Actor::set_map(nullptr);
+	GameObjects::old_level_id = id;
 }
 
 void Level::generate_level(int size, LEVEL_TYPE type) {
@@ -37,6 +38,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	_map.resize(_height);
 
 	_type = type;
+	id = Random::random(Random::generator);
 
 	for (int i = 0; i < _map.size(); i++) {
 		_map[i].resize(_width);
@@ -426,7 +428,7 @@ Level* Level::load_level_file(std::string path) {
 		level->_actors.push_back(actor);
 	}
 	
-	level->_actors.pop_back();
+//	level->_actors.pop_back();
 	level->generate_level(size, Level::NONE);
 	level->set_type(static_cast<LEVEL_TYPE>(type));
 	

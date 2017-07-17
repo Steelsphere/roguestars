@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "GUI.h"
+#include "Level.h"
 
 #include <iostream>
 
@@ -15,9 +16,10 @@ public:
 
 	void spawn_player_in_world();
 
-	void spawn_player_in_galaxy();
+	void spawn_player(Level::LEVEL_TYPE type);
 
 	void set_info(InfoViewer* info) { _info = info; }
+
 protected:
 	InfoViewer* _info = nullptr;
 };

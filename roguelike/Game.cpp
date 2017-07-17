@@ -382,7 +382,6 @@ void Game::new_world() {
 	
 	_level = _world->get_current_level();
 	_level->save_level_image("Data\\Level.png");
-	_level->id = Random::random(Random::generator);
 	_level->set_savedir("surface");
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
@@ -403,7 +402,6 @@ void Game::new_solar_system() {
 	delete _level;
 	_level = new Level;
 	_level->generate_level(256, Level::SOLAR_SYSTEM);
-	_level->id = Random::random(Random::generator);
 	_level->set_savedir("solarsystem");
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
@@ -420,7 +418,6 @@ void Game::new_star_sector() {
 	delete _level;
 	_level = new Level;
 	_level->generate_level(512, Level::STAR_SECTOR);
-	_level->id = Random::random(Random::generator);
 	_level->set_savedir("starsector");
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
@@ -433,21 +430,13 @@ void Game::new_star_sector() {
 void Game::new_galaxy() {
 	save_level();
 	
-//	GameObjects::new_level_id = Random::random(Random::generator);
-
 	delete _level;
 	_level = new Level;
 	_level->generate_level(1024, Level::GALAXY);
-	_level->id = Random::random(Random::generator);
 	_level->set_savedir("galaxy");
 	
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
-	_player->spawn_player_in_galaxy();
-
-	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
-	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
-	_player->add_to_inventory(new Item(0, 0, 0, Item::FLOWER));
-	_player->add_to_inventory(new Item(0, 0, 0, Item::DIGITAL_WATCH));
+	_player->spawn_player(Level::GALAXY);
 
 	level_setup();
 	GameObjects::update = true;
@@ -467,7 +456,6 @@ void Game::new_world_map() {
 		_player = nullptr;
 
 		_level = _world->generate_world_map();
-		_level->id = Random::random(Random::generator);
 		_level->set_savedir("world");
 
 		_player = new Player(_world->get_current_pos().first, _world->get_current_pos().second, 0, '@', TCODColor::blue);
@@ -481,7 +469,6 @@ void Game::new_world_map() {
 
 void Game::enter_world_tile() {
 	loading_screen();
-	GameObjects::new_level_id = Random::random(Random::generator);
 	save_level();
 
 	delete _level;
@@ -592,7 +579,7 @@ void Game::to_galaxy() {
 	_level->set_savedir("galaxy");
 	_level->update();
 
-	_player = static_cast<Player*>(GameObjects::find_player());
+	_player = static_cast<Player*>(GameObjects::find_player(_level));
 	level_setup();
 
 	GameObjects::update = true;
@@ -626,7 +613,7 @@ void Game::to_star_sector() {
 	_level->set_savedir("starsector");
 	_level->update();
 
-	_player = static_cast<Player*>(GameObjects::find_player());
+	_player = static_cast<Player*>(GameObjects::find_player(_level));
 	level_setup();
 
 	GameObjects::update = true;
@@ -660,7 +647,7 @@ void Game::to_solar_system() {
 	_level->set_savedir("solarsystem");
 	_level->update();
 	
-	_player = static_cast<Player*>(GameObjects::find_player());
+	_player = static_cast<Player*>(GameObjects::find_player(_level));
 	level_setup();
 
 	GameObjects::update = true;
@@ -694,7 +681,7 @@ void Game::to_world_map() {
 	_level->set_savedir("world");
 	_level->update();
 
-	_player = static_cast<Player*>(GameObjects::find_player());
+	_player = static_cast<Player*>(GameObjects::find_player(_level));
 	level_setup();
 
 	GameObjects::update = true;
@@ -734,8 +721,8 @@ void Game::load_level() {
 			_level = Level::load_level_file(f.path().string());
 			_level->id = GameObjects::level_id_to_load;
 
-			_player = new Player(0, 0, 0, '@', TCODColor::blue);
-			_player->spawn_player_in_world();
+//			_player = new Player(0, 0, 0, '@', TCODColor::blue);
+//			_player->spawn_player_in_world();
 
 			level_setup();
 
