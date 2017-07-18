@@ -28,6 +28,22 @@ public:
 
 	void start();
 
+	void game_loop();
+
+	void on_event(TCOD_event_t e);
+
+	void game_event();
+
+	void update();
+
+	void update_gui(bool all = false);
+
+	void update_characters();
+
+	void level_setup();
+
+	void loading_screen();
+	
 	void exit_game();
 	
 	void startup_new_game();
@@ -86,22 +102,10 @@ public:
 
 	void save_level();
 
+	template<typename T>
+	void fix_tile_id();
+
 private:
-	void game_loop();
-
-	void on_event(TCOD_event_t e);
-
-	void game_event();
-
-	void update();
-
-	void update_gui(bool all = false);
-
-	void update_characters();
-
-	void level_setup();
-
-	void loading_screen();
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
 	

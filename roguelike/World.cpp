@@ -46,7 +46,6 @@ void World::new_level(int x, int y) {
 	_currlevel = _world[x][y].level;
 
 	_currlevel->generate_level(1024, _world[x][y].biome);
-	_currlevel->id = _numlevels++;
 	_currpos.first = x;
 	_currpos.second = y;
 }

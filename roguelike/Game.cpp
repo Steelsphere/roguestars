@@ -5,6 +5,7 @@
 #include "AI.h"
 #include "Character.h"
 #include "Structure.h"
+#include "Tile.h"
 
 #include <filesystem>
 
@@ -134,6 +135,9 @@ void Game::game_event() {
 		break;
 	case GameEvent::SAVE_SCREEN:
 		save_screen();
+		break;
+	case GameEvent::LOAD_LEVEL:
+		load_level();
 		break;
 	case GameEvent::EXIT:
 		exit_game();
@@ -388,8 +392,6 @@ void Game::new_world() {
 	_player->spawn_player_in_world();
 	_player->add_to_inventory(new Item(0, 0, 0, Item::DIGITAL_WATCH));
 	
-	new Monster(_player->get_screen_pos()[0]-10, _player->get_screen_pos()[1]-10, 0);
-	
 	level_setup();
 	_lightsystem.set_global_lighting(_level, 15, 15, 0);
 	
@@ -405,7 +407,7 @@ void Game::new_solar_system() {
 	_level->set_savedir("solarsystem");
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
-	_player->spawn_player_in_world();
+	_player->spawn_player(Level::SOLAR_SYSTEM);
 	
 	level_setup();
 
@@ -421,7 +423,7 @@ void Game::new_star_sector() {
 	_level->set_savedir("starsector");
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
-	_player->spawn_player_in_world();
+	_player->spawn_player(Level::STAR_SECTOR);
 	
 	level_setup();
 	GameObjects::update = true;
@@ -480,8 +482,6 @@ void Game::enter_world_tile() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	
-	new Monster(_player->get_screen_pos()[0] - 10, _player->get_screen_pos()[1] - 10, 0);
-
 	level_setup();
 	_lightsystem.set_global_lighting(_level, 15, 15, 0);
 	
@@ -554,34 +554,22 @@ void Game::to_galaxy() {
 	
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\galaxy")) {
 		new_galaxy();
+		fix_tile_id<StarSector>();
 		return;
 	}
 	
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\galaxy")) {
-		std::string name = f.path().string();
-		int idx = 0;
-		int tobreak = 0;
-		for (char c : name) {
-			std::cout << c << std::endl;
-			if (c == '\\') {
-				tobreak++;
-			}
-			idx++;
-			if (tobreak == 4) {
-				break;
-			}
-		}
-		name.erase(0, idx);
-		GameObjects::level_id_to_load = std::stoi(name);
+		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
 	}
 	
 	load_level();
 	_level->set_savedir("galaxy");
 	_level->update();
 
-	_player = static_cast<Player*>(GameObjects::find_player(_level));
+	_player = GameObjects::find_player(_level);
 	level_setup();
 
+	fix_tile_id<StarSector>();
 	GameObjects::update = true;
 }
 
@@ -589,33 +577,22 @@ void Game::to_star_sector() {
 	
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\starsector")) {
 		new_star_sector();
+		fix_tile_id<SolarSystem>();
 		return;
 	}
 	
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\starsector")) {
-		std::string name = f.path().string();
-		int idx = 0;
-		int tobreak = 0;
-		for (char c : name) {
-			if (c == '\\') {
-				tobreak++;
-			}
-			idx++;
-			if (tobreak == 4) {
-				break;
-			}
-		}
-		name.erase(0, idx);
-		GameObjects::level_id_to_load = std::stoi(name);
+		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
 	}
 	
 	load_level();
 	_level->set_savedir("starsector");
 	_level->update();
 
-	_player = static_cast<Player*>(GameObjects::find_player(_level));
+	_player = GameObjects::find_player(_level);
 	level_setup();
 
+	fix_tile_id<SolarSystem>();
 	GameObjects::update = true;
 }
 
@@ -623,33 +600,22 @@ void Game::to_solar_system() {
 	
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\solarsystem")) {
 		new_solar_system();
+		fix_tile_id<Planet>();
 		return;
 	}
 	
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\solarsystem")) {
-		std::string name = f.path().string();
-		int idx = 0;
-		int tobreak = 0;
-		for (char c : name) {
-			if (c == '\\') {
-				tobreak++;
-			}
-			idx++;
-			if (tobreak == 4) {
-				break;
-			}
-		}
-		name.erase(0, idx);
-		GameObjects::level_id_to_load = std::stoi(name);
+		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
 	}
 	
 	load_level();
 	_level->set_savedir("solarsystem");
 	_level->update();
 	
-	_player = static_cast<Player*>(GameObjects::find_player(_level));
+	_player = GameObjects::find_player(_level);
 	level_setup();
 
+	fix_tile_id<Planet>();
 	GameObjects::update = true;
 }
 
@@ -657,33 +623,22 @@ void Game::to_world_map() {
 	
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\world")) {
 		new_world_map();
+		fix_tile_id<Biome>();
 		return;
 	}
 
 	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\world")) {
-		std::string name = f.path().string();
-		int idx = 0;
-		int tobreak = 0;
-		for (char c : name) {
-			if (c == '\\') {
-				tobreak++;
-			}
-			idx++;
-			if (tobreak == 4) {
-				break;
-			}
-		}
-		name.erase(0, idx);
-		GameObjects::level_id_to_load = std::stoi(name);
+		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
 	}
 
 	load_level();
 	_level->set_savedir("world");
 	_level->update();
 
-	_player = static_cast<Player*>(GameObjects::find_player(_level));
+	_player = GameObjects::find_player(_level);
 	level_setup();
 
+	fix_tile_id<Biome>();
 	GameObjects::update = true;
 }
 
@@ -721,13 +676,13 @@ void Game::load_level() {
 			_level = Level::load_level_file(f.path().string());
 			_level->id = GameObjects::level_id_to_load;
 
-//			_player = new Player(0, 0, 0, '@', TCODColor::blue);
-//			_player->spawn_player_in_world();
-
 			level_setup();
 
 			_log = new Log;
 			_status = new Status(_player, &_time);
+			
+			std::cout << "Loaded level with ID: " << GameObjects::level_id_to_load << std::endl;
+			
 			GameObjects::level_id_to_load = 0;
 			return;
 		}
@@ -743,4 +698,16 @@ void Game::save_level() {
 	std::string name = std::to_string(_level->id);
 	name.insert(0, _level->get_savedir() + "\\");
 	_level->save_level_file(_savegame_directory + "\\" + name);
+
+	std::cout << "Saved level with ID: " << name << std::endl;
+}
+
+template<typename T>
+void Game::fix_tile_id() {
+	for (Actor* a : Actor::get_actors(_player->get_world_pos()[0], _player->get_world_pos()[1], 0)) {
+		if (typeid(*a).name() == typeid(T).name()) {
+			static_cast<T*>(a)->id = GameObjects::old_level_id;
+			std::cout << "Tile ID fixed successfully to " << static_cast<T*>(a)->id << std::endl;
+		}
+	}
 }

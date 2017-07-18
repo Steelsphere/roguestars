@@ -43,11 +43,13 @@ std::map<std::string, Actor*(*)()> GameObjects::type_map = {
 	{ typeid(SolarSystem).name(), create_actor_instance<SolarSystem> },
 	{ typeid(Planet).name(), create_actor_instance<Planet> },
 	{ typeid(Biome).name(), create_actor_instance<Biome> },
+	{ typeid(Door).name(), create_actor_instance<Door> },
 };
 
 bool GameObjects::file_in_filesystem(const std::string& path, const std::string& file) {
 	for (auto f : std::experimental::filesystem::recursive_directory_iterator(path)) {
-		if (f.path().string() == (path + "\\" + file)) {
+		if (f.path().filename().string() == file) {
+			std::cout << "Searched: " << f.path().filename().string() << std::endl;
 			return true;
 		}
 	}
@@ -69,11 +71,11 @@ int GameObjects::num_files_in_directory(const std::string& path) {
 	return num;
 }
 
-Actor* GameObjects::find_player(Level* level) {
+Player* GameObjects::find_player(Level* level) {
 	for (Actor* i : (*level->get_actors())) {
 		if (i->get_name() == "Player") {
 			std::cout << "Player found\n";
-			return i;
+			return dynamic_cast<Player*>(i);
 		}
 	}
 	throw "Player was not found!\n";

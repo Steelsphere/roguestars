@@ -270,10 +270,13 @@ StarSector::StarSector(int x, int y, int z) : Actor(x, y, z) {
 }
 
 void StarSector::on_pg_down() {
+	std::cout << "ID: " << id << std::endl;
 	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
 		GameObjects::level_id_to_load = id;
 		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+		return;
 	}
+	std::cout << "Generating new level\n";
 	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::NEW_STAR_SECTOR);
 }
@@ -298,10 +301,13 @@ SolarSystem::SolarSystem(int x, int y, int z) : Actor(x, y, z) {
 }
 
 void SolarSystem::on_pg_down() {
+	std::cout << "ID: " << id << std::endl;
 	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
 		GameObjects::level_id_to_load = id;
 		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+		return;
 	}
+	std::cout << "Generating new level\n";
 	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::NEW_SOLAR_SYSTEM);
 }
@@ -331,10 +337,13 @@ Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
 }
 
 void Planet::on_pg_down() {
+	std::cout << "ID: " << id << std::endl;
 	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
 		GameObjects::level_id_to_load = id;
 		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+		return;
 	}
+	std::cout << "Generating new level\n";
 	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::NEW_WORLD);
 }
@@ -427,13 +436,18 @@ void Biome::deserialize(TCODZip* zip) {
 }
 
 void Biome::on_pg_down() {
+	std::cout << "ID: " << id << std::endl;
 	if (GameObjects::file_in_filesystem(GameObjects::savegame_path, std::to_string(id))) {
 		GameObjects::level_id_to_load = id;
 		GameEvent::set_event(GameEvent::LOAD_LEVEL);
+		return;
 	}
+	std::cout << "Generating new level\n";
 	GameObjects::new_level_id = id;
 	GameEvent::set_event(GameEvent::ENTER_WORLD_TILE);
 }
+
+Door::Door() {}
 
 Door::Door(int x, int y, int z, int type) : Actor(x, y, z) {
 	switch (type) {

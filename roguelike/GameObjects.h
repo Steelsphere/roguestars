@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 
+class Player;
 class GameObjects
 {
 public:
@@ -30,7 +31,7 @@ public:
 	
 	static std::map<std::string, Actor*(*)()> type_map;
 
-	static Actor* find_player(Level* level);
+	static Player* find_player(Level* level);
 
 	static bool file_in_filesystem(const std::string& path, const std::string& file);
 

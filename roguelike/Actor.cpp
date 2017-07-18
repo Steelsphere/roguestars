@@ -27,7 +27,7 @@ Actor::Actor(int x, int y, int z, const std::string& name) :
 {
 	_buffer->push_back(this);
 	if (_map != nullptr) {
-		_map->operator[](x)[y].push_back(this);
+		(*_map)[x][y].push_back(this);
 	}
 }
 

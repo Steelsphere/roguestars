@@ -395,8 +395,8 @@ void Level::save_level_file(std::string path) {
 	zip.putInt(size);
 	zip.putInt(_type);
 	
-	for (int i = 0; i < _actors.size(); i++) {
-		_actors[i]->serialize(&zip);
+	for (Actor* a : _actors) {
+		a->serialize(&zip);
 	}
 	
 	zip.saveToFile(path.c_str());
@@ -428,7 +428,6 @@ Level* Level::load_level_file(std::string path) {
 		level->_actors.push_back(actor);
 	}
 	
-//	level->_actors.pop_back();
 	level->generate_level(size, Level::NONE);
 	level->set_type(static_cast<LEVEL_TYPE>(type));
 	

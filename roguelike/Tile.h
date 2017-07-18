@@ -105,6 +105,7 @@ public:
 		STEEL,
 	};
 	
+	Door();
 	Door(int x, int y, int z, int type);
 
 	virtual void on_collide() override;
