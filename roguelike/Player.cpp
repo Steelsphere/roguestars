@@ -36,7 +36,8 @@ void Player::move(const std::string& dir) {
 	int ym = GameObjects::map_dir.at(dir).second;
 	
 	std::vector<Actor*> checkvec = Actor::get_actors(_world_x + xm, _world_y + ym, _world_z);
-	
+	std::vector<std::vector<std::vector<Actor*>>>* invec = Actor::get_map();
+
 	if (checkvec.size() == 0) {
 		return;
 	}
@@ -48,6 +49,14 @@ void Player::move(const std::string& dir) {
 		}
 	}
 	
+	for (int i = 0; i < (*invec)[_world_x][_world_y].size(); i++) {
+		if ((*invec)[_world_x][_world_y][i] == this) {
+			(*invec)[_world_x][_world_y].erase((*invec)[_world_x][_world_y].begin() + i);
+		}
+	}
+
+	(*invec)[_world_x + xm][_world_y + ym].push_back(this);
+
 	this->set_position(_screen_x + xm, _screen_y + ym, _screen_z);
 	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
 	

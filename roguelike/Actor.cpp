@@ -100,7 +100,7 @@ void Actor::draw_mem() {
 }
 
 Actor* Actor::get_actor(int x, int y, int z) {
-	return _map->operator[](x)[y].back();
+	return (*_map)[x][y].back();
 }
 
 std::vector<Actor*> Actor::get_actors(int x, int y, int z) {
@@ -110,9 +110,9 @@ std::vector<Actor*> Actor::get_actors(int x, int y, int z) {
 		return a;
 	}
 
-	for (int i = 0; i < _map->operator[](x)[y].size(); i++) {
-			a.push_back(_map->operator[](x)[y][i]);
-		}
+	for (int i = 0; i < (*_map)[x][y].size(); i++) {
+			a.push_back((*_map)[x][y][i]);
+	}
 	
 	return a;
 }

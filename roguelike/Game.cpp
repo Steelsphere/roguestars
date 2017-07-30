@@ -675,6 +675,7 @@ void Game::load_level() {
 				
 			_level = Level::load_level_file(f.path().string());
 			_level->id = GameObjects::level_id_to_load;
+			_player = GameObjects::find_player(_level);
 
 			level_setup();
 
@@ -684,6 +685,7 @@ void Game::load_level() {
 			std::cout << "Loaded level with ID: " << GameObjects::level_id_to_load << std::endl;
 			
 			GameObjects::level_id_to_load = 0;
+			GameObjects::update = true;
 			return;
 		}
 	}
