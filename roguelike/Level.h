@@ -13,17 +13,21 @@ class Level
 public:
 	enum LEVEL_TYPE {
 		NONE,
+		TEST,
 		GALAXY,
 		STAR_SECTOR,
 		SOLAR_SYSTEM,
 		SPACE,
+		
+		// ALL LEVEL TYPES GREATER THAN WORLD_MAP ARE SURFACE LEVELS
+		WORLD_MAP,
+		
 		GRASSLAND,
 		FOREST,
 		HILLS,
 		DESERT,
 		SNOWY_TAIGA,
 		OCEAN,
-		WORLD_MAP
 	};
 	
 	enum GENERATION_FLAG {
@@ -80,6 +84,8 @@ public:
 	std::string get_savedir() { return _savedir; }
 
 	void set_savedir(const std::string& dir) { _savedir = dir; }
+
+	void generate_test_level();
 
 private:
 	int _width, _height;

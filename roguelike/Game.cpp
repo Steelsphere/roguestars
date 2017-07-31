@@ -139,6 +139,9 @@ void Game::game_event() {
 	case GameEvent::LOAD_LEVEL:
 		load_level();
 		break;
+	case GameEvent::TEST_LEVEL:
+		test_level();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -158,6 +161,7 @@ void Game::exit_game() {
 
 void Game::update() {
 	if (GameObjects::new_turn && GameObjects::player_controlled) {
+//		_level->update_tile(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
 		update_characters();
 		_turn++;
 		
@@ -239,7 +243,7 @@ void Game::update_characters() {
 	std::vector<Character*>* b = Character::get_chbuff();
 	for (Character* c : (*b)) {
 		c->update();
-		_level->update_tile(c->get_world_pos()[0], c->get_world_pos()[1], 0);
+//		_level->update_tile(c->get_world_pos()[0], c->get_world_pos()[1], 0);
 	}
 }
 
@@ -533,7 +537,7 @@ void Game::close_inventory() {
 }
 
 void Game::upwards() {
-	if (_level->get_type() == Level::GALAXY) {
+	if (_level->get_type() == Level::GALAXY || Level::NONE) {
 		return;
 	}
 	else if (_level->get_type() == Level::STAR_SECTOR) {
@@ -545,7 +549,7 @@ void Game::upwards() {
 	else if (_level->get_type() == Level::WORLD_MAP) {
 		to_solar_system();
 	}
-	else if (_level->get_type() != Level::SPACE) {
+	else if (_level->get_type() > Level::WORLD_MAP) {
 		to_world_map();
 	}
 }
@@ -712,4 +716,20 @@ void Game::fix_tile_id() {
 			std::cout << "Tile ID fixed successfully to " << static_cast<T*>(a)->id << std::endl;
 		}
 	}
+}
+
+void Game::test_level() {
+	destroy_main_menu();
+	TCODConsole::root->clear();
+
+	_level = new Level;
+	_level->generate_level(128, Level::TEST);
+	
+	_player = new Player(32, 32, 0, '@', TCODColor::blue);
+	level_setup();
+
+	_log = new Log;
+	_status = new Status(_player, &_time);
+
+	GameObjects::update = true;
 }

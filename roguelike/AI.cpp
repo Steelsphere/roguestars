@@ -28,7 +28,7 @@ void AI::simple_follow(Character* c) {
 	int sposy = c->get_world_pos()[1];
 	
 	TCODPath path = TCODPath(Level::get_fov_map(), 1.0f);
-	path.compute(sposx, sposy, _player->get_world_pos()[0], _player->get_world_pos()[1]);
+	path.compute(sposx, sposy, _player->get_world_pos()[0]-1, _player->get_world_pos()[1]-1);
 	
 	if (path.size() == 0) {
 		return;

@@ -381,6 +381,9 @@ void MainMenu::draw(bool force) {
 			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
 		}
 	}
+	if (Input::get_last_key().shift && Input::get_last_key().vk == TCODK_1) {
+		GameEvent::set_event(GameEvent::TEST_LEVEL);
+	}
 }
 
 ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObjects::screen_height / 2 - 10, 24, 12, std::vector<Text>()) {

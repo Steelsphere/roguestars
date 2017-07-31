@@ -46,6 +46,10 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	
 	switch (type) {
 	
+	case TEST:
+		generate_test_level();
+		break;
+
 	case GALAXY:
 		generate_space();
 		generate_space_obj(Random::one_to_sixteen, GALAXY);
@@ -236,7 +240,7 @@ void Level::update_tile(int x, int y, int z) {
 	std::vector<Actor*> actors = Actor::get_actors(x, y, z);
 	_map[x][y].clear();
 	for (Actor* a : actors) {
-		_fovmap->setProperties(a->get_world_pos()[0], a->get_world_pos()[1], a->is_transparent(), a->is_impassable());
+		_fovmap->setProperties(a->get_world_pos()[0], a->get_world_pos()[1], a->is_transparent(), !a->is_impassable());
 		_map[x][y].push_back(a);
 	}
 }
@@ -433,4 +437,39 @@ Level* Level::load_level_file(std::string path) {
 	level->update();
 	
 	return level;
+}
+
+void Level::generate_test_level() {
+	
+	//Generate the floor
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			new Tile(x, y, 0, Tile::STEEL_FLOOR);
+		}
+	}
+	
+	//Generate the border
+	for (int x = 0; x < _width; x++) {
+		new Tile(x, 0, 0, Tile::STEEL_WALL);
+		new Tile(x, _height - 1, 0, Tile::STEEL_WALL);
+	}
+	for (int y = 1; y < _height - 1; y++) {
+		new Tile(0, y, 0, Tile::STEEL_WALL);
+		new Tile(_width - 1, y, 0, Tile::STEEL_WALL);
+	}
+
+	//Generate some obstacles
+	for (int x = 1; x < _width - 1; x++) {
+		for (int y = 1; y < _height - 1; y++) {
+			if (Random::one_to_eight(Random::generator) == 1) {
+				new Tile(x, y, 0, Tile::WOOD);
+			}
+		}
+	}
+
+	//Generate monsters
+	new Monster(1, 1, 0);
+	new Monster(_width - 1, 1, 0);
+	new Monster(1, _height - 1, 0);
+	new Monster(_width - 1, _height - 1, 0);
 }

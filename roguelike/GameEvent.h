@@ -24,6 +24,7 @@ public:
 		DEHIGHLIGHT_PLAYER,
 		SAVE_SCREEN,
 		LOAD_LEVEL,
+		TEST_LEVEL,
 		EXIT,
 	};
 	enum class GAME_STATUS {

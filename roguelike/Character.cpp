@@ -65,5 +65,5 @@ Monster::Monster(int x, int y, int z) : Character(x, y, z) {
 	_c = 'M';
 	_fcolor = TCODColor::brass;
 	_name = "Monster";
-	_speed = 500;
+	_speed = 1000;
 }

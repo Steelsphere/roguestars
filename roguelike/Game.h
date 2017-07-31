@@ -105,6 +105,8 @@ public:
 	template<typename T>
 	void fix_tile_id();
 
+	void test_level();
+
 private:
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
