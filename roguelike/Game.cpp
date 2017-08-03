@@ -142,6 +142,12 @@ void Game::game_event() {
 	case GameEvent::TEST_LEVEL:
 		test_level();
 		break;
+	case GameEvent::OPEN_MAP:
+		open_map();
+		break;
+	case GameEvent::CLOSE_MAP:
+		close_map();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -732,4 +738,13 @@ void Game::test_level() {
 	_status = new Status(_player, &_time);
 
 	GameObjects::update = true;
+}
+
+void Game::open_map() {
+	_gui_map = new Map(_level);
+}
+
+void Game::close_map() {
+	delete _gui_map;
+	_gui_map = nullptr;
 }

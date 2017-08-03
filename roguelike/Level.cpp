@@ -468,8 +468,8 @@ void Level::generate_test_level() {
 	}
 
 	//Generate monsters
-	new Monster(1, 1, 0);
-	new Monster(_width - 1, 1, 0);
-	new Monster(1, _height - 1, 0);
-	new Monster(_width - 1, _height - 1, 0);
+	new Monster(2, 2, 0);
+	new Monster(_width - 2, 2, 0);
+	new Monster(2, _height - 2, 0);
+	new Monster(_width - 2, _height - 2, 0);
 }

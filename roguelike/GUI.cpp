@@ -404,20 +404,20 @@ InfoViewer::InfoViewer(Actor* aref) : GUI(0, (GameObjects::screen_height - 10), 
 	Text c4 = { 2, 5, _width - 2, 1, "", TCODColor::white };
 	Text c5 = { 2, 6, _width - 2, 1, "", TCODColor::white };
 	Text c6 = { 2, 7, _width - 2, 1, "", TCODColor::white };
-	_text.push_back(title); 
-	_text.push_back(c1); _text.push_back(c2); _text.push_back(c3);
-	_text.push_back(c4); _text.push_back(c5); _text.push_back(c6);
-	
-	_type = FILLED_BORDERED_BACKGROUND;
-	_transparency = 0.9;
-	_actor = aref;
+_text.push_back(title);
+_text.push_back(c1); _text.push_back(c2); _text.push_back(c3);
+_text.push_back(c4); _text.push_back(c5); _text.push_back(c6);
+
+_type = FILLED_BORDERED_BACKGROUND;
+_transparency = 0.9;
+_actor = aref;
 }
 
 void InfoViewer::draw(bool force) {
 	if (_update || force) {
 		GUI::draw(force);
 		std::vector<Actor*> actors = Actor::get_actors(_actor->get_world_pos()[0], _actor->get_world_pos()[1], 0);
-		
+
 		if (actors.size() == 0) {
 			for (int i = 1; i < _text.size() - 1; i++) {
 				_text[i].str = "";
@@ -428,7 +428,7 @@ void InfoViewer::draw(bool force) {
 		for (int i = actors.size() - 1, j = 1;
 			i >= 0 && j < _text.size();
 			i--, j++) {
-		
+
 			Actor* a = actors[i];
 
 			if (!a->is_in_fov()) {
@@ -452,7 +452,7 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 	_text.push_back(title);
 
 	std::vector<Item*>* inv = c->get_inventory();
-	
+
 	int ypos = 2;
 	for (Item* i : (*inv)) {
 		MText item = { 3, ypos, 50, 1, i->get_name(), TCODColor::white };
@@ -460,7 +460,7 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 		ypos++;
 		std::cout << _mtext.size() << " " << i->get_name() << std::endl;
 	}
-	
+
 	if (_mtext.size() > 0) {
 		_mtext[0].selected = true;
 	}
@@ -470,4 +470,64 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 
 	_type = FILLED_BORDERED_BACKGROUND;
 	_transparency = 0.9;
+}
+
+Map::Map(Level* level) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
+	Text title = { _width - 4, 0, 30, 1, "Map", TCODColor::red };
+	_text.push_back(title);
+
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0.9;
+
+	// Generate Map
+
+	int maparea_x = 1;
+	int maparea_y = 1;
+	int maparea_w = _width - 2;
+	int maparea_h = _height - 2;
+
+	std::vector<std::vector<std::vector<Actor*>>>* data = level->get_actor_map();
+
+	std::vector<std::vector<TCODColor>> colormap;
+	colormap.resize(level->get_size() / 2);
+	for (int i = 0; i < colormap.size(); i++) {
+		colormap[i].resize(level->get_size() / 2);
+	}
+	for (int x = 0; x < level->get_size() / 2; x++) {
+		for (int y = 0; y < level->get_size() / 2; y++) {
+			colormap[x][y] = (*data)[x][y].back()->get_color_obj();
+		}
+	}
+
+	// Make it bigger
+	
+	int prev_x = colormap.size();
+	int prev_y = colormap[0].size();
+
+	std::vector<std::vector<TCODColor>> image;
+	image.resize(maparea_w);
+	for (int x = 0; x < image.size(); x++) {
+		image[x].resize(maparea_h);
+	}
+	std::cout << "Map x size: " << colormap.size() << std::endl;
+	std::cout << "Map y size: " << colormap[0].size() << std::endl;
+	
+	for (int x = 0; x < maparea_w; x++) {
+		for (int y = 0; y < maparea_h; y++) {
+			image[x][y] = colormap[x*prev_x/maparea_w][y*prev_y/maparea_h];
+		}
+	}
+	
+	// Display to screen
+
+	for (int x = 0; x < image.size(); x++) {
+		for (int y = 0; y < image[x].size(); y++) {
+			_cons->putCharEx(x + maparea_x, y + maparea_y, 0, TCODColor::black, image[x][y]);
+		}
+	}
+
+}
+
+Map::~Map() {
+	TCODConsole::root->clear();
 }

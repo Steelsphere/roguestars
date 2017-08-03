@@ -107,6 +107,10 @@ public:
 
 	void test_level();
 
+	void open_map();
+
+	void close_map();
+
 private:
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
@@ -141,4 +145,5 @@ private:
 	ESCMenu* _ESCMenu = nullptr;
 	InfoViewer* _info_viewer = nullptr;
 	InventoryPanel* _inv_panel = nullptr;
+	Map* _gui_map = nullptr;
 };

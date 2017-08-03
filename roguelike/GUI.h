@@ -9,6 +9,7 @@
 #include <vector>
 
 class Player;
+class Level;
 
 class GUI
 {
@@ -143,4 +144,10 @@ protected:
 class InventoryPanel : public SelectionBoxEx {
 public:
 	InventoryPanel(Character* c);
+};
+
+class Map : public GUI {
+public:
+	Map(Level* level);
+	~Map();
 };

@@ -25,6 +25,8 @@ public:
 		SAVE_SCREEN,
 		LOAD_LEVEL,
 		TEST_LEVEL,
+		OPEN_MAP,
+		CLOSE_MAP,
 		EXIT,
 	};
 	enum class GAME_STATUS {

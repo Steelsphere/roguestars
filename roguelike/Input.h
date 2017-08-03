@@ -16,6 +16,7 @@ public:
 		ENTER_TO_CONTINUE,
 		INFO_VIEWER,
 		INVENTORY_PANEL,
+		MAP,
 		CLOSE,
 	};
 	
