@@ -150,6 +150,7 @@
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Faction.cpp" />
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjects.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Faction.h" />
     <ClInclude Include="GameEvent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjects.h" />

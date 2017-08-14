@@ -6,6 +6,7 @@
 #include "Character.h"
 #include "Structure.h"
 #include "Tile.h"
+#include "Faction.h"
 
 #include <filesystem>
 
@@ -274,7 +275,9 @@ void Game::startup_new_game() {
 	
 	GameObjects::new_level_id = Random::random(Random::generator);
 
-	new_world();
+	new_galaxy();
+	generate_factions();
+
 	_log = new Log;
 	_status = new Status(_player, &_time);
 	new Message_Box("No errors");
@@ -397,6 +400,7 @@ void Game::new_world() {
 	_level = _world->get_current_level();
 	_level->save_level_image("Data\\Level.png");
 	_level->set_savedir("surface");
+	_world_id = _level->id;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
@@ -415,6 +419,7 @@ void Game::new_solar_system() {
 	_level = new Level;
 	_level->generate_level(256, Level::SOLAR_SYSTEM);
 	_level->set_savedir("solarsystem");
+	_solarsystem_id = _level->id;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player(Level::SOLAR_SYSTEM);
@@ -431,6 +436,7 @@ void Game::new_star_sector() {
 	_level = new Level;
 	_level->generate_level(512, Level::STAR_SECTOR);
 	_level->set_savedir("starsector");
+	_starsector_id - _level->id;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player(Level::STAR_SECTOR);
@@ -446,7 +452,8 @@ void Game::new_galaxy() {
 	_level = new Level;
 	_level->generate_level(1024, Level::GALAXY);
 	_level->set_savedir("galaxy");
-	
+	_galaxy_id = _level->id;
+
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player(Level::GALAXY);
 
@@ -568,9 +575,7 @@ void Game::to_galaxy() {
 		return;
 	}
 	
-	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\galaxy")) {
-		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
-	}
+	GameObjects::level_id_to_load = _galaxy_id;
 	
 	load_level();
 	_level->set_savedir("galaxy");
@@ -591,9 +596,7 @@ void Game::to_star_sector() {
 		return;
 	}
 	
-	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\starsector")) {
-		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
-	}
+	GameObjects::level_id_to_load = _starsector_id;
 	
 	load_level();
 	_level->set_savedir("starsector");
@@ -614,9 +617,7 @@ void Game::to_solar_system() {
 		return;
 	}
 	
-	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\solarsystem")) {
-		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
-	}
+	GameObjects::level_id_to_load = _solarsystem_id;
 	
 	load_level();
 	_level->set_savedir("solarsystem");
@@ -637,10 +638,8 @@ void Game::to_world_map() {
 		return;
 	}
 
-	for (auto f : std::experimental::filesystem::directory_iterator(_savegame_directory + "\\world")) {
-		GameObjects::level_id_to_load = std::stoi(f.path().filename().string());
-	}
-
+	GameObjects::level_id_to_load = _world_id;
+	
 	load_level();
 	_level->set_savedir("world");
 	_level->update();
@@ -747,4 +746,25 @@ void Game::open_map() {
 void Game::close_map() {
 	delete _gui_map;
 	_gui_map = nullptr;
+}
+
+void Game::generate_factions() {
+	for (int i = 0; i < 5; i++) {
+		new Faction(Random::randc(0, (_level->get_size() / 2) - 1), Random::randc(0, (_level->get_size() / 2) - 1));
+	}
+
+	for (int i = 0; i < 10000; i++) {
+		for (Faction* f : Faction::get_factions()) {
+			f->simulate();
+//			std::cout << i << std::endl;
+		}
+	}
+
+	TCODImage img(_level->get_size() / 2, _level->get_size() / 2);
+	for (Faction* f : Faction::get_factions()) {
+		for (Actor* a : f->get_owned_tiles()) {
+			img.putPixel(a->get_world_pos()[0], a->get_world_pos()[1], f->get_color());
+		}
+	}
+	img.save("Data\\factionmap.png");
 }

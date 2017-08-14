@@ -111,9 +111,12 @@ public:
 
 	void close_map();
 
+	void generate_factions();
+
 private:
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
+	int _galaxy_id = 0; int _starsector_id = 0; int _solarsystem_id = 0; int _world_id = 0;
 	
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
@@ -125,9 +128,6 @@ private:
 	Level* _level = nullptr;
 	Camera* _camera = nullptr;
 	World* _world = nullptr;
-	Level* _galaxy = nullptr;
-	Level* _star_sector = nullptr;
-	Level* _solar_system = nullptr;
 	
 	// Player stuff
 	Player* _player = nullptr;

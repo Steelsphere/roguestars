@@ -100,6 +100,12 @@ void Actor::draw_mem() {
 }
 
 Actor* Actor::get_actor(int x, int y, int z) {
+	if (x >= _map->size()) {
+		return nullptr;
+	}
+	if (y >= _map[0].size()) {
+		return nullptr;
+	}
 	return (*_map)[x][y].back();
 }
 
