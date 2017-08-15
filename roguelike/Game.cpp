@@ -749,22 +749,60 @@ void Game::close_map() {
 }
 
 void Game::generate_factions() {
-	for (int i = 0; i < 5; i++) {
-		new Faction(Random::randc(0, (_level->get_size() / 2) - 1), Random::randc(0, (_level->get_size() / 2) - 1));
+	
+	
+	// Find suitable spawn points
+	std::vector<Actor*> spawnpoints;
+	
+	for (Actor* a : (*_level->get_actors())) {
+		if (a->get_name() == "Star Sector") {
+			spawnpoints.push_back(a);
+		}
 	}
+	
+	for (int i = 0; i < 5; i++) {
+		int r = Random::randc(0, spawnpoints.size() - 1);
+		new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
+		spawnpoints.erase(spawnpoints.begin() + r);
+		if (spawnpoints.size() == 0) {
+			break;
+		}
+	}
+
+	// Simulate
+	std::cout << "Beginning faction simulation!\n";
+	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
 
 	for (int i = 0; i < 10000; i++) {
 		for (Faction* f : Faction::get_factions()) {
 			f->simulate();
-//			std::cout << i << std::endl;
+			std::cout << i << "/" << 10000 << "\r";
+			
+			if (Random::randc(0, 4000) == 1) {
+				int r = Random::randc(0, spawnpoints.size() - 1);
+				new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
+				std::cout << "A new nation has been founded\n";
+				spawnpoints.erase(spawnpoints.begin() + r);
+				if (spawnpoints.size() == 0) {
+					break;
+				}
+			}
+
+			if (i % 1000 == 0) {
+				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
+			}
 		}
 	}
 
-	TCODImage img(_level->get_size() / 2, _level->get_size() / 2);
+	// Set color of tiles on the level
 	for (Faction* f : Faction::get_factions()) {
 		for (Actor* a : f->get_owned_tiles()) {
-			img.putPixel(a->get_world_pos()[0], a->get_world_pos()[1], f->get_color());
+			a->set_bcolor_obj(f->get_color());
 		}
+		// Capital color
+		f->get_capital()->set_color_obj(TCODColor::yellow);
 	}
-	img.save("Data\\factionmap.png");
+
+	// Save factions image
+	Faction::save_faction_map("Data\\factionmap.png", _level->get_size());
 }

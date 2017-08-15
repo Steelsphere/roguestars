@@ -13,7 +13,11 @@ public:
 
 	static std::vector<Faction*> get_factions() { return _factions; }
 
-	static bool does_faction_own_tile(int x, int y);
+	static bool any_own_tile(const Actor* t);
+
+	static Faction* who_owns_tile(const Actor* t);
+
+	static void save_faction_map(const std::string& path, int size);
 
 	TCODColor get_color() { return _color; }
 
@@ -21,7 +25,13 @@ public:
 
 	void simulate();
 
-	bool self_own_tile(int x, int y);
+	bool self_own_tile(const Actor* t);
+
+	bool other_own_tile(const Actor* t);
+
+	void remove_tile(const Actor* t);
+
+	Actor* get_capital() { return _capital_tile; }
 
 private:
 	static std::vector<Faction*> _factions;
