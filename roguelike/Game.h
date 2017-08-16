@@ -146,4 +146,5 @@ private:
 	InfoViewer* _info_viewer = nullptr;
 	InventoryPanel* _inv_panel = nullptr;
 	Map* _gui_map = nullptr;
+	LoadingScreen* _loadingscreen = nullptr;
 };

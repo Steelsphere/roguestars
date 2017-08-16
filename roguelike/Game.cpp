@@ -30,6 +30,8 @@ void Game::init() {
 
 	_time.pass_time(0, 24, 0, 0, 0, 0);
 	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
+
+	GameObjects::log = _log;
 }
 
 void Game::start() {
@@ -275,8 +277,25 @@ void Game::startup_new_game() {
 	
 	GameObjects::new_level_id = Random::random(Random::generator);
 
+	_loadingscreen = new LoadingScreen("Generating the galaxy");
+	_log = new Log(1, GameObjects::screen_height - 14, GameObjects::screen_width - 2, 6);
+	
+	GameObjects::log = _log;
+
+	_loadingscreen->draw(true);
+	_log->draw(true);
+
 	new_galaxy();
+	
+	_gui_map = new Map(1, 1, GameObjects::screen_width - 2, GameObjects::screen_height - 15, _level, true);
+	_gui_map->draw(true);
+	TCODConsole::root->flush();
+
 	generate_factions();
+	
+	delete _loadingscreen;
+	delete _gui_map;
+	delete _log;
 
 	_log = new Log;
 	_status = new Status(_player, &_time);
@@ -778,19 +797,39 @@ void Game::generate_factions() {
 			f->simulate();
 			std::cout << i << "/" << 10000 << "\r";
 			
+			if (i % 100 == 0) {
+				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(10000));
+				TCODConsole::root->flush();
+			}
+
+			if (i % 1000 == 0) {
+				for (Faction* f : Faction::get_factions()) {
+					for (Actor* a : f->get_owned_tiles()) {
+						a->set_bcolor_obj(f->get_color());
+					}
+				}
+				_gui_map->update_map(_level, true);
+				_gui_map->draw(true);
+				TCODConsole::root->flush();
+			}
+			
 			if (Random::randc(0, 4000) == 1) {
 				int r = Random::randc(0, spawnpoints.size() - 1);
 				new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
+				
 				std::cout << "A new nation has been founded\n";
+				_log->message("A new nation has been founded", TCODColor::green);
+				_log->draw(true);
+
 				spawnpoints.erase(spawnpoints.begin() + r);
 				if (spawnpoints.size() == 0) {
 					break;
 				}
 			}
 
-			if (i % 1000 == 0) {
-				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
-			}
+//			if (i % 1000 == 0) {
+//				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
+//			}
 		}
 	}
 
@@ -798,6 +837,19 @@ void Game::generate_factions() {
 	for (Faction* f : Faction::get_factions()) {
 		for (Actor* a : f->get_owned_tiles()) {
 			a->set_bcolor_obj(f->get_color());
+			
+			// Change color of star sectors based on how dangerous it is
+			if (a->get_name() == "Star Sector") {
+				int dangerlevel = 0;
+				for (Actor* ab : a->get_adjacent_actors_vec()) {
+					if (f->other_own_tile(ab)) {
+						dangerlevel++;
+					}
+				}
+				if (dangerlevel != 0) {
+					a->set_color(255, 255 - (30 * dangerlevel), 255 - (30 * dangerlevel));
+				}
+			}
 		}
 		// Capital color
 		f->get_capital()->set_color_obj(TCODColor::yellow);

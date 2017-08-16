@@ -2,6 +2,7 @@
 
 #include "Actor.h"
 #include "Level.h"
+#include "GUI.h"
 
 #include <vector>
 #include <map>
@@ -22,6 +23,8 @@ public:
 	static bool update;
 	static bool player_controlled;
 	static bool new_turn;
+
+	static Log* log;
 	
 	static std::string savegame_path;
 	static std::map<std::string, std::pair<int, int>> map_dir;

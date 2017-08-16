@@ -21,6 +21,8 @@ bool GameObjects::update = true;
 bool GameObjects::player_controlled = false;
 bool GameObjects::new_turn = false;
 
+Log* GameObjects::log;
+
 std::string GameObjects::savegame_path;
 
 std::map<std::string, std::pair<int, int>> GameObjects::map_dir = {

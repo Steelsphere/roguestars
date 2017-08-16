@@ -123,6 +123,13 @@ Log::Log() : GUI(GameObjects::screen_width - 30, 0, 30, GameObjects::screen_heig
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
+Log::Log(int x, int y, int w, int h) : GUI(x, y, w, h, std::vector<Text>()) {
+	Text name = { 1, 0, 3, 1, "Log", TCODColor::red };
+	_text.push_back(name);
+	_transparency = 0.9f;
+	_type = FILLED_BORDERED_BACKGROUND;
+}
+
 void Log::message(const std::string& message, TCODColor color) {
 	for (int i = 1; i < _text.size(); i++) {
 		_text[i].y--;
@@ -472,7 +479,20 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 	_transparency = 0.9;
 }
 
-Map::Map(Level* level) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
+Map::Map(Level* level, bool background) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
+	Text title = { _width - 4, 0, 30, 1, "Map", TCODColor::red };
+	_text.push_back(title);
+
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0.9;
+	
+	// Generate Map
+
+	update_map(level, background);
+
+}
+
+Map::Map(int x, int y, int w, int h, Level* level, bool background) : GUI(x, y, w, h, std::vector<Text>()) {
 	Text title = { _width - 4, 0, 30, 1, "Map", TCODColor::red };
 	_text.push_back(title);
 
@@ -481,6 +501,14 @@ Map::Map(Level* level) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::
 
 	// Generate Map
 
+	update_map(level, background);
+}
+
+Map::~Map() {
+	TCODConsole::root->clear();
+}
+
+void Map::update_map(Level* level, bool background) {
 	int maparea_x = 1;
 	int maparea_y = 1;
 	int maparea_w = _width - 2;
@@ -495,12 +523,17 @@ Map::Map(Level* level) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::
 	}
 	for (int x = 0; x < level->get_size() / 2; x++) {
 		for (int y = 0; y < level->get_size() / 2; y++) {
-			colormap[x][y] = (*data)[x][y].back()->get_color_obj();
+			if (background) {
+				colormap[x][y] = (*data)[x][y].back()->get_bcolor_obj();
+			}
+			else {
+				colormap[x][y] = (*data)[x][y].back()->get_color_obj();
+			}
 		}
 	}
 
 	// Make it bigger
-	
+
 	int prev_x = colormap.size();
 	int prev_y = colormap[0].size();
 
@@ -509,15 +542,15 @@ Map::Map(Level* level) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::
 	for (int x = 0; x < image.size(); x++) {
 		image[x].resize(maparea_h);
 	}
-	std::cout << "Map x size: " << colormap.size() << std::endl;
-	std::cout << "Map y size: " << colormap[0].size() << std::endl;
-	
+//	std::cout << "Map x size: " << colormap.size() << std::endl;
+//	std::cout << "Map y size: " << colormap[0].size() << std::endl;
+
 	for (int x = 0; x < maparea_w; x++) {
 		for (int y = 0; y < maparea_h; y++) {
-			image[x][y] = colormap[x*prev_x/maparea_w][y*prev_y/maparea_h];
+			image[x][y] = colormap[x*prev_x / maparea_w][y*prev_y / maparea_h];
 		}
 	}
-	
+
 	// Display to screen
 
 	for (int x = 0; x < image.size(); x++) {
@@ -525,9 +558,22 @@ Map::Map(Level* level) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::
 			_cons->putCharEx(x + maparea_x, y + maparea_y, 0, TCODColor::black, image[x][y]);
 		}
 	}
-
 }
 
-Map::~Map() {
-	TCODConsole::root->clear();
+LoadingScreen::LoadingScreen(const std::string& text) : GUI(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
+	Text loading = { (_width / 2) - 5, _height - 7, 20, 1, "Loading...", TCODColor::white };
+	Text bottext = { (_width / 2) - 25, _height - 5, 60, 1, text, TCODColor::white };
+
+	_text.push_back(loading);
+	_text.push_back(bottext);
+
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0;
+
+	draw(true);
+}
+
+void LoadingScreen::set_text(const std::string& text) {
+	_text[1].str = text;
+	draw(true);
 }

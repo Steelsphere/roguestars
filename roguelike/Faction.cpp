@@ -1,4 +1,5 @@
 #include "Faction.h"
+#include "GameObjects.h"
 
 #include <iostream>
 
@@ -71,6 +72,7 @@ void Faction::simulate() {
 	// Check if dead
 	if (!self_own_tile(_capital_tile)) {
 		std::cout << _name << " has collapsed!\n";
+		GameObjects::log->message(_name + " has collapsed!", TCODColor::red);
 		delete this; // RIP
 	}
 }

@@ -61,6 +61,7 @@ public:
 class Log : public GUI {
 public:
 	Log();
+	Log(int x, int y, int w, int h);
 
 	void message(const std::string& message, TCODColor color);
 };
@@ -148,6 +149,17 @@ public:
 
 class Map : public GUI {
 public:
-	Map(Level* level);
+	Map(Level* level, bool background = false);
+	Map(int x, int y, int w, int h, Level* level, bool background);
+	
 	~Map();
+
+	void update_map(Level* level, bool background);
+};
+
+class LoadingScreen : public GUI {
+public:
+	LoadingScreen(const std::string& text);
+
+	void set_text(const std::string& text);
 };
