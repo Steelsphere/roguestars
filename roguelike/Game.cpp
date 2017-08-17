@@ -257,21 +257,6 @@ void Game::update_characters() {
 }
 
 void Game::startup_new_game() {
-	int num = 1;
-	for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
-		num++;
-	}
-	std::string gname = "Game " + std::to_string(num);
-	std::experimental::filesystem::create_directory("Data\\Save\\" + gname);
-	_savegame_directory = "Data\\Save\\" + gname;
-	GameObjects::savegame_path = _savegame_directory;
-	
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\galaxy");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\starsector");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\solarsystem");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\world");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\surface");
-	
 	destroy_main_menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 	
@@ -296,6 +281,21 @@ void Game::startup_new_game() {
 	delete _loadingscreen;
 	delete _gui_map;
 	delete _log;
+
+	int num = 1;
+	for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
+		num++;
+	}
+	std::string gname = "Game " + std::to_string(num);
+	std::experimental::filesystem::create_directory("Data\\Save\\" + gname);
+	_savegame_directory = "Data\\Save\\" + gname;
+	GameObjects::savegame_path = _savegame_directory;
+
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\galaxy");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\starsector");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\solarsystem");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\world");
+	std::experimental::filesystem::create_directory(_savegame_directory + "\\surface");
 
 	_log = new Log;
 	_status = new Status(_player, &_time);
