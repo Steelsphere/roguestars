@@ -14,7 +14,11 @@ Faction::Faction(int startx, int starty) {
 	_capital_tile = Actor::get_actors(startx, starty, 0).back();
 	_owned_tiles.push_back(_capital_tile);
 	_color = TCODColor(Random::randc(0, 255), Random::randc(0, 255), Random::randc(0, 255));
-	_name = std::to_string(Random::random(Random::generator));
+	_name = TCODNamegen::generate("object");
+
+	std::cout << "A new nation, " << _name << ", has been founded\n";
+	GameObjects::log->message("A new nation, " + _name + ", has been founded", TCODColor::green);
+	GameObjects::log->draw(true);
 }
 
 Faction::~Faction() {
@@ -73,6 +77,7 @@ void Faction::simulate() {
 	if (!self_own_tile(_capital_tile)) {
 		std::cout << _name << " has collapsed!\n";
 		GameObjects::log->message(_name + " has collapsed!", TCODColor::red);
+		GameObjects::log->draw(true);
 		delete this; // RIP
 	}
 }

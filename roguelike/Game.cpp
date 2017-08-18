@@ -32,6 +32,12 @@ void Game::init() {
 	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
 	GameObjects::log = _log;
+
+	TCODNamegen::parse("Data\\tcod\\names.cfg");
+
+	for (int i = 0; i < 10; i++) {
+		std::cout << TCODNamegen::generate("object") << std::endl;
+	}
 }
 
 void Game::start() {
@@ -817,10 +823,6 @@ void Game::generate_factions() {
 				int r = Random::randc(0, spawnpoints.size() - 1);
 				new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
 				
-				std::cout << "A new nation has been founded\n";
-				_log->message("A new nation has been founded", TCODColor::green);
-				_log->draw(true);
-
 				spawnpoints.erase(spawnpoints.begin() + r);
 				if (spawnpoints.size() == 0) {
 					break;
