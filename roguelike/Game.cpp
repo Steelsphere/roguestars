@@ -181,12 +181,32 @@ void Game::update() {
 		_turn++;
 		
 		if (_log != nullptr) {
-			_log->message(std::to_string(_turn), TCODColor::white);
+			_log->message("Turn: " + std::to_string(_turn) + " Pos: " + 
+				std::to_string(_player->get_world_pos()[0]) + " " + 
+				std::to_string(_player->get_world_pos()[1]), TCODColor::white);
+		}
+		
+		for (Faction* f : Faction::get_factions()) {
+			f->simulate();
+		}
+
+		if (_level->get_type() == Level::GALAXY) {
+			for (Faction* f : Faction::get_factions()) {
+				for (Actor* a : f->get_owned_tiles()) {
+					a->set_bcolor_obj(f->get_color());
+				}
+			}
 		}
 		
 		GameObjects::new_turn = false;
 	}
 	
+	for (Faction* f : Faction::get_factions()) {
+		for (Hero* h : f->get_heroes()) {
+			h->draw();
+		}
+	}
+
 	_num_actors_drawn = 0;
 	std::vector<Actor*>* actors = _level->get_actors();
 	TCODMap* fov = nullptr;
@@ -277,7 +297,9 @@ void Game::startup_new_game() {
 	_log->draw(true);
 
 	new_galaxy();
-	
+
+	TCODConsole::root->clear();
+
 	_gui_map = new Map(1, 1, GameObjects::screen_width - 2, GameObjects::screen_height - 15, _level, true);
 	_gui_map->draw(true);
 	TCODConsole::root->flush();
@@ -303,9 +325,18 @@ void Game::startup_new_game() {
 	std::experimental::filesystem::create_directory(_savegame_directory + "\\world");
 	std::experimental::filesystem::create_directory(_savegame_directory + "\\surface");
 
+	std::cout << "Number of actors: " << Actor::get_buffer()->size() << std::endl;
+
+	new Hero(_player->get_world_pos()[0] - 1, _player->get_world_pos()[1] - 1, Faction::get_factions()[0]);
+
 	_log = new Log;
+	GameObjects::log = _log;
+
 	_status = new Status(_player, &_time);
 	new Message_Box("No errors");
+
+	level_setup();
+	GameObjects::update = true;
 }
 
 void Game::startup_load_game() {
@@ -482,7 +513,6 @@ void Game::new_galaxy() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player(Level::GALAXY);
 
-	level_setup();
 	GameObjects::update = true;
 }
 
@@ -798,16 +828,19 @@ void Game::generate_factions() {
 	std::cout << "Beginning faction simulation!\n";
 	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
 
-	for (int i = 0; i < 10000; i++) {
+	for (int i = 0; i < 5000; i++) {
 		for (Faction* f : Faction::get_factions()) {
 			f->simulate();
-			std::cout << i << "/" << 10000 << "\r";
+			std::cout << i << "/" << 5000 << "\r";
 			
+
+			// Update loading screen
 			if (i % 100 == 0) {
 				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(10000));
 				TCODConsole::root->flush();
 			}
 
+			// Update map
 			if (i % 1000 == 0) {
 				for (Faction* f : Faction::get_factions()) {
 					for (Actor* a : f->get_owned_tiles()) {
@@ -819,6 +852,7 @@ void Game::generate_factions() {
 				TCODConsole::root->flush();
 			}
 			
+			// Spawn new nations
 			if (Random::randc(0, 4000) == 1) {
 				int r = Random::randc(0, spawnpoints.size() - 1);
 				new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
@@ -855,6 +889,14 @@ void Game::generate_factions() {
 		}
 		// Capital color
 		f->get_capital()->set_color_obj(TCODColor::yellow);
+	}
+	
+	// Set factions to be slow
+	for (Faction* f : Faction::get_factions()) {
+		f->set_speed(false);
+		for (Hero* h : f->get_heroes()) {
+			h->join_playarea();
+		}
 	}
 
 	// Save factions image

@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Tile.h"
+#include "Hero.h"
 
 #include <vector>
 
 class Faction {
+	friend class Hero;
+
 public:
 	Faction();
 	Faction(int startx, int starty);
@@ -33,6 +36,10 @@ public:
 
 	Actor* get_capital() { return _capital_tile; }
 
+	void set_speed(bool fast) { _fast = fast; }
+
+	std::vector<Hero*> get_heroes() { return _heroes; }
+
 private:
 	static std::vector<Faction*> _factions;
 
@@ -40,5 +47,8 @@ private:
 	Actor* _capital_tile;
 	TCODColor _color;
 	std::string _name;
+	std::vector<Hero*> _heroes;
+
+	bool _fast;
 };
 

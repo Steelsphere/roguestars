@@ -15,6 +15,7 @@ Faction::Faction(int startx, int starty) {
 	_owned_tiles.push_back(_capital_tile);
 	_color = TCODColor(Random::randc(0, 255), Random::randc(0, 255), Random::randc(0, 255));
 	_name = TCODNamegen::generate("object");
+	_fast = true;
 
 	std::cout << "A new nation, " << _name << ", has been founded\n";
 	GameObjects::log->message("A new nation, " + _name + ", has been founded", TCODColor::green);
@@ -70,7 +71,23 @@ void Faction::simulate() {
 	}
 	else { 
 		// FORTIFY
+		
+		// Create a hero
+		if (Random::randc(0, 4000) == 1) {
+			std::vector<Actor*> spawn;
+			for (Actor* a : _owned_tiles) {
+				if (a->get_name() == "Star Sector") {
+					spawn.push_back(a);
+				}
+			}
+			int rdx = Random::randc(0, spawn.size() - 1);
+			Actor* s = spawn[rdx];
+			new Hero(s->get_world_pos()[0], s->get_world_pos()[1], this);
+		}
+	}
 
+	for (Hero* h : _heroes) {
+		h->simulate(_fast);
 	}
 	
 	// Check if dead
