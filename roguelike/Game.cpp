@@ -327,8 +327,6 @@ void Game::startup_new_game() {
 
 	std::cout << "Number of actors: " << Actor::get_buffer()->size() << std::endl;
 
-	new Hero(_player->get_world_pos()[0] - 1, _player->get_world_pos()[1] - 1, Faction::get_factions()[0]);
-
 	_log = new Log;
 	GameObjects::log = _log;
 
@@ -828,14 +826,14 @@ void Game::generate_factions() {
 	std::cout << "Beginning faction simulation!\n";
 	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
 
-	for (int i = 0; i < 5000; i++) {
+	for (int i = 0; i < 10000; i++) {
 		for (Faction* f : Faction::get_factions()) {
 			f->simulate();
-			std::cout << i << "/" << 5000 << "\r";
+			std::cout << i << "/" << 10000 << "\r";
 			
 
 			// Update loading screen
-			if (i % 100 == 0) {
+			if (i % 14 == 0) {
 				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(10000));
 				TCODConsole::root->flush();
 			}

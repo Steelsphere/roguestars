@@ -134,7 +134,7 @@ void Hero::simulate(bool fast) {
 				else if (x > dx && y > dy) {
 					move("bottomright");
 				}
-				std::cout << _name << " moved to " << _world_x << " " << _world_y << std::endl;
+//				std::cout << _name << " moved to " << _world_x << " " << _world_y << std::endl;
 			}
 	//	}
 	}

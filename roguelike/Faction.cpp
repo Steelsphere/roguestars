@@ -14,7 +14,23 @@ Faction::Faction(int startx, int starty) {
 	_capital_tile = Actor::get_actors(startx, starty, 0).back();
 	_owned_tiles.push_back(_capital_tile);
 	_color = TCODColor(Random::randc(0, 255), Random::randc(0, 255), Random::randc(0, 255));
-	_name = TCODNamegen::generate("object");
+	
+	std::string name = TCODNamegen::generate("object");
+	
+	if (Random::coinflip(Random::generator) == 1) {
+		if (Random::one_to_eight(Random::generator) == 1) {
+			name.insert(0, "The ");
+		}
+		name += suffixes[Random::randc(0, suffixes.size() - 1)];
+	}
+	else {
+		if (Random::one_to_eight(Random::generator) == 1) {
+			name.insert(0, " the ");
+		}
+		name.insert(0, prefixes[Random::randc(0, prefixes.size() - 1)]);
+	}
+	
+	_name = name;
 	_fast = true;
 
 	std::cout << "A new nation, " << _name << ", has been founded\n";

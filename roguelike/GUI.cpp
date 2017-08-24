@@ -553,6 +553,7 @@ void Map::update_map(Level* level, bool background) {
 
 	// Display to screen
 
+	_cons->clear();
 	for (int x = 0; x < image.size(); x++) {
 		for (int y = 0; y < image[x].size(); y++) {
 			_cons->putCharEx(x + maparea_x, y + maparea_y, 0, TCODColor::black, image[x][y]);
