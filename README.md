@@ -1,37 +1,26 @@
-Rogue Stars is a space roguelike that will (is planned to) include vast space exploration, dynamic simulation, factional warfare,  randomly generated **everything**™, and complex roguelike mechanics.
+# Rogue Stars
 
-Current progress to a completed game: 1%
+## About
 
-Current version: 0
+Rogue Stars is a space simulation roguelike.
 
-This project was born on: 4/20/2017
+* Date of creation: 4/20/2017
 
-If you would like to contribute, pm this guy on reddit ---> https://www.reddit.com/user/pepperonion
+* Progress to a completed game: 3%
 
-![pic](devpics/World.png)
+* Version: 0.1.1
 
-![pic](devpics/WorldBiomes.png)
+## How To Build
 
-![pic](devpics/1.PNG)
+Make sure the following dependencies are installed:
 
-![pic](devpics/3.PNG)
+* libtcod
 
-![pic](devpics/4.PNG)
+* SDL2
 
-![pic](devpics/5.PNG)
+Open the .sln file with Visual Studio 2017 and hit build.
 
-![pic](devpics/6.PNG)
+## Contributing
 
-![pic](devpics/7.PNG)
+Fork away!
 
-![pic](devpics/8.PNG)
-
-![pic](devpics/9.PNG)
-
-![pic](devpics/10.PNG)
-
-![pic](devpics/11.PNG)
-
-![pic](devpics/12.PNG)
-
-![pic](devpics/13.PNG)
