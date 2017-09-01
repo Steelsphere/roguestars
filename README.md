@@ -1,5 +1,7 @@
 # Rogue Stars
 
+![alt text](title.PNG)
+
 ## About
 
 Rogue Stars is a space simulation roguelike.
