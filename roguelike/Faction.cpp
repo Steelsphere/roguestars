@@ -40,6 +40,11 @@ Faction::Faction(int startx, int starty) {
 
 Faction::~Faction() {
 	_factions.erase(std::remove(_factions.begin(), _factions.end(), this));
+	
+	for (Actor* a : _owned_tiles) {
+		a->set_bcolor(Random::one_to_sixty_four(Random::generator), 0, Random::one_to_sixty_four(Random::generator));
+	}
+
 	std::cout << "Number of factions: " << _factions.size() << std::endl;
 }
 

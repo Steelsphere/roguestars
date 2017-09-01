@@ -80,6 +80,8 @@ public:
 	virtual void on_pg_down() {}
 	virtual void on_keypress_c() {}
 
+	void set_transparent_background();
+
 protected:
 	int _screen_x, _screen_y, _screen_z;
 	int _world_x, _world_y, _world_z;

@@ -231,3 +231,12 @@ bool operator!= (const Actor &a1, const Actor &a2) {
 		a1._impassable != a2._impassable &&
 		a1._transparent != a2._transparent);
 }
+
+void Actor::set_transparent_background() {
+	auto vec = get_actors(_world_x, _world_y, 0);
+	int idx = std::find(vec.begin(), vec.end(), this) - vec.begin();
+	if (idx == 0) {
+		return;
+	}
+	_bcolor = vec[idx - 1]->get_bcolor_obj();
+}

@@ -186,11 +186,12 @@ void Game::update() {
 				std::to_string(_player->get_world_pos()[1]), TCODColor::white);
 		}
 		
-		for (Faction* f : Faction::get_factions()) {
-			f->simulate();
-		}
-
 		if (_level->get_type() == Level::GALAXY) {
+		
+			for (Faction* f : Faction::get_factions()) {
+				f->simulate();
+			}
+
 			for (Faction* f : Faction::get_factions()) {
 				for (Actor* a : f->get_owned_tiles()) {
 					a->set_bcolor_obj(f->get_color());
@@ -201,12 +202,6 @@ void Game::update() {
 		GameObjects::new_turn = false;
 	}
 	
-	for (Faction* f : Faction::get_factions()) {
-		for (Hero* h : f->get_heroes()) {
-			h->draw();
-		}
-	}
-
 	_num_actors_drawn = 0;
 	std::vector<Actor*>* actors = _level->get_actors();
 	TCODMap* fov = nullptr;
@@ -331,8 +326,7 @@ void Game::startup_new_game() {
 	GameObjects::log = _log;
 
 	_status = new Status(_player, &_time);
-	new Message_Box("No errors");
-
+	
 	level_setup();
 	GameObjects::update = true;
 }

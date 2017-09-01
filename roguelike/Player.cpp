@@ -124,6 +124,11 @@ void Player::spawn_player(Level::LEVEL_TYPE type) {
 	}
 }
 
+void Player::draw() {
+	Actor::set_transparent_background();
+	Actor::draw();
+}
+
 Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {
 	GameObjects::player_controlled = false;
 }

@@ -2,6 +2,7 @@
 #include "Tile.h"
 #include "Item.h"
 #include "Player.h"
+#include "Hero.h"
 
 #include <typeinfo>
 #include <string>
@@ -46,6 +47,7 @@ std::map<std::string, Actor*(*)()> GameObjects::type_map = {
 	{ typeid(Planet).name(), create_actor_instance<Planet> },
 	{ typeid(Biome).name(), create_actor_instance<Biome> },
 	{ typeid(Door).name(), create_actor_instance<Door> },
+	{ typeid(Hero).name(), create_actor_instance<Hero> },
 };
 
 bool GameObjects::file_in_filesystem(const std::string& path, const std::string& file) {

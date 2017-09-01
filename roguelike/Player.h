@@ -14,6 +14,8 @@ public:
 
 	virtual void move(const std::string& dir) override;
 
+	virtual void draw() override;
+
 	void spawn_player_in_world();
 
 	void spawn_player(Level::LEVEL_TYPE type);

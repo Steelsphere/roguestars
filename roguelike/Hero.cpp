@@ -45,6 +45,7 @@ void Hero::join_playarea() {
 }
 
 void Hero::draw() {
+	Actor::set_transparent_background();
 	Actor::draw();
 }
 

@@ -131,6 +131,7 @@ Log::Log(int x, int y, int w, int h) : GUI(x, y, w, h, std::vector<Text>()) {
 }
 
 void Log::message(const std::string& message, TCODColor color) {
+	_cons->clear();
 	for (int i = 1; i < _text.size(); i++) {
 		_text[i].y--;
 		if (_text[i].y <= 0) {
