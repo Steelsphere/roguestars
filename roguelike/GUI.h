@@ -24,6 +24,7 @@ public:
 		int x, y, w, h;
 		std::string str;
 		TCODColor color;
+		bool ovrcolor = false;
 	};
 	
 	GUI();
@@ -66,15 +67,29 @@ public:
 	void message(const std::string& message, TCODColor color);
 };
 
+class HealthInfo : public GUI {
+public:
+	HealthInfo(int x, int y, int w, int h, Player* p);
+};
+
+class TileInfo : public GUI {
+public:
+	TileInfo(int x, int y, int w, int h, Player* p);
+};
+
 class Status : public GUI {
 public:
 	Status(Player* player, Time* time);
+
+	~Status();
 
 	virtual void draw(bool force = false) override;
 
 private:
 	Player* _player;
 	Time* _time;
+	HealthInfo* _health;
+	TileInfo* _tile;
 };
 
 class SelectionBox : public GUI {

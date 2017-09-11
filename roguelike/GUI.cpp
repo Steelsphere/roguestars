@@ -36,6 +36,8 @@ GUI::~GUI()
 
 void GUI::draw(bool force) {
 	if (_update || force) {
+		
+		// Add background
 		switch (_type) {
 		case FILLED_BACKGROUND:
 			_cons->rect(0, 0, _width, _height, true);
@@ -44,10 +46,18 @@ void GUI::draw(bool force) {
 			_cons->printFrame(0, 0, _width, _height, true);
 			break;
 		}
+		
+		// Add text
 		for (int i = 0; i < _text.size(); i++) {
 			_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
-			_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+			if (!_text[i].ovrcolor) {
+				_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+			}
+			else {
+				_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, _text[i].str.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+			}
 		}
+		
 		TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 		_update = false;
 	}
@@ -163,27 +173,12 @@ void Log::message(const std::string& message, TCODColor color) {
 //GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())
 Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30, GameObjects::screen_height / 2, 30, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
-	Text texttime = { 1, 2, 20, 1, "Time: Unknown", TCODColor::red };
-	Text healthsep1 = { 1, 4, _width - 1, 1, "Health" + std::string(_width - 8, '-'), TCODColor::white };
-	Text headh = { 1, 5, 4, 1, "Head", TCODColor::green };
-	Text leftarmh = { 1, 6, 8, 1, "Left Arm", TCODColor::green };
-	Text torsoh = { 10, 6, 5, 1, "Torso", TCODColor::green };
-	Text rightarmh = { 16, 6, 9, 1, "Right Arm", TCODColor::green };
-	Text leftlegh = { 1, 7, 8, 1, "Left Leg", TCODColor::green };
-	Text rightlegh = { 10, 7, 9, 1, "Right Leg", TCODColor::green };
-	Text healthsep2 = { 1, 8, _width - 1, 1, std::string(_width - 2, '-'), TCODColor::white };
+	
+	_health = new HealthInfo(1 + _x, 1 + _y, _width - 2, 5, _player);
+	_tile = new TileInfo(1 + _x, 6 + _y, _width - 2, 8, _player);
 
 	_text.push_back(name);
-	_text.push_back(texttime);
-	_text.push_back(healthsep1);
-	_text.push_back(headh);
-	_text.push_back(leftarmh);
-	_text.push_back(torsoh);
-	_text.push_back(rightarmh);
-	_text.push_back(leftlegh);
-	_text.push_back(rightlegh);
-	_text.push_back(healthsep2);
-
+	
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 	_player = player;
@@ -192,7 +187,7 @@ Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30,
 }
 
 void Status::draw(bool force) {
-	if (force) {
+/*	if (force) {
 		if (_player != nullptr || _player != NULL) {
 			if (_player->is_item_in_inventory("Digital Watch")) {
 				_text[1].str = "Time: " + _time->format_time("%M/%D/%Y %H:%m:%S");
@@ -202,9 +197,14 @@ void Status::draw(bool force) {
 				_text[1].str = "Time: Unknown";
 				_text[1].color = TCODColor::red;
 			}
-		}
-	}
+		} 
+	} */
 	GUI::draw(force);
+}
+
+Status::~Status() {
+	delete _health;
+	delete _tile;
 }
 
 SelectionBox::SelectionBox() {
@@ -578,4 +578,48 @@ LoadingScreen::LoadingScreen(const std::string& text) : GUI(0, 0, GameObjects::s
 void LoadingScreen::set_text(const std::string& text) {
 	_text[1].str = text;
 	draw(true);
+}
+
+HealthInfo::HealthInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std::vector<Text>()) {
+	Text title = { 1, 0, w, 1, "Health", TCODColor::red };
+	Text headh = { 10, 1, 4, 1, "Head", TCODColor::green };
+	Text leftarmh = { 1, 2, 8, 1, "Left Arm", TCODColor::green };
+	Text torsoh = { 10, 2, 5, 1, "Torso", TCODColor::green };
+	Text rightarmh = { 16, 2, 9, 1, "Right Arm", TCODColor::green };
+	Text leftlegh = { 1, 3, 8, 1, "Left Leg", TCODColor::green };
+	Text rightlegh = { 16, 3, 9, 1, "Right Leg", TCODColor::green };
+	
+	_text.push_back(title);
+	_text.push_back(headh);
+	_text.push_back(leftarmh);
+	_text.push_back(torsoh);
+	_text.push_back(rightarmh);
+	_text.push_back(leftlegh);
+	_text.push_back(rightlegh);
+
+	_transparency = 1.0f;
+	_type = FILLED_BORDERED_BACKGROUND;
+}
+
+TileInfo::TileInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std::vector<Text>()) {
+	Text title = { 1, 0, w, 1, "Tile", TCODColor::red };
+	
+	Text tname = { 1, 1, w - 2, 1, "Name: %cTest%c", TCODColor::red, true };
+	Text tdesc = { 1, 2, w - 2, 1, "Description: ", TCODColor::white, true };
+	Text tfact = { 1, 3, w - 2, 1, "Faction: ", TCODColor::white, true };
+	Text tappr = { 1, 4, w - 2, 1, "Appearance: ", TCODColor::white, true };
+	Text timpa = { 1, 5, w - 2, 1, "Impassable: ", TCODColor::white, true };
+	Text ttran = { 1, 6, w - 2, 1, "Transparent: ", TCODColor::white, true };
+
+	_text.push_back(title);
+
+	_text.push_back(tname);
+	_text.push_back(tdesc);
+	_text.push_back(tfact);
+	_text.push_back(tappr);
+	_text.push_back(timpa);
+	_text.push_back(ttran);
+
+	_transparency = 1.0f;
+	_type = FILLED_BORDERED_BACKGROUND;
 }
