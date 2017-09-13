@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Actor.h"
 #include "Player.h"
+#include "Faction.h"
 
 #include <algorithm>
 #include <cstring>
@@ -174,8 +175,10 @@ void Log::message(const std::string& message, TCODColor color) {
 Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30, GameObjects::screen_height / 2, 30, (GameObjects::screen_height / 2) + 1, std::vector<Text>()) {
 	Text name = { 1, 0, 6, 1, "Status", TCODColor::red };
 	
-	_health = new HealthInfo(1 + _x, 1 + _y, _width - 2, 5, _player);
-	_tile = new TileInfo(1 + _x, 6 + _y, _width - 2, 8, _player);
+	_health = new HealthInfo(1 + _x, 1 + _y, _width - 2, 5, player);
+	_tile = new TileInfo(1 + _x, 6 + _y, _width - 2, 8, player);
+	_char = new CharInfo(1 + _x, 14 + _y, _width - 2, 16, player);
+	_misc = new MiscInfo(1 + _x, 30 + _y, _width - 2, 7, player);
 
 	_text.push_back(name);
 	
@@ -187,8 +190,8 @@ Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30,
 }
 
 void Status::draw(bool force) {
-/*	if (force) {
-		if (_player != nullptr || _player != NULL) {
+	if (force) {
+		/*if (_player != nullptr || _player != NULL) {
 			if (_player->is_item_in_inventory("Digital Watch")) {
 				_text[1].str = "Time: " + _time->format_time("%M/%D/%Y %H:%m:%S");
 				_text[1].color = TCODColor::green;
@@ -197,14 +200,19 @@ void Status::draw(bool force) {
 				_text[1].str = "Time: Unknown";
 				_text[1].color = TCODColor::red;
 			}
-		} 
-	} */
+		} */
+		if (_player != nullptr) {
+			_tile->update();
+		}
+	} 
 	GUI::draw(force);
 }
 
 Status::~Status() {
 	delete _health;
 	delete _tile;
+	delete _char;
+	delete _misc;
 }
 
 SelectionBox::SelectionBox() {
@@ -619,6 +627,84 @@ TileInfo::TileInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	_text.push_back(tappr);
 	_text.push_back(timpa);
 	_text.push_back(ttran);
+
+	_transparency = 1.0f;
+	_type = FILLED_BORDERED_BACKGROUND;
+	_player = p;
+}
+
+void TileInfo::update() {
+	auto v = Actor::get_actors(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
+	if (v.size() < 1) {
+		_text[1].str = "Name: ";
+		_text[2].str = "Description: ";
+		_text[3].str = "Faction: ";
+		_text[4].str = "Appearance: ";
+		_text[5].str = "Impassable: ";
+		_text[6].str = "Transparent: ";
+	}
+	else {
+		Actor* a = v[v.size() - 2];
+		
+		_text[1].str = "Name: " + std::string("%c") + a->get_name() + std::string("%c");
+		_text[1].color = a->get_color_obj();
+		
+		if (_text[1].str.length() > _text[1].w - 2) {
+			while (_text[1].str.length() > _text[1].w - 2) {
+				_text[1].str.pop_back();
+			}
+			_text[3].str.append("%c");
+		}
+		
+		Faction* f = Faction::who_owns_tile(a);
+		if (f != nullptr) {
+			_text[3].str = "Faction: " + std::string("%c") + f->get_name() + std::string("%c");
+			_text[3].color = f->get_color();
+
+			if (_text[3].str.length() > _text[3].w - 2) {
+				while (_text[3].str.length() > _text[3].w - 2) {
+					_text[3].str.pop_back();
+				}
+				_text[3].str.append("%c");
+			}
+		
+		}
+		else {
+			_text[3].str = "Faction: None";
+			_text[3].color = TCODColor::white;
+		}
+//		_text[4].str = "Appearance: " + std::string("%c") + a->get_char() + std::string("%c");
+//		_text[4].color = a->get_color_obj();
+		if (a->is_impassable()) {
+			_text[5].str = "Impassable: %cTrue%c";
+			_text[5].color = TCODColor::green;
+		}
+		else {
+			_text[5].str = "Impassable: %cFalse%c";
+			_text[5].color = TCODColor::red;
+		}
+		if (a->is_transparent()) {
+			_text[6].str = "Transparent: %cTrue%c";
+			_text[6].color = TCODColor::green;
+		}
+		else {
+			_text[6].str = "Transparent: %False%c";
+			_text[6].color = TCODColor::red;
+		}
+	}
+}
+
+CharInfo::CharInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std::vector<Text>()) {
+	Text title = { 1, 0, w, 1, "Character", TCODColor::red };
+	_text.push_back(title);
+
+	_transparency = 1.0f;
+	_type = FILLED_BORDERED_BACKGROUND;
+}
+
+MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std::vector<Text>()) {
+	Text title = { 1, 0, w, 1, "Misc", TCODColor::red };
+	_text.push_back(title);
 
 	_transparency = 1.0f;
 	_type = FILLED_BORDERED_BACKGROUND;

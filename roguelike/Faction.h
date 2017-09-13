@@ -90,6 +90,8 @@ public:
 
 	std::vector<Hero*> get_heroes() { return _heroes; }
 
+	std::string get_name() { return _name; }
+
 private:
 	static std::vector<Faction*> _factions;
 

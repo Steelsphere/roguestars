@@ -820,10 +820,10 @@ void Game::generate_factions() {
 	std::cout << "Beginning faction simulation!\n";
 	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
 
-	for (int i = 0; i < 10000; i++) {
+	for (int i = 0; i < 1000; i++) {
 		for (Faction* f : Faction::get_factions()) {
 			f->simulate();
-			std::cout << i << "/" << 10000 << "\r";
+			std::cout << i << "/" << 1000 << "\r";
 			
 
 			// Update loading screen

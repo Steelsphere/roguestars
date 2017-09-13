@@ -75,6 +75,21 @@ public:
 class TileInfo : public GUI {
 public:
 	TileInfo(int x, int y, int w, int h, Player* p);
+
+	void update();
+
+private:
+	Player* _player;
+};
+
+class CharInfo : public GUI {
+public:
+	CharInfo(int x, int y, int w, int h, Player* p);
+};
+
+class MiscInfo : public GUI {
+public:
+	MiscInfo(int x, int y, int w, int h, Player* p);
 };
 
 class Status : public GUI {
@@ -88,8 +103,11 @@ public:
 private:
 	Player* _player;
 	Time* _time;
+	
 	HealthInfo* _health;
 	TileInfo* _tile;
+	CharInfo* _char;
+	MiscInfo* _misc;
 };
 
 class SelectionBox : public GUI {
