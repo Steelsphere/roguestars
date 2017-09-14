@@ -196,3 +196,10 @@ public:
 
 	void set_text(const std::string& text);
 };
+
+class TextBox : public GUI {
+public:
+	TextBox(int x, int y, int w, int h);
+
+	virtual void draw(bool force = false) override;
+};

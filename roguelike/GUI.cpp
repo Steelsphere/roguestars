@@ -79,11 +79,11 @@ void GUI::make_transparency_work() {
 			screen[y].resize(_height);
 		}
 
-		for (int x = _x; x < _width; x++) {
-			for (int y = _y; y < _height; y++) {
-				screen[x][y].push_back(std::make_tuple(TCODConsole::root->getChar(x, y),
-					TCODConsole::root->getCharForeground(x, y),
-					TCODConsole::root->getCharBackground(x, y)));
+		for (int x = 0; x < _width; x++) {
+			for (int y = 0; y < _height; y++) {
+				screen[x][y].push_back(std::make_tuple(TCODConsole::root->getChar(_x + x, _y + y),
+					TCODConsole::root->getCharForeground(_x + x, _y + y),
+					TCODConsole::root->getCharBackground(_x + x, _y + y)));
 			}
 		}
 		_screencons = new TCODConsole(_width, _height);
@@ -708,4 +708,32 @@ MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 
 	_transparency = 1.0f;
 	_type = FILLED_BORDERED_BACKGROUND;
+}
+
+TextBox::TextBox(int x, int y, int w, int h) : GUI(x, y, w, h, std::vector<Text>()) {
+	_transparency = 0.9f;
+	_type = FILLED_BORDERED_BACKGROUND;
+
+	Text input = { 1, h - 2, w, 1, "", TCODColor::white };
+	_text.push_back(input);
+
+	Input::set_mode(Input::NONE);
+	GUI::make_transparency_work();
+}
+
+void TextBox::draw(bool force) {
+	TCOD_key_t key = Input::get_last_key();
+	if (key.pressed && key.c != 0) {
+		if (key.vk == TCODK_BACKSPACE) {
+			if (_text[0].str.size() > 0) {
+				_text[0].str.pop_back();
+			}
+		}
+		else {
+			_text[0].str += key.c;
+		}
+	}
+	GUI::draw(true);
+	GUI::make_transparency_work();
+	TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 }
