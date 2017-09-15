@@ -710,13 +710,16 @@ MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
-TextBox::TextBox(int x, int y, int w, int h) : GUI(x, y, w, h, std::vector<Text>()) {
+TextBox::TextBox(int x, int y, int w, int h, std::string title) : GUI(x, y, w, h, std::vector<Text>()) {
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 
+	Text t = { 1, 0, w, 1, title, TCODColor::red };
 	Text input = { 1, h - 2, w, 1, "", TCODColor::white };
+	
 	_text.push_back(input);
-
+	_text.push_back(t);
+	
 	Input::set_mode(Input::NONE);
 	GUI::make_transparency_work();
 }

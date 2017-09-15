@@ -382,7 +382,7 @@ void Game::new_main_menu() {
 
 	_MainMenu = new MainMenu;
 
-//	new TextBox((GameObjects::screen_width / 2) - 20, (GameObjects::screen_height / 2), 20, 3);
+//	new TextBox((GameObjects::screen_width / 2) - 20, (GameObjects::screen_height / 2), 20, 3, "Testing");
 }
 
 void Game::destroy_main_menu() {

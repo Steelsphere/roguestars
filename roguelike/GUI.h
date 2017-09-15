@@ -199,7 +199,7 @@ public:
 
 class TextBox : public GUI {
 public:
-	TextBox(int x, int y, int w, int h);
+	TextBox(int x, int y, int w, int h, std::string title);
 
 	virtual void draw(bool force = false) override;
 };
