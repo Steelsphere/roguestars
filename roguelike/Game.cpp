@@ -799,7 +799,25 @@ void Game::close_map() {
 
 void Game::generate_factions() {
 	
+	// User settings
+	TextBox* tb = new TextBox((GameObjects::screen_width / 2) - 15, GameObjects::screen_height / 2, 30, 3, "Number of turns to simulate");
 	
+	// Mini game loop
+	while (!tb->is_done()) {
+		_event = TCODSystem::checkForEvent(TCOD_EVENT_ANY, &_key, &_mouse);
+
+		if (_event) {
+			on_event(_event);
+		}
+		
+		update_gui(true);
+		Input::refresh();
+
+		TCODConsole::flush();
+	}
+	int simturns = std::stoi(tb->get_value());
+	delete tb;
+
 	// Find suitable spawn points
 	std::vector<Actor*> spawnpoints;
 	
@@ -819,18 +837,18 @@ void Game::generate_factions() {
 	}
 
 	// Simulate
-	std::cout << "Beginning faction simulation!\n";
+	std::cout << "Beginning faction simulation for " << simturns << " turns!";
 	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
 
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < simturns; i++) {
 		for (Faction* f : Faction::get_factions()) {
 			f->simulate();
-			std::cout << i << "/" << 1000 << "\r";
+			std::cout << i << "/" << simturns << "\r";
 			
 
 			// Update loading screen
 			if (i % 14 == 0) {
-				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(10000));
+				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns));
 				TCODConsole::root->flush();
 			}
 

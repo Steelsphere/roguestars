@@ -18,6 +18,8 @@ public:
 		INVENTORY_PANEL,
 		MAP,
 		CLOSE,
+		TEXTBOX,
+		MAIN_MENU,
 	};
 	
 	static void input(TCOD_key_t key);

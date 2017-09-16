@@ -323,14 +323,14 @@ void MainMenu::front() {
 	_mtext.clear();
 
 	Text title = { (_width / 2) - 50, 5, 100, 50, 
-		"`#######                                                `#####    `##\n"
-		"`##    `##                                            `##    `##  `##\n"
-		"`##    `##     `##       `##   `##  `##  `###          `##      `######   `###     `### `####\n"
-		"`##`##       `##  `##  `##  `##`##  `## `#  `##          `##      `##   `##  `##  `##   `##\n"
-		"`##  `##    `##    `##`##   `##`##  `##`##### `#            `##   `##  `##   `##  `##     `###\n"
+		"`#######                                                `#####    `##                          \n"
+		"`##    `##                                            `##    `##  `##                          \n"
+		"`##    `##     `##       `##   `##  `##  `###          `##      `######   `###     `### `####  \n"
+		"`##`##       `##  `##  `##  `##`##  `## `#  `##          `##      `##   `##  `##  `##   `##    \n"
+		"`##  `##    `##    `##`##   `##`##  `##`##### `#            `##   `##  `##   `##  `##     `### \n"
 		"`##    `##   `##  `##  `##  `##`##  `##`#             `##    `##  `##  `##   `##  `##       `##\n"
 		"`##      `##   `##         `##   `##`## `#####          `#####     `##   `## `###`###   `## `##\n"
-		"`##                       `##                                                             `##\n",
+		"`##                       `##                                                             `##  \n",
 		TCODColor::red };
 	_text.push_back(title);
 
@@ -357,7 +357,7 @@ void MainMenu::front() {
 	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
 
 	set_selector();
-	Input::set_mode(Input::NONE);
+	Input::set_mode(Input::MAIN_MENU);
 }
 
 void MainMenu::save_screen() {
@@ -384,21 +384,23 @@ void MainMenu::save_screen() {
 		std::cerr << e.what() << std::endl;
 	}
 	set_selector();
-	Input::set_mode(Input::NONE);
+	Input::set_mode(Input::MAIN_MENU);
 
 	_cons->clear();
 }
 
 void MainMenu::draw(bool force) {
-	_update = true;
-	SelectionBox::draw(force);
-	if (TCODSystem::getFps() != 0) {
-		if (GameObjects::ticks % 180 == 0 && _state == FRONT) {
-			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
+	if (Input::get_mode() == Input::MAIN_MENU) {
+		_update = true;
+		SelectionBox::draw(force);
+		if (TCODSystem::getFps() != 0) {
+			if (GameObjects::ticks % 180 == 0 && _state == FRONT) {
+				_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
+			}
 		}
-	}
-	if (Input::get_last_key().shift && Input::get_last_key().vk == TCODK_1) {
-		GameEvent::set_event(GameEvent::TEST_LEVEL);
+		if (Input::get_last_key().shift && Input::get_last_key().vk == TCODK_1) {
+			GameEvent::set_event(GameEvent::TEST_LEVEL);
+		}
 	}
 }
 
@@ -720,7 +722,7 @@ TextBox::TextBox(int x, int y, int w, int h, std::string title) : GUI(x, y, w, h
 	_text.push_back(input);
 	_text.push_back(t);
 	
-	Input::set_mode(Input::NONE);
+	Input::set_mode(Input::TEXTBOX);
 	GUI::make_transparency_work();
 }
 
@@ -732,8 +734,13 @@ void TextBox::draw(bool force) {
 				_text[0].str.pop_back();
 			}
 		}
+		else if (key.vk == TCODK_ENTER) {
+			_val = _text[0].str;
+			_done = true;
+		}
 		else {
 			_text[0].str += key.c;
+			std::cout << _text[0].str << std::endl;
 		}
 	}
 	GUI::draw(true);

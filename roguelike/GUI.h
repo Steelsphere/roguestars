@@ -202,4 +202,12 @@ public:
 	TextBox(int x, int y, int w, int h, std::string title);
 
 	virtual void draw(bool force = false) override;
+
+	std::string get_value() { return _val; }
+
+	bool is_done() { return _done; }
+
+private:
+	std::string _val = "";
+	bool _done = false;
 };
