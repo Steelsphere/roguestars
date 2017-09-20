@@ -16,6 +16,7 @@
 #include <iostream>
 #include <cmath>
 #include <memory>
+#include <functional>
 
 class Game
 {
@@ -112,6 +113,8 @@ public:
 	void close_map();
 
 	void generate_factions();
+
+	void textbox_game_loop(TextBox* tb);
 
 private:
 	

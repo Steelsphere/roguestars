@@ -199,7 +199,7 @@ public:
 
 class TextBox : public GUI {
 public:
-	TextBox(int x, int y, int w, int h, std::string title);
+	TextBox(int x, int y, int w, int h, std::string title, std::string descr, bool digits_only = false);
 
 	virtual void draw(bool force = false) override;
 
@@ -210,4 +210,5 @@ public:
 private:
 	std::string _val = "";
 	bool _done = false;
+	bool _digits_only = false;
 };

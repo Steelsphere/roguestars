@@ -800,22 +800,20 @@ void Game::close_map() {
 void Game::generate_factions() {
 	
 	// User settings
-	TextBox* tb = new TextBox((GameObjects::screen_width / 2) - 15, GameObjects::screen_height / 2, 30, 3, "Number of turns to simulate");
+	TextBox* tb = new TextBox((GameObjects::screen_width / 2) - 17, GameObjects::screen_height / 2, 33, 3, "Number of turns to simulate", "Leave blank for default (10000)", true);
 	
 	// Mini game loop
-	while (!tb->is_done()) {
-		_event = TCODSystem::checkForEvent(TCOD_EVENT_ANY, &_key, &_mouse);
+	textbox_game_loop(tb);
 
-		if (_event) {
-			on_event(_event);
-		}
-		
-		update_gui(true);
-		Input::refresh();
+	int simturns;
 
-		TCODConsole::flush();
+	if (tb->get_value() == "") {
+		simturns = 10000;
 	}
-	int simturns = std::stoi(tb->get_value());
+	else {
+		simturns = std::stoi(tb->get_value());
+	}
+	
 	delete tb;
 
 	// Find suitable spawn points
@@ -837,7 +835,7 @@ void Game::generate_factions() {
 	}
 
 	// Simulate
-	std::cout << "Beginning faction simulation for " << simturns << " turns!";
+	std::cout << "Beginning faction simulation for " << simturns << " turns!\n";
 	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
 
 	for (int i = 0; i < simturns; i++) {
@@ -913,4 +911,34 @@ void Game::generate_factions() {
 
 	// Save factions image
 	Faction::save_faction_map("Data\\factionmap.png", _level->get_size());
+
+	// More popups
+
+	TextBox* player_alias_tb = new TextBox((GameObjects::screen_width / 2) - 17, GameObjects::screen_height / 2, 33, 3, "Character alias", "Leave blank for random");
+
+	textbox_game_loop(player_alias_tb);
+
+	if (player_alias_tb->get_value() == "") {
+		_player->set_alias(TCODNamegen::generate("object"));
+	}
+	else {
+		_player->set_alias(player_alias_tb->get_value());
+	}
+
+	delete player_alias_tb;
+}
+
+void Game::textbox_game_loop(TextBox* tb) {
+	while (!tb->is_done()) {
+		_event = TCODSystem::checkForEvent(TCOD_EVENT_ANY, &_key, &_mouse);
+
+		if (_event) {
+			on_event(_event);
+		}
+
+		update_gui(true);
+		Input::refresh();
+
+		TCODConsole::flush();
+	}
 }

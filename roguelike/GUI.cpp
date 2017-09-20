@@ -11,6 +11,7 @@
 #include <iostream>
 #include <filesystem>
 #include <tuple>
+#include <ctype.h>
 
 std::vector<GUI*> GUI::_buffer;
 
@@ -698,7 +699,11 @@ void TileInfo::update() {
 
 CharInfo::CharInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std::vector<Text>()) {
 	Text title = { 1, 0, w, 1, "Character", TCODColor::red };
+	Text alias = { 1, 1, w, 1, "Alias: ", TCODColor::white };
 	_text.push_back(title);
+	_text.push_back(alias);
+
+	_text[1].str += p->get_alias();
 
 	_transparency = 1.0f;
 	_type = FILLED_BORDERED_BACKGROUND;
@@ -712,16 +717,20 @@ MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
-TextBox::TextBox(int x, int y, int w, int h, std::string title) : GUI(x, y, w, h, std::vector<Text>()) {
+TextBox::TextBox(int x, int y, int w, int h, std::string title, std::string descr, bool digits_only) : GUI(x, y, w, h, std::vector<Text>()) {
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 
 	Text t = { 1, 0, w, 1, title, TCODColor::red };
 	Text input = { 1, h - 2, w, 1, "", TCODColor::white };
-	
+	Text dscr = { 1, h - 1, w, 1, descr, TCODColor::white };
+
 	_text.push_back(input);
 	_text.push_back(t);
+	_text.push_back(dscr);
 	
+	_digits_only = digits_only;
+
 	Input::set_mode(Input::TEXTBOX);
 	GUI::make_transparency_work();
 }
@@ -735,12 +744,31 @@ void TextBox::draw(bool force) {
 			}
 		}
 		else if (key.vk == TCODK_ENTER) {
-			_val = _text[0].str;
-			_done = true;
+			if (_digits_only) {
+				if (std::atoi(_text[0].str.c_str()) > 1000000) {
+					_text[0].str.clear();
+				}
+				else {
+					_val = _text[0].str;
+					_done = true;
+				}
+			}
+			else {
+				_val = _text[0].str;
+				_done = true;
+			}
 		}
 		else {
-			_text[0].str += key.c;
-			std::cout << _text[0].str << std::endl;
+			if (_digits_only) {
+				if (isdigit(key.c)) {
+					_text[0].str += key.c;
+				}
+			}
+			else {
+				if (isalpha(key.c) || isdigit(key.c)) {
+					_text[0].str += key.c;
+				}
+			}
 		}
 	}
 	GUI::draw(true);

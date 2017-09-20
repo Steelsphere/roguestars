@@ -22,8 +22,15 @@ public:
 
 	void set_info(InfoViewer* info) { _info = info; }
 
+	std::string get_alias() { return _alias; }
+
+	void set_alias(const std::string& str) { _alias = str; }
+
 protected:
 	InfoViewer* _info = nullptr;
+
+private:
+	std::string _alias = "";
 };
 
 class Dummy : public Player {
