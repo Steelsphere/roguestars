@@ -110,7 +110,7 @@ void Player::spawn_player(Level::LEVEL_TYPE type) {
 	
 	std::vector<Actor*>* buffer = Actor::get_buffer();
 	while (true) {
-		int rindex = Random::randc(0, buffer->size());
+		int rindex = Random::randc(0, buffer->size() - 1);
 		if (rindex > buffer->size()) {
 			continue;
 		}

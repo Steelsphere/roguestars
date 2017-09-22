@@ -638,7 +638,7 @@ TileInfo::TileInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 
 void TileInfo::update() {
 	auto v = Actor::get_actors(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
-	if (v.size() < 1) {
+	if (v.size() < 2) {
 		_text[1].str = "Name: ";
 		_text[2].str = "Description: ";
 		_text[3].str = "Faction: ";
@@ -711,7 +711,10 @@ CharInfo::CharInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 
 MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std::vector<Text>()) {
 	Text title = { 1, 0, w, 1, "Misc", TCODColor::red };
+	Text time = { 1, 1, w, 1, "Time: %cUnknown%c", TCODColor::red, true };
+	
 	_text.push_back(title);
+	_text.push_back(time);
 
 	_transparency = 1.0f;
 	_type = FILLED_BORDERED_BACKGROUND;

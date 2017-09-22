@@ -449,9 +449,8 @@ void Game::new_world() {
 	
 	_level = _world->get_current_level();
 	_level->save_level_image("Data\\Level.png");
-	_level->set_savedir("surface");
-	_world_id = _level->id;
-
+	_level->set_savedir("world");
+	
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player_in_world();
 	_player->add_to_inventory(new Item(0, 0, 0, Item::DIGITAL_WATCH));
@@ -486,7 +485,7 @@ void Game::new_star_sector() {
 	_level = new Level;
 	_level->generate_level(512, Level::STAR_SECTOR);
 	_level->set_savedir("starsector");
-	_starsector_id - _level->id;
+	_starsector_id = _level->id;
 
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player(Level::STAR_SECTOR);
@@ -532,6 +531,7 @@ void Game::new_world_map() {
 		_camera->update();
 	}
 	
+	_world_id = _level->id;
 	GameObjects::update = true;
 }
 
@@ -851,7 +851,7 @@ void Game::generate_factions() {
 			}
 
 			// Update map
-			if (i % 1000 == 0) {
+			if (i % 100 == 0) {
 				for (Faction* f : Faction::get_factions()) {
 					for (Actor* a : f->get_owned_tiles()) {
 						a->set_bcolor_obj(f->get_color());

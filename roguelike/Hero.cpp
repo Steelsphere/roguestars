@@ -22,6 +22,7 @@ Hero::Hero(int x, int y, Faction* f) : Actor(x, y, 0) {
 	
 	std::cout << Actor::get_buffer()->back()->get_name() << std::endl;
 	std::cout << "The hero " << _name << " has arrived in " << _faction->_name << std::endl;
+	GameObjects::log->message("The hero " + _name + " has arrived in " + _faction->_name, TCODColor::yellow);
 }
 
 Hero::~Hero() {

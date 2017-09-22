@@ -203,6 +203,7 @@ void Actor::serialize(TCODZip* zip) {
 	zip->putColor(&_fcolor); zip->putColor(&_bcolor);
 	zip->putString(_name.c_str());
 	zip->putInt(_impassable); zip->putInt(_transparent);
+	zip->putInt(_in_fov);
 }
 
 void Actor::deserialize(TCODZip* zip) {
@@ -212,6 +213,7 @@ void Actor::deserialize(TCODZip* zip) {
 	_fcolor = zip->getColor(); _bcolor = zip->getColor();
 	_name = zip->getString();
 	_impassable = zip->getInt(); _transparent = zip->getInt();
+	_in_fov = zip->getInt();
 }
 
 bool operator== (const Actor &a1, const Actor &a2) {
