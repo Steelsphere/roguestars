@@ -128,7 +128,7 @@ public:
 
 	virtual void position_text() override;
 
-	void set_selector();
+	void set_selector(bool force = false);
 protected:
 	std::vector<MText> _mtext;
 };

@@ -255,7 +255,7 @@ void SelectionBox::draw(bool force) {
 				else {
 					_mtext[i + 1].selected = true;
 				}
-				set_selector();
+				set_selector(true);
 				_update = true;
 				break;
 			}
@@ -271,7 +271,7 @@ void SelectionBox::draw(bool force) {
 				else {
 					_mtext[i - 1].selected = true;
 				}
-				set_selector();
+				set_selector(true);
 				_update = true;
 				break;
 			}
@@ -284,6 +284,7 @@ void SelectionBox::draw(bool force) {
 			}
 		}
 	}
+	set_selector();
 }
 
 void SelectionBox::position_text() {
@@ -294,10 +295,12 @@ void SelectionBox::position_text() {
 	}
 }
 
-void SelectionBox::set_selector() {
+void SelectionBox::set_selector(bool force) {
 	for (MText& i : _mtext) {
 		if (i.selected) {
-			i.color = TCODColor::yellow;
+			if (GameObjects::ticks % 25 == 0 || force) {
+				i.color = TCODColor(125, (std::sin(GameObjects::ticks) * 50) + 150, (std::sin(GameObjects::ticks) * 50) + 150);
+			}
 		}
 		else {
 			i.color = TCODColor::white;
