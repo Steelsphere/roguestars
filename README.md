@@ -14,15 +14,17 @@ Rogue Stars is a space simulation roguelike.
 
 ## How To Build
 
-Make sure the following dependencies are installed:
+Download libtcod and extract the following files to the build directory:
 
-* libtcod
+* libtcod.dll
 
-* SDL2
+* SDL2.dll
 
-Open the .sln file with Visual Studio 2017 and hit build.
+* terminal12x12_gs_ro.png
+
+Open the .sln file with Visual Studio 2017 and then compile.
 
 ## Contributing
 
-Fork away!
+Fork
 

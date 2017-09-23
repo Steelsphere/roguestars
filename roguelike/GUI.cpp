@@ -298,8 +298,8 @@ void SelectionBox::position_text() {
 void SelectionBox::set_selector(bool force) {
 	for (MText& i : _mtext) {
 		if (i.selected) {
-			if (GameObjects::ticks % 25 == 0 || force) {
-				i.color = TCODColor(125, (std::sin(GameObjects::ticks) * 50) + 150, (std::sin(GameObjects::ticks) * 50) + 150);
+			if (GameObjects::ticks % 24 == 0 || force) {
+				i.color = TCODColor((int)(std::sin(GameObjects::ticks) * 100) + 150, (int)(std::sin(GameObjects::ticks) * 100) + 150, 0);
 			}
 		}
 		else {

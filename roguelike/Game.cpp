@@ -936,6 +936,10 @@ void Game::textbox_game_loop(TextBox* tb) {
 			on_event(_event);
 		}
 
+		if (TCODConsole::isWindowClosed()) {
+			exit_game();
+		}
+		
 		update_gui(true);
 		Input::refresh();
 
