@@ -10,7 +10,9 @@ Rogue Stars is a space simulation roguelike.
 
 * Progress to a completed game: 3%
 
-* Version: 0.1.1
+* Version: 0.1.2
+
+* Discord: https://discord.gg/T9ZraD2
 
 ## How To Build
 
