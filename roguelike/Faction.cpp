@@ -4,6 +4,7 @@
 #include <iostream>
 
 std::vector<Faction*> Faction::_factions;
+std::vector<Actor*> Faction::_galaxy_actors;
 
 Faction::Faction() {
 
@@ -182,4 +183,27 @@ void Faction::save_faction_map(const std::string& path, int size) {
 		}
 	}
 	img.save(path.c_str());
+}
+
+void Faction::set_actors_cpy(std::vector<Actor*>* v) {
+	std::cout << "Copying actors into a new vector...\n";
+	for (Actor* a : (*v)) {
+		_galaxy_actors.push_back(new Actor((*a)));
+	}
+}
+
+void Faction::reinit_factions() {
+	for (Faction* f : Faction::get_factions()) {
+		f->_owned_tiles.clear();
+		for (Actor* a : (*Actor::get_buffer())) {
+			if (a->get_bcolor_obj() == f->get_color()) {
+				f->_owned_tiles.push_back(a);
+			}
+		}
+		for (Actor* a : f->_owned_tiles) {
+			if (a->get_name() == "Star Sector" && a->get_color_obj() == TCODColor::yellow) {
+				f->_capital_tile = a;
+			}
+		}
+	}
 }

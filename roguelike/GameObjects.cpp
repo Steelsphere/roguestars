@@ -79,7 +79,7 @@ Player* GameObjects::find_player(Level* level) {
 	for (Actor* i : (*level->get_actors())) {
 		if (i->get_name() == "Player") {
 			std::cout << "Player found\n";
-			return dynamic_cast<Player*>(i);
+			return static_cast<Player*>(i);
 		}
 	}
 	throw "Player was not found!\n";

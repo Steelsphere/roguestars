@@ -470,7 +470,7 @@ void InfoViewer::draw(bool force) {
 }
 
 InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height) {
-	Text title = { (GameObjects::screen_width - 31) - c->get_name().length() - 10, 0, 30, 1, c->get_name() + " Inventory", TCODColor::red };
+	Text title = { 1, 0, 30, 1, c->get_name() + " Inventory", TCODColor::red };
 	_text.push_back(title);
 
 	std::vector<Item*>* inv = c->get_inventory();
@@ -495,7 +495,7 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 }
 
 Map::Map(Level* level, bool background) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
-	Text title = { _width - 4, 0, 30, 1, "Map", TCODColor::red };
+	Text title = { 1, 0, 30, 1, "Map", TCODColor::red };
 	_text.push_back(title);
 
 	_type = FILLED_BORDERED_BACKGROUND;
@@ -508,7 +508,7 @@ Map::Map(Level* level, bool background) : GUI(0, 0, GameObjects::screen_width - 
 }
 
 Map::Map(int x, int y, int w, int h, Level* level, bool background) : GUI(x, y, w, h, std::vector<Text>()) {
-	Text title = { _width - 4, 0, 30, 1, "Map", TCODColor::red };
+	Text title = { 1, 0, 30, 1, "Map", TCODColor::red };
 	_text.push_back(title);
 
 	_type = FILLED_BORDERED_BACKGROUND;

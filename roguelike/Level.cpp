@@ -228,9 +228,15 @@ void Level::update() {
 	for (int i = 0; i < _map.size(); i++) {
 		_map[i].resize(_width);
 	}
-	for (int i = 0; i < _actors.size(); i++) {
-		_map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]].push_back(_actors[i]);
+	for (Actor* a : _actors) {
+		_map[a->
+			get_world_pos()[0]]
+			[a->
+			get_world_pos()[1]]
+		.push_back(a);
 	}
+	Actor::set_buffer(&_actors);
+	Actor::set_map(&_map);
 	std::cout << "LEVEL UPDATED\n";
 	std::cout << "Buffer status: " << Actor::get_buffer()->size() << std::endl;
 	std::cout << "Size of level: " << _actors.size() << std::endl;

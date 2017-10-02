@@ -72,7 +72,7 @@ void Game::game_loop() {
 		
 		TCODConsole::flush();
 		
-		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
+//		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
 		GameObjects::time += 0.01f;
 		GameObjects::ticks++;
 
@@ -479,6 +479,7 @@ void Game::new_solar_system() {
 }
 
 void Game::new_star_sector() {
+	
 	save_level();
 	
 	delete _level;
@@ -627,18 +628,26 @@ void Game::to_galaxy() {
 	GameObjects::level_id_to_load = _galaxy_id;
 	
 	load_level();
+	
 	_level->set_savedir("galaxy");
 	_level->update();
 
 	_player = GameObjects::find_player(_level);
+	
 	level_setup();
 
 	fix_tile_id<StarSector>();
+
+	Faction::reinit_factions();
 	GameObjects::update = true;
 }
 
 void Game::to_star_sector() {
 	
+	if (_level->get_type() == Level::GALAXY) {
+		Faction::set_actors_cpy(Actor::get_buffer());
+	}
+
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\starsector")) {
 		new_star_sector();
 		fix_tile_id<SolarSystem>();
@@ -666,6 +675,10 @@ void Game::to_solar_system() {
 		return;
 	}
 	
+	if (_level->get_type() == Level::WORLD_MAP) {
+		delete _world;
+	}
+
 	GameObjects::level_id_to_load = _solarsystem_id;
 	
 	load_level();
@@ -946,3 +959,4 @@ void Game::textbox_game_loop(TextBox* tb) {
 		TCODConsole::flush();
 	}
 }
+

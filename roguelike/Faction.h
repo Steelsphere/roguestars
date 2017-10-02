@@ -72,6 +72,12 @@ public:
 
 	static void save_faction_map(const std::string& path, int size);
 
+	static std::vector<Actor*>* get_actors() { return &_galaxy_actors; }
+
+	static void set_actors_cpy(std::vector<Actor*>* v);
+
+	static void reinit_factions();
+
 	TCODColor get_color() { return _color; }
 
 	std::vector<Actor*> get_owned_tiles() { return _owned_tiles; }
@@ -94,6 +100,9 @@ public:
 
 private:
 	static std::vector<Faction*> _factions;
+	
+	// This var is for when the the galaxy needs to be loaded
+	static std::vector<Actor*> _galaxy_actors;
 
 	std::vector<Actor*> _owned_tiles;
 	Actor* _capital_tile;

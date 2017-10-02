@@ -45,6 +45,8 @@ public:
 	
 	std::vector<Actor*>* get_actors() { return &_actors; }
 
+	void set_actors(std::vector<Actor*>* v) { _actors = (*v); }
+
 	std::vector<std::vector<std::vector<Actor*>>>* get_actor_map() { return &_map; }
 
 	static TCODMap* get_fov_map() { return _fovmap; }
@@ -86,6 +88,8 @@ public:
 	void set_savedir(const std::string& dir) { _savedir = dir; }
 
 	void generate_test_level();
+
+	void set_size(int s) { _width = s / 2; _height = s / 2; }
 
 private:
 	int _width, _height;
