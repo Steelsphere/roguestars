@@ -8,6 +8,32 @@ enum LEVEL_TYPE;
 
 class Tile : public Actor {
 public:
+	struct Economy {
+		struct Goods {
+			int food = 0;
+			int water = 0;
+			int air = 0;
+			int minerals = 0;
+			int industrial_goods = 0;
+			int luxury_goods = 0;
+			int consumer_goods = 0;
+			int military_goods = 0;
+		} supply, demand;
+
+		class Building {
+			enum BUILDING_TYPE {
+				CONSUMER_FACTORY,
+				MILITARY_FACTORY,
+				MINE,
+				FARM,
+			};
+
+			void update() {}
+		};
+
+		std::vector<Building> buildings;
+	};
+	
 	enum TILE_TYPE {
 		GRASS,
 		STONE_WALL,
@@ -47,6 +73,8 @@ public:
 
 	virtual void serialize(TCODZip* zip) override;
 	virtual void deserialize(TCODZip* zip) override;
+
+	Tile::Economy economy;
 };
 
 class SolarSystem : public Actor {
@@ -66,6 +94,8 @@ public:
 
 	virtual void serialize(TCODZip* zip) override;
 	virtual void deserialize(TCODZip* zip) override;
+
+	Tile::Economy economy;
 };
 
 class Planet : public Actor {
@@ -83,6 +113,8 @@ public:
 
 	virtual void serialize(TCODZip* zip) override;
 	virtual void deserialize(TCODZip* zip) override;
+
+	Tile::Economy economy;
 };
 
 class Biome : public Actor {
