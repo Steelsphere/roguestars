@@ -1,6 +1,7 @@
 #pragma once
+#define TCOD_SDL2
 
-#include <libtcod\libtcod.hpp>
+#include <libtcod.hpp>
 
 #include "Actor.h"
 

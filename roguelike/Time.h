@@ -1,4 +1,5 @@
 #pragma once
+#define TCOD_SDL2
 
 #include <string>
 

@@ -1,0 +1,44 @@
+ 
+SDL2 includes:
+  build\dependencies\include\
+ 
+Debug x64 libtcod_bare:
+  build\msvs\libtcod_bare\x64\Debug\libtcod.dll
+  build\msvs\libtcod_bare\x64\Debug\libtcod.pdb
+  build\msvs\libtcod_bare\x64\Debug\libtcod.lib
+ 
+Debug x64 libtcod_sdl_opengl:
+  build\msvs\libtcod_sdl_opengl\x64\Debug\libtcod.dll
+  build\msvs\libtcod_sdl_opengl\x64\Debug\libtcod.pdb
+  build\msvs\libtcod_sdl_opengl\x64\Debug\libtcod.lib
+ 
+Debug x64 libtcod_sdl:
+  build\msvs\libtcod_sdl\x64\Debug\libtcod.dll
+  build\msvs\libtcod_sdl\x64\Debug\libtcod.pdb
+  build\msvs\libtcod_sdl\x64\Debug\libtcod.lib
+ 
+Debug x64 libtcod-gui:
+  build\msvs\libtcod-gui\x64\Debug\libtcod-gui.dll
+  build\msvs\libtcod-gui\x64\Debug\libtcod-gui.pdb
+  build\msvs\libtcod-gui\x64\Debug\libtcod-gui.lib
+ 
+Release x64 libtcod_bare:
+  build\msvs\libtcod_bare\x64\Release\libtcod.dll
+  build\msvs\libtcod_bare\x64\Release\libtcod.pdb
+  build\msvs\libtcod_bare\x64\Release\libtcod.lib
+ 
+Release x64 libtcod_sdl_opengl:
+  build\msvs\libtcod_sdl_opengl\x64\Release\libtcod.dll
+  build\msvs\libtcod_sdl_opengl\x64\Release\libtcod.pdb
+  build\msvs\libtcod_sdl_opengl\x64\Release\libtcod.lib
+ 
+Release x64 libtcod_sdl:
+  build\msvs\libtcod_sdl\x64\Release\libtcod.dll
+  build\msvs\libtcod_sdl\x64\Release\libtcod.pdb
+  build\msvs\libtcod_sdl\x64\Release\libtcod.lib
+ 
+Release x64 libtcod-gui:
+  build\msvs\libtcod-gui\x64\Release\libtcod-gui.dll
+  build\msvs\libtcod-gui\x64\Release\libtcod-gui.pdb
+  build\msvs\libtcod-gui\x64\Release\libtcod-gui.lib
+ 

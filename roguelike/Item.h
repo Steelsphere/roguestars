@@ -1,4 +1,5 @@
 #pragma once
+#define TCOD_SDL2
 #include "Actor.h"
 
 class Item : public Actor

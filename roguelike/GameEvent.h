@@ -1,4 +1,5 @@
 #pragma once
+#define TCOD_SDL2
 class GameEvent {
 public:
 	enum GAME_EVENT {

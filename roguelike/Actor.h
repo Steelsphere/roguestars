@@ -1,8 +1,9 @@
 #pragma once
+#define TCOD_SDL2
 
 #include "Random.h"
 
-#include <libtcod\libtcod.hpp>
+#include <libtcod.hpp>
 #include <string>
 #include <map>
 #include <algorithm>

@@ -1,7 +1,8 @@
 #pragma once
+#define TCOD_SDL2
 #include "Level.h"
 
-#include <FastNoise\FastNoise.h>
+#include <FastNoise.h>
 #include <vector>
 
 class World {

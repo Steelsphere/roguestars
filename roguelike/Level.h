@@ -1,9 +1,10 @@
 #pragma once
+#define TCOD_SDL2
 
 #include "Actor.h"
 #include "Tile.h"
 
-#include <FastNoise\FastNoise.h>
+#include <FastNoise.h>
 #include <string>
 #include <iostream>
 #include <vector>

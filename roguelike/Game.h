@@ -1,4 +1,5 @@
 #pragma once
+#define TCOD_SDL2
 
 #include "Actor.h"
 #include "Player.h"
@@ -12,7 +13,7 @@
 
 #include <cstdlib>
 #include <algorithm>
-#include <libtcod\libtcod.hpp>
+#include <libtcod.hpp>
 #include <iostream>
 #include <cmath>
 #include <memory>

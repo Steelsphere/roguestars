@@ -1,8 +1,9 @@
 #pragma once
+#define TCOD_SDL2
 #include "Character.h"
 #include "GUI.h"
 
-#include <libtcod\libtcod.hpp>
+#include <libtcod.hpp>
 #include <iostream>
 #include <typeinfo>
 

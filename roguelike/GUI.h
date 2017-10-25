@@ -1,11 +1,12 @@
 #pragma once
+#define TCOD_SDL2
 
 #include "GameEvent.h"
 #include "Character.h"
 #include "Time.h"
 
 #include <string>
-#include <libtcod\libtcod.hpp>
+#include <libtcod.hpp>
 #include <vector>
 
 class Player;
