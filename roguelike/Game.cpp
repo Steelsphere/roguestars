@@ -644,10 +644,6 @@ void Game::to_galaxy() {
 
 void Game::to_star_sector() {
 	
-	if (_level->get_type() == Level::GALAXY) {
-		Faction::set_actors_cpy(Actor::get_buffer());
-	}
-
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\starsector")) {
 		new_star_sector();
 		fix_tile_id<SolarSystem>();
@@ -914,14 +910,6 @@ void Game::generate_factions() {
 		f->get_capital()->set_color_obj(TCODColor::yellow);
 	}
 	
-	// Set factions to be slow
-	for (Faction* f : Faction::get_factions()) {
-		f->set_speed(false);
-		for (Hero* h : f->get_heroes()) {
-			h->join_playarea();
-		}
-	}
-
 	// Save factions image
 	Faction::save_faction_map("Data\\factionmap.png", _level->get_size());
 

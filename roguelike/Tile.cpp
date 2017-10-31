@@ -260,7 +260,9 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 
 }
 
-StarSector::StarSector(int x, int y, int z) : Actor(x, y, z) {
+TravelPoint::TravelPoint(int x, int y, int z) : Actor(x, y, z) {}
+
+StarSector::StarSector(int x, int y, int z) : TravelPoint(x, y, z) {
 	_c = '*';
 	_fcolor = TCODColor::white;
 	_bcolor = TCODColor::black;
@@ -291,7 +293,7 @@ void StarSector::deserialize(TCODZip* zip) {
 	id = zip->getInt();
 }
 
-SolarSystem::SolarSystem(int x, int y, int z) : Actor(x, y, z) {
+SolarSystem::SolarSystem(int x, int y, int z) : TravelPoint(x, y, z) {
 	_c = '*';
 	_fcolor = TCODColor::white;
 	_bcolor = TCODColor::black;
@@ -322,7 +324,7 @@ void SolarSystem::deserialize(TCODZip* zip) {
 	id = zip->getInt();
 }
 
-Planet::Planet(int x, int y, int z, PLANET_TYPE type) : Actor(x, y, z) {
+Planet::Planet(int x, int y, int z, PLANET_TYPE type) : TravelPoint(x, y, z) {
 	_c = 15;
 	id = Random::random(Random::generator);
 
@@ -359,7 +361,7 @@ void Planet::deserialize(TCODZip* zip) {
 }
 
 
-Biome::Biome(int x, int y, int z, int type) : Actor(x, y, z) {
+Biome::Biome(int x, int y, int z, int type) : TravelPoint(x, y, z) {
 	id = Random::random(Random::generator);
 	
 	switch (type) {

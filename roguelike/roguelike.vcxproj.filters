@@ -87,6 +87,9 @@
     <ClCompile Include="..\deps\FastNoise\FastNoise.cpp">
       <Filter>Source Files\Third Party</Filter>
     </ClCompile>
+    <ClCompile Include="Economy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\deps\FastNoise\FastNoise.h">
       <Filter>Header Files\Third Party</Filter>
+    </ClInclude>
+    <ClInclude Include="Economy.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -50,7 +50,7 @@ void Hero::draw() {
 	Actor::draw();
 }
 
-void Hero::simulate(bool fast) {
+void Hero::simulate() {
 
 	// Decide which action to take
 	if (_action == IDLE) {

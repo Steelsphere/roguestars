@@ -75,7 +75,10 @@ int* Actor::get_world_pos() {
 }
 
 void Actor::set_position(int x, int y, int z) {
-	TCODConsole::root->putCharEx(_screen_x, _screen_y, 0, TCODColor::black, TCODColor::black);
+	if (_screen_x < TCODConsole::root->getWidth() && _screen_y < TCODConsole::root->getHeight() &&
+		_screen_x > 0 && _screen_y > 0) {
+		TCODConsole::root->putCharEx(_screen_x, _screen_y, 0, TCODColor::black, TCODColor::black);
+	}
 	_screen_x = x;
 	_screen_y = y;
 	_screen_z = z;
@@ -88,12 +91,20 @@ void Actor::set_world_position(int x, int y, int z) {
 }
 
 void Actor::draw() {
+	if (!(_screen_x < TCODConsole::root->getWidth() && _screen_y < TCODConsole::root->getHeight() &&
+		_screen_x > 0 && _screen_y > 0)) {
+		return;
+	}
 	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
 	TCODConsole::root->setCharForeground(_screen_x, _screen_y, _fcolor);
 	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
 }
 
 void Actor::draw_mem() {
+	if (!(_screen_x < TCODConsole::root->getWidth() && _screen_y < TCODConsole::root->getHeight() &&
+		_screen_x > 0 && _screen_y > 0)) {
+		return;
+	}
 	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
 	TCODConsole::root->setCharForeground(_screen_x, _screen_y, TCODColor::darkCyan);
 	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);

@@ -4,7 +4,6 @@
 #include <iostream>
 
 std::vector<Faction*> Faction::_factions;
-std::vector<Actor*> Faction::_galaxy_actors;
 
 Faction::Faction() {
 
@@ -32,7 +31,6 @@ Faction::Faction(int startx, int starty) {
 	}
 	
 	_name = name;
-	_fast = true;
 
 	std::cout << "A new nation, " << _name << ", has been founded\n";
 	GameObjects::log->message("A new nation, " + _name + ", has been founded", TCODColor::green);
@@ -89,11 +87,20 @@ void Faction::simulate() {
 			owner->remove_tile(ex_points[idx2]);
 		}
 
+		// Put into star sector container if it is one
+		if (ex_points[idx2]->get_type() == typeid(StarSector).name()) {
+			_ssv.push_back(dynamic_cast<StarSector*>(ex_points[idx2]));
+		}
+
 		_owned_tiles.push_back(ex_points[idx2]);
 	}
 	else { 
 		// FORTIFY
 		
+		// Manage economy
+
+
+
 		// Create a hero
 		if (Random::randc(0, 4000) == 1) {
 			std::vector<Actor*> spawn;
@@ -108,8 +115,12 @@ void Faction::simulate() {
 		}
 	}
 
+	for (StarSector* s : _ssv) {
+		s->economy.update();
+	}
+
 	for (Hero* h : _heroes) {
-		h->simulate(_fast);
+		h->simulate();
 	}
 	
 	// Check if dead
@@ -183,13 +194,6 @@ void Faction::save_faction_map(const std::string& path, int size) {
 		}
 	}
 	img.save(path.c_str());
-}
-
-void Faction::set_actors_cpy(std::vector<Actor*>* v) {
-	std::cout << "Copying actors into a new vector...\n";
-	for (Actor* a : (*v)) {
-		_galaxy_actors.push_back(new Actor((*a)));
-	}
 }
 
 void Faction::reinit_factions() {

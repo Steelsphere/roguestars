@@ -426,7 +426,7 @@ Level* Level::load_level_file(std::string path) {
 	std::cout << "IMPORTANT!!!" << type << std::endl;
 
 	while (true) {
-		std::string typestring = zip.getString();;
+		std::string typestring = zip.getString();
 		
 		if (typestring.size() == 0) {
 			break;

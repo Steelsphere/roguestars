@@ -4,37 +4,12 @@
 #include <libtcod.hpp>
 
 #include "Actor.h"
+#include "Economy.h"
 
 enum LEVEL_TYPE;
 
 class Tile : public Actor {
 public:
-	struct Economy {
-		struct Goods {
-			int food = 0;
-			int water = 0;
-			int air = 0;
-			int minerals = 0;
-			int industrial_goods = 0;
-			int luxury_goods = 0;
-			int consumer_goods = 0;
-			int military_goods = 0;
-		} supply, demand;
-
-		class Building {
-			enum BUILDING_TYPE {
-				CONSUMER_FACTORY,
-				MILITARY_FACTORY,
-				MINE,
-				FARM,
-			};
-
-			void update() {}
-		};
-
-		std::vector<Building> buildings;
-	};
-	
 	enum TILE_TYPE {
 		GRASS,
 		STONE_WALL,
@@ -63,10 +38,17 @@ public:
 	Tile(int x, int y, int z, TILE_TYPE type, TCODColor color = TCODColor::black);
 };
 
-class StarSector : public Actor {
+class TravelPoint : public Actor {
 public:
-	int id;
+	TravelPoint(int x, int y, int z);
+	TravelPoint() : Actor() {}
 	
+	int id;
+	Economy economy;
+};
+
+class StarSector : public TravelPoint {
+public:
 	StarSector() {}
 	StarSector(int x, int y, int z);
 
@@ -74,14 +56,10 @@ public:
 
 	virtual void serialize(TCODZip* zip) override;
 	virtual void deserialize(TCODZip* zip) override;
-
-	Tile::Economy economy;
 };
 
-class SolarSystem : public Actor {
+class SolarSystem : public TravelPoint {
 public:
-	int id;
-	
 	enum SOLAR_TYPE {
 		MAIN_SEQUENCE,
 		DWARF,
@@ -95,14 +73,10 @@ public:
 
 	virtual void serialize(TCODZip* zip) override;
 	virtual void deserialize(TCODZip* zip) override;
-
-	Tile::Economy economy;
 };
 
-class Planet : public Actor {
+class Planet : public TravelPoint {
 public:
-	int id;
-	
 	enum PLANET_TYPE {
 		TERRA,
 	};
@@ -114,14 +88,10 @@ public:
 
 	virtual void serialize(TCODZip* zip) override;
 	virtual void deserialize(TCODZip* zip) override;
-
-	Tile::Economy economy;
 };
 
-class Biome : public Actor {
+class Biome : public TravelPoint {
 public:
-	int id;
-	
 	Biome() {}
 	Biome(int x, int y, int z, int type);
 

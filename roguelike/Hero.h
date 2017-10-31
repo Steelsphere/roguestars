@@ -22,7 +22,7 @@ public:
 
 	virtual void draw();
 
-	void simulate(bool fast);
+	void simulate();
 
 private:
 	bool _in_playarea;
