@@ -83,7 +83,7 @@ public:
 
 	void set_transparent_background();
 
-	std::string get_type() { return std::string(typeid(this).name()); }
+	std::string get_type() { return std::string(typeid((*this)).name()); }
 
 protected:
 	int _screen_x, _screen_y, _screen_z;

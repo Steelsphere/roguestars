@@ -7,6 +7,7 @@
 #include "Economy.h"
 
 enum LEVEL_TYPE;
+class Faction;
 
 class Tile : public Actor {
 public:
@@ -45,6 +46,10 @@ public:
 	
 	int id;
 	Economy economy;
+	std::string alias = TCODNamegen::generate("object");
+	bool colonized = false;
+
+	void colonize(Faction* f);
 };
 
 class StarSector : public TravelPoint {

@@ -18,18 +18,17 @@ public:
 		int luxury_goods = 0;
 		int consumer_goods = 0;
 		int military_goods = 0;
+		int workers = 0;
 	} supply, demand;
 
 	class Building {
-		enum BUILDING_TYPE {
-			CONSUMER_FACTORY,
-			MILITARY_FACTORY,
-			MINE,
-			FARM,
-		};
+	public:
+		Building::Building(Economy* e);
 
-		void update() {}
+		virtual void update() {}
+		Economy* economy;
 	};
+	
 
 	void update();
 
@@ -38,5 +37,17 @@ public:
 
 	void goods_change(SUPPLY_TYPES type, std::vector<int>& v);
 
+	void print_values();
+
 	std::vector<Building> buildings;
 };
+
+namespace Buildings {
+	class FarmingComplex : public Economy::Building {
+		virtual void update() override;
+	};
+
+	class MiningComplex : public Economy::Building {
+		virtual void update() override;
+	};
+}

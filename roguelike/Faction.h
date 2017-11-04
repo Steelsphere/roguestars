@@ -87,7 +87,7 @@ public:
 
 	void remove_tile(const Actor* t);
 
-	Actor* get_capital() { return _capital_tile; }
+	StarSector* get_capital() { return _capital_tile; }
 
 	std::vector<Hero*> get_heroes() { return _heroes; }
 
@@ -97,7 +97,7 @@ private:
 	static std::vector<Faction*> _factions;
 	std::vector<Actor*> _owned_tiles;
 	std::vector<StarSector*> _ssv;
-	Actor* _capital_tile;
+	StarSector* _capital_tile;
 	TCODColor _color;
 	std::string _name;
 	std::vector<Hero*> _heroes;

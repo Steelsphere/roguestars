@@ -170,6 +170,8 @@ void Log::message(const std::string& message, TCODColor color) {
 		}
 	}
 	_update = true;
+	draw();
+	TCODConsole::flush();
 }
 
 //GUI(GameObjects::screen_width / 2, GameObjects::screen_height - GameObjects::screen_height / 8, GameObjects::screen_width / 2, GameObjects::screen_width / 11, std::vector<Text>())

@@ -11,7 +11,21 @@ Faction::Faction() {
 
 Faction::Faction(int startx, int starty) {
 	_factions.push_back(this);
-	_capital_tile = Actor::get_actors(startx, starty, 0).back();
+	
+	StarSector* capital = dynamic_cast<StarSector*>(Actor::get_actors(startx, starty, 0).back());
+	
+	if (capital == nullptr) {
+		abort();
+	}
+	else {
+		_capital_tile = capital;
+		std::vector<int> newvals;
+		for (int i = 0; i < _capital_tile->economy.supply_values().size(); i++) {
+			newvals.push_back(Random::randc(10000, 1000000));
+		}
+		_capital_tile->economy.goods_change(Economy::SUPPLY, newvals);
+	}
+
 	_owned_tiles.push_back(_capital_tile);
 	_color = TCODColor(Random::randc(0, 255), Random::randc(0, 255), Random::randc(0, 255));
 	
@@ -89,7 +103,15 @@ void Faction::simulate() {
 
 		// Put into star sector container if it is one
 		if (ex_points[idx2]->get_type() == typeid(StarSector).name()) {
-			_ssv.push_back(dynamic_cast<StarSector*>(ex_points[idx2]));
+			StarSector* ss = dynamic_cast<StarSector*>(ex_points[idx2]);
+			if (!ss->colonized) {
+				ss->colonize(this);
+				_ssv.push_back(ss);
+				if (_ssv.size() % 50 == 0) {
+					GameObjects::log->message(_name + " has reached the " + std::to_string(_ssv.size()) + " number of star sectors colonized milestone", TCODColor::yellow);
+					std::cout << _name + " has reached the " + std::to_string(_ssv.size()) + " number of star sectors colonized milestone" << std::endl;
+				}
+			}
 		}
 
 		_owned_tiles.push_back(ex_points[idx2]);
@@ -206,7 +228,7 @@ void Faction::reinit_factions() {
 		}
 		for (Actor* a : f->_owned_tiles) {
 			if (a->get_name() == "Star Sector" && a->get_color_obj() == TCODColor::yellow) {
-				f->_capital_tile = a;
+				f->_capital_tile = dynamic_cast<StarSector*>(a);
 			}
 		}
 	}

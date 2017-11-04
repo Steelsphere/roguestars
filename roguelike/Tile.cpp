@@ -3,6 +3,7 @@
 #include "GameEvent.h"
 #include "Level.h"
 #include "GameObjects.h"
+#include "Faction.h"
 
 #include <iostream>
 
@@ -261,6 +262,15 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 }
 
 TravelPoint::TravelPoint(int x, int y, int z) : Actor(x, y, z) {}
+
+void TravelPoint::colonize(Faction* f) {
+	economy.supply.food = Random::randc(0, 1000);
+	economy.supply.air = Random::randc(0, 1000);
+	economy.supply.minerals = Random::randc(0, 1000);
+	economy.supply.water = Random::randc(0, 1000);
+
+	colonized = true;
+}
 
 StarSector::StarSector(int x, int y, int z) : TravelPoint(x, y, z) {
 	_c = '*';

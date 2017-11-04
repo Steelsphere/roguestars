@@ -853,6 +853,8 @@ void Game::generate_factions() {
 			std::cout << i << "/" << simturns << "\r";
 			
 
+	//		Faction::get_factions()[0]->get_capital()->economy.print_values();
+
 			// Update loading screen
 			if (i % 14 == 0) {
 				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns));
