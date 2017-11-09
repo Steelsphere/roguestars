@@ -852,9 +852,6 @@ void Game::generate_factions() {
 			f->simulate();
 			std::cout << i << "/" << simturns << "\r";
 			
-
-	//		Faction::get_factions()[0]->get_capital()->economy.print_values();
-
 			// Update loading screen
 			if (i % 14 == 0) {
 				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns));
@@ -870,6 +867,11 @@ void Game::generate_factions() {
 				}
 				_gui_map->update_map(_level, true);
 				_gui_map->draw(true);
+
+				if (Faction::get_factions()[0]->get_ssv().size() > 1) {
+					Faction::get_factions()[0]->get_ssv()[0]->economy.print_values();
+				}
+
 				TCODConsole::root->flush();
 			}
 			

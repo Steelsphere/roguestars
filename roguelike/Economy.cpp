@@ -3,6 +3,12 @@
 
 #include <iostream>
 
+Economy::~Economy() {
+	for (Building* b : buildings) {
+		delete b;
+	}
+}
+
 std::vector<int> Economy::supply_values() {
 	std::vector<int> v;
 	v.push_back(supply.food);
@@ -61,13 +67,14 @@ void Economy::update() {
 	std::vector<int> dv = demand_values();
 
 	// Make demand go down if supply outnumbers demand
-	bool modified = false;
 	for (int i = 0; i < sv.size(); i++) {
-		if (sv[i] > dv[i]) {
+		if (sv[i] > dv[i] && dv[i] > 0) {
 			dv[i]--;
-			modified = true;
 		}
 	}
+
+	goods_change(SUPPLY, sv);
+	goods_change(DEMAND, dv);
 
 	// Change the economy dynamically
 	if (supply.workers > supply.food && supply.workers > 0) {
@@ -85,12 +92,14 @@ void Economy::update() {
 		}
 	}
 	
-	supply.food -= supply.workers / 10;
-	supply.water -= supply.workers / 5;
 
-	if (modified) {
-		goods_change(SUPPLY, sv);
-		goods_change(DEMAND, dv);
+	// Workers use supplies
+	supply.food -= supply.workers / 1000;
+	supply.water -= supply.workers / 500;
+
+	// Update buildings
+	for (Building* b : buildings) {
+		b->update();
 	}
 }
 
@@ -110,6 +119,10 @@ void Economy::print_values() {
 Economy::Building::Building(Economy* e) : economy(e)
 {}
 
+Buildings::FarmingComplex::FarmingComplex(Economy* e) : Economy::Building(e) {
+	cost.industrial_goods = 500;
+}
+
 void Buildings::FarmingComplex::update() {
 	if (economy->supply.workers / 512 > 1) {
 		economy->supply.food += Random::randc(0, 10);
@@ -119,9 +132,26 @@ void Buildings::FarmingComplex::update() {
 	}
 }
 
+Buildings::MiningComplex::MiningComplex(Economy* e) : Economy::Building(e) {
+	cost.industrial_goods = 500;
+}
+
 void Buildings::MiningComplex::update() {
 	if (economy->supply.workers / 512 > 1) {
 		economy->supply.minerals += Random::randc(0, 10);
+	}
+	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
+		economy->demand.workers++;
+	}
+}
+
+Buildings::IndustrialComplex::IndustrialComplex(Economy* e) : Economy::Building(e) {
+	cost.industrial_goods = 500;
+}
+
+void Buildings::IndustrialComplex::update() {
+	if (economy->supply.workers / 512 > 1) {
+		economy->supply.industrial_goods += Random::randc(0, 10);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;

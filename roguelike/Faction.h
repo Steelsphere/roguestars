@@ -93,6 +93,8 @@ public:
 
 	std::string get_name() { return _name; }
 
+	std::vector<StarSector*> get_ssv() { return _ssv; }
+
 private:
 	static std::vector<Faction*> _factions;
 	std::vector<Actor*> _owned_tiles;

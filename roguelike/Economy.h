@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <iostream>
+
 class Economy {
 public:
 	enum SUPPLY_TYPES {
@@ -23,12 +25,21 @@ public:
 
 	class Building {
 	public:
+		enum BUILDING_TYPES {
+			FARMING_COMPLEX,
+			MINING_COMPLEX,
+			INDUSTRIAL_COMPLEX,
+		};
+		
 		Building::Building(Economy* e);
 
-		virtual void update() {}
+		virtual void update() { std::cout << "DEBUG ERROR: A BUILDING HAS NO UPDATE FUNCTION\n"; }
 		Economy* economy;
+
+		Goods cost;
 	};
 	
+	~Economy();
 
 	void update();
 
@@ -39,15 +50,30 @@ public:
 
 	void print_values();
 
-	std::vector<Building> buildings;
+	std::vector<Building*> buildings;
+
+	std::vector<Building::BUILDING_TYPES> wanted_buildings;
 };
 
 namespace Buildings {
 	class FarmingComplex : public Economy::Building {
+	public:
+		FarmingComplex(Economy* e);
+		
 		virtual void update() override;
 	};
 
 	class MiningComplex : public Economy::Building {
+	public:
+		MiningComplex(Economy* e);
+		
+		virtual void update() override;
+	};
+
+	class IndustrialComplex : public Economy::Building {
+	public:
+		IndustrialComplex(Economy* e);
+
 		virtual void update() override;
 	};
 }

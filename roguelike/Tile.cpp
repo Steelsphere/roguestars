@@ -268,6 +268,7 @@ void TravelPoint::colonize(Faction* f) {
 	economy.supply.air = Random::randc(0, 1000);
 	economy.supply.minerals = Random::randc(0, 1000);
 	economy.supply.water = Random::randc(0, 1000);
+	economy.supply.workers = Random::randc(10, 100);
 
 	colonized = true;
 }

@@ -24,9 +24,13 @@ Faction::Faction(int startx, int starty) {
 			newvals.push_back(Random::randc(10000, 1000000));
 		}
 		_capital_tile->economy.goods_change(Economy::SUPPLY, newvals);
+		_capital_tile->economy.buildings.push_back(new Buildings::FarmingComplex(&_capital_tile->economy));
+		_capital_tile->economy.buildings.push_back(new Buildings::MiningComplex(&_capital_tile->economy));
+		_capital_tile->economy.buildings.push_back(new Buildings::IndustrialComplex(&_capital_tile->economy));
 	}
 
 	_owned_tiles.push_back(_capital_tile);
+	_ssv.push_back(_capital_tile);
 	_color = TCODColor(Random::randc(0, 255), Random::randc(0, 255), Random::randc(0, 255));
 	
 	std::string name = TCODNamegen::generate("object");
