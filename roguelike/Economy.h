@@ -37,6 +37,7 @@ public:
 		Economy* economy;
 
 		Goods cost;
+		unsigned int tier = 1;
 	};
 	
 	~Economy();

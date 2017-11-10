@@ -2,6 +2,7 @@
 #include "Random.h"
 
 #include <iostream>
+#include <string>
 
 Economy::~Economy() {
 	for (Building* b : buildings) {
@@ -63,19 +64,6 @@ void Economy::goods_change(SUPPLY_TYPES type, std::vector<int>& v) {
 }
 
 void Economy::update() {
-	std::vector<int> sv = supply_values();
-	std::vector<int> dv = demand_values();
-
-	// Make demand go down if supply outnumbers demand
-	for (int i = 0; i < sv.size(); i++) {
-		if (sv[i] > dv[i] && dv[i] > 0) {
-			dv[i]--;
-		}
-	}
-
-	goods_change(SUPPLY, sv);
-	goods_change(DEMAND, dv);
-
 	// Change the economy dynamically
 	if (supply.workers > supply.food && supply.workers > 0) {
 		demand.food++; 
@@ -86,7 +74,7 @@ void Economy::update() {
 	}
 	if (supply.workers > supply.water && supply.workers > 0) {
 		demand.water++;
-		supply.workers -= Random::randc(0, 10);
+		supply.workers -= Random::randc(0, 100);
 		if (supply.workers < 0) {
 			supply.workers = 0;
 		}
@@ -94,25 +82,65 @@ void Economy::update() {
 	
 
 	// Workers use supplies
-	supply.food -= supply.workers / 1000;
-	supply.water -= supply.workers / 500;
-
+	if (supply.food - supply.workers / 1000 <= 0) {
+		supply.food = 0;
+	}
+	else {
+		supply.food -= supply.workers / 1000;
+	}
+	
+	if (supply.water - supply.workers / 500 <= 0) {
+		supply.water = 0;
+	}
+	else {
+		supply.water -= supply.workers / 500;
+	}
+	
 	// Update buildings
 	for (Building* b : buildings) {
 		b->update();
 	}
+
+	std::vector<int> sv = supply_values();
+	std::vector<int> dv = demand_values();
+
+	// Make demand go down if supply outnumbers demand
+	for (int i = 0; i < sv.size(); i++) {
+		if (sv[i] > dv[i] && dv[i] > 0) {
+			dv[i]--;
+		}
+		// Set to zero if negative
+		if (sv[i] < 0) {
+			sv[i] = 0;
+		}
+	}
+
+	goods_change(SUPPLY, sv);
+	goods_change(DEMAND, dv);
 }
 
 void Economy::print_values() {
-	std::cout << "SUPPLY\n";
+	std::string vals[] = {
+		"Food",
+		"Water",
+		"Air",
+		"Industrial Goods",
+		"Luxury Goods",
+		"Consumer Goods",
+		"Military Goods",
+		"Minerals",
+		"Workers"
+	};
+	
+	std::cout << "-----SUPPLY-----\n";
 	std::vector<int> sv = supply_values();
 	std::vector<int> dv = demand_values();
 	for (int i = 0; i < sv.size(); i++) {
-		std::cout << sv[i] << "\n";
+		std::cout << vals[i] + " " + std::to_string(sv[i]) << "\n";
 	}
-	std::cout << "DEMAND\n";
+	std::cout << "-----DEMAND-----\n";
 	for (int i = 0; i < dv.size(); i++) {
-		std::cout << dv[i] << "\n";
+		std::cout << vals[i] + " " + std::to_string(dv[i]) << "\n";
 	}
 }
 
@@ -124,8 +152,8 @@ Buildings::FarmingComplex::FarmingComplex(Economy* e) : Economy::Building(e) {
 }
 
 void Buildings::FarmingComplex::update() {
-	if (economy->supply.workers / 512 > 1) {
-		economy->supply.food += Random::randc(0, 10);
+	if (economy->supply.workers / std::log(tier + 1) > 1) {
+		economy->supply.food += Random::randc(std::log(tier + 1) * 500, std::log(tier + 1) * 1000);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;
@@ -137,8 +165,8 @@ Buildings::MiningComplex::MiningComplex(Economy* e) : Economy::Building(e) {
 }
 
 void Buildings::MiningComplex::update() {
-	if (economy->supply.workers / 512 > 1) {
-		economy->supply.minerals += Random::randc(0, 10);
+	if (economy->supply.workers / std::log(tier + 1) > 1) {
+		economy->supply.minerals += Random::randc(std::log(tier + 1) * 500, std::log(tier + 1) * 1000);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;
@@ -150,8 +178,8 @@ Buildings::IndustrialComplex::IndustrialComplex(Economy* e) : Economy::Building(
 }
 
 void Buildings::IndustrialComplex::update() {
-	if (economy->supply.workers / 512 > 1) {
-		economy->supply.industrial_goods += Random::randc(0, 10);
+	if (economy->supply.workers / std::log(tier + 1) > 1) {
+		economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 500, std::log(tier + 1) * 1000);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;
