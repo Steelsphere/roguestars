@@ -124,9 +124,9 @@ void Economy::print_values() {
 		"Food",
 		"Water",
 		"Air",
+		"Consumer Goods",
 		"Industrial Goods",
 		"Luxury Goods",
-		"Consumer Goods",
 		"Military Goods",
 		"Minerals",
 		"Workers"
