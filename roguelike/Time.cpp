@@ -1,9 +1,16 @@
 #include "Time.h"
 
+#include <cmath>
+#include <iostream>
 
+#define SECONDS_IN_YEAR 31104000 // 30 DAY MONTHS!
+#define SECONDS_IN_MONTH 2592000
+#define SECONDS_IN_DAY 86400
+#define SECONDS_IN_HOUR 3600
+#define SECONDS_IN_MINUTE 60
 
-Time::Time(int year, int month, int day, int hour, int minute, int second) :
-	_year(year), _month(month), _day(day), _hour(hour), _minute(minute), _second(second)
+Time::Time(unsigned long long start) :
+	_timestamp(start)
 {
 
 }
@@ -19,27 +26,34 @@ std::string Time::format_time(const std::string& format) {
 			continue;
 		}
 		if (processf) {
+			std::string t;
 			switch (c) {
 			case '%':
 				str.push_back('%');
 				break;
-			case 'Y':
-				str.append(std::to_string(_year));
+			case 'Y': // Year
+				str += std::to_string( (unsigned long long) std::floor(_timestamp / SECONDS_IN_YEAR));
 				break;
-			case 'M':
-				str.append(std::to_string(_month));
+			case 'M': // Month
+				str += std::to_string(( ((unsigned long long) std::floor(_timestamp / SECONDS_IN_MONTH)) % 12) + 1);
 				break;
-			case 'D':
-				str.append(std::to_string(_day));
+			case 'D': // Day
+				str += std::to_string( ((unsigned long long) std::floor(_timestamp / SECONDS_IN_DAY) % 30) + 1);
 				break;
-			case 'H':
-				str.append(std::to_string(_hour));
+			case 'H': // Hour
+				t = std::to_string(((unsigned long long) std::floor(_timestamp / SECONDS_IN_HOUR) % 24));
+				if (t.size() == 1) t.insert(0, 1, '0');
+				str += t;
 				break;
-			case 'm':
-				str.append(std::to_string(_minute));
+			case 'm': // Minute
+				t = std::to_string(((unsigned long long) std::floor(_timestamp / SECONDS_IN_MINUTE) % 60));
+				if (t.size() == 1) t.insert(0, 1, '0');
+				str += t;
 				break;
-			case 'S':
-				str.append(std::to_string(_second));
+			case 'S': // Second
+				t = std::to_string(((unsigned long long) _timestamp) % 60);
+				if (t.length() == 1) t.insert(0, 1, '0');
+				str += t;
 				break;
 			}
 			processf = false;
@@ -51,6 +65,7 @@ std::string Time::format_time(const std::string& format) {
 	return str;
 }
 
+/*
 void Time::pass_time(int year, int month, int day, int hour, int minute, int second) {
 	int overflow;
 	int next;
@@ -111,3 +126,5 @@ void Time::pass_time(int year, int month, int day, int hour, int minute, int sec
 
 	}
 }
+
+*/

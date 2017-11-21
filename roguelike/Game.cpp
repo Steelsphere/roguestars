@@ -25,10 +25,10 @@ void Game::init() {
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
 	TCODSystem::setFps(180);
 
-	_time = Time(3000, 1, 1, 1, 1, 1);
+	_time = Time(0);
 	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
-	_time.pass_time(0, 24, 0, 0, 0, 0);
+	_time.pass_time(9223372036854775807);
 	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
 	GameObjects::log = _log;
