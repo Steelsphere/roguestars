@@ -21,6 +21,32 @@ public:
 		int consumer_goods = 0;
 		int military_goods = 0;
 		int workers = 0;
+
+		std::vector<int> get_vals() {
+			std::vector<int> v;
+			v.push_back(food);
+			v.push_back(water);
+			v.push_back(air);
+			v.push_back(consumer_goods);
+			v.push_back(industrial_goods);
+			v.push_back(luxury_goods);
+			v.push_back(military_goods);
+			v.push_back(minerals);
+			v.push_back(workers);
+			return v;
+		}
+
+		void set_vals(std::vector<int>& v) {
+			food = v[0];
+			water = v[1];
+			air = v[2];
+			consumer_goods = v[3];
+			industrial_goods = v[4];
+			luxury_goods = v[5];
+			military_goods = v[6];
+			minerals = v[7];
+			workers = v[8];
+		}
 	} supply, demand;
 
 	class Building {
@@ -53,7 +79,13 @@ public:
 
 	std::vector<Building*> buildings;
 
+	std::vector<Building*> underconstruction_buildings;
+
 	std::vector<Building::BUILDING_TYPES> wanted_buildings;
+
+	void build_building(Building* b);
+
+	void construct_buildings();
 };
 
 namespace Buildings {

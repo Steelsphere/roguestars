@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 Economy::~Economy() {
 	for (Building* b : buildings) {
@@ -141,6 +142,39 @@ void Economy::print_values() {
 	std::cout << "-----DEMAND-----\n";
 	for (int i = 0; i < dv.size(); i++) {
 		std::cout << vals[i] + " " + std::to_string(dv[i]) << "\n";
+	}
+}
+
+void Economy::build_building(Building* b) {
+	underconstruction_buildings.push_back(b);
+}
+
+void Economy::construct_buildings() {
+	for (Building* b : underconstruction_buildings) {
+		std::vector<int> in = b->cost.get_vals();
+		
+		// Complete the building if done
+		int sum = 0;
+		for (int i : in) {
+			sum += i;
+		}
+		if (sum == 0) {
+			underconstruction_buildings.erase(std::remove(underconstruction_buildings.begin(), underconstruction_buildings.end(), b));
+			buildings.push_back(b);
+			continue;
+		}
+		
+		// Subtract cost from 20% of worker count
+		std::vector<int> out = in;
+		for (int i = 0; i < in.size(); i++) {
+			if (in[i] != 0) {
+				out[i] -= (int)std::ceil(supply.workers * 0.2);
+				if (out[i] < 0) {
+					out[i] = 0;
+				}
+			}
+		}
+		b->cost.set_vals(out);
 	}
 }
 
