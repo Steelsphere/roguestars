@@ -101,6 +101,7 @@ void Economy::update() {
 	for (Building* b : buildings) {
 		b->update();
 	}
+	construct_buildings();
 
 	std::vector<int> sv = supply_values();
 	std::vector<int> dv = demand_values();
@@ -159,16 +160,27 @@ void Economy::construct_buildings() {
 			sum += i;
 		}
 		if (sum == 0) {
-			underconstruction_buildings.erase(std::remove(underconstruction_buildings.begin(), underconstruction_buildings.end(), b));
+			std::cout << "Completed " << b->name << std::endl;
 			buildings.push_back(b);
-			continue;
+			underconstruction_buildings.erase(std::remove(underconstruction_buildings.begin(), underconstruction_buildings.end(), b));
+			break; // Stuff breaks if you don't break here
 		}
 		
 		// Subtract cost from 20% of worker count
 		std::vector<int> out = in;
-		for (int i = 0; i < in.size(); i++) {
-			if (in[i] != 0) {
-				out[i] -= (int)std::ceil(supply.workers * 0.2);
+		for (int i = 0; i < out.size(); i++) {
+			if (out[i] != 0) {
+				
+				// Gotta remember to subtract from economy
+				if (supply.get_vals()[i] - (int)std::ceil(supply.workers * 0.2) > 0) {
+					out[i] -= (int)std::ceil(supply.workers * 0.2);
+					
+					std::vector<int> econ_out = supply.get_vals();
+					econ_out[i] -= (int)std::ceil(supply.workers * 0.2);
+
+					supply.set_vals(econ_out);
+				}
+				
 				if (out[i] < 0) {
 					out[i] = 0;
 				}
@@ -178,10 +190,23 @@ void Economy::construct_buildings() {
 	}
 }
 
+bool Economy::has_building(const std::string& name) {
+	for (Building* b : buildings) {
+		if (b->name == name)
+			return true;
+	}
+	for (Building* ub : underconstruction_buildings) {
+		if (ub->name == name)
+			return true;
+	}
+	return false;
+}
+
 Economy::Building::Building(Economy* e) : economy(e)
 {}
 
 Buildings::FarmingComplex::FarmingComplex(Economy* e) : Economy::Building(e) {
+	name = "Farming Complex";
 	cost.industrial_goods = 500;
 }
 
@@ -195,6 +220,7 @@ void Buildings::FarmingComplex::update() {
 }
 
 Buildings::MiningComplex::MiningComplex(Economy* e) : Economy::Building(e) {
+	name = "Mining Complex";
 	cost.industrial_goods = 500;
 }
 
@@ -208,12 +234,31 @@ void Buildings::MiningComplex::update() {
 }
 
 Buildings::IndustrialComplex::IndustrialComplex(Economy* e) : Economy::Building(e) {
+	name = "Industrial Complex";
 	cost.industrial_goods = 500;
 }
 
 void Buildings::IndustrialComplex::update() {
 	if (economy->supply.workers / std::log(tier + 1) > 1) {
 		economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 500, std::log(tier + 1) * 1000);
+	}
+	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
+		economy->demand.workers++;
+	}
+}
+
+Buildings::Infrastructure::Infrastructure(Economy* e) : Economy::Building(e) {
+	name = "Infrastructure";
+	cost.industrial_goods = 250;
+	cost.luxury_goods = 250;
+	cost.consumer_goods = 250;
+}
+
+void Buildings::Infrastructure::update() {
+	if (economy->supply.workers / std::log(tier + 1) > 1) {
+		economy->supply.food += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		economy->supply.water += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		economy->supply.air += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;

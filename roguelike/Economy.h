@@ -64,6 +64,8 @@ public:
 
 		Goods cost;
 		unsigned int tier = 1;
+
+		std::string name = "Unnamed";
 	};
 	
 	~Economy();
@@ -81,11 +83,11 @@ public:
 
 	std::vector<Building*> underconstruction_buildings;
 
-	std::vector<Building::BUILDING_TYPES> wanted_buildings;
-
 	void build_building(Building* b);
 
 	void construct_buildings();
+
+	bool has_building(const std::string& type);
 };
 
 namespace Buildings {
@@ -106,6 +108,13 @@ namespace Buildings {
 	class IndustrialComplex : public Economy::Building {
 	public:
 		IndustrialComplex(Economy* e);
+
+		virtual void update() override;
+	};
+
+	class Infrastructure : public Economy::Building {
+	public:
+		Infrastructure(Economy* e);
 
 		virtual void update() override;
 	};

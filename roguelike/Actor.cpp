@@ -92,7 +92,7 @@ void Actor::set_world_position(int x, int y, int z) {
 
 void Actor::draw() {
 	if (!(_screen_x < TCODConsole::root->getWidth() && _screen_y < TCODConsole::root->getHeight() &&
-		_screen_x > 0 && _screen_y > 0)) {
+		_screen_x >= 0 && _screen_y >= 0)) {
 		return;
 	}
 	TCODConsole::root->putChar(_screen_x, _screen_y, _c);

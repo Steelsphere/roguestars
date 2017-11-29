@@ -124,7 +124,7 @@ void Faction::simulate() {
 		// FORTIFY
 		
 		// Manage economy
-
+		decide_buildings();
 
 
 		// Create a hero
@@ -234,6 +234,15 @@ void Faction::reinit_factions() {
 			if (a->get_name() == "Star Sector" && a->get_color_obj() == TCODColor::yellow) {
 				f->_capital_tile = dynamic_cast<StarSector*>(a);
 			}
+		}
+	}
+}
+
+void Faction::decide_buildings() {
+	for (StarSector* ss : _ssv) {
+		if (!ss->economy.has_building("Infrastructure")) {
+			ss->economy.build_building(new Buildings::Infrastructure(&ss->economy));
+			std::cout << _name << " has started building Infrastructure in " << ss->alias << std::endl;
 		}
 	}
 }

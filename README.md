@@ -20,7 +20,7 @@ Open the .sln file with Visual Studio, right click on the solution and select "B
 
 They should both succeed but upon running RS you should get an error about missing dlls
 
-Copy the files from essentialfiles into the build directory (x64/Debug)
+Copy the files from essentialfiles into the build directory
 
 ## Contributing
 

@@ -95,6 +95,8 @@ public:
 
 	std::vector<StarSector*> get_ssv() { return _ssv; }
 
+	void decide_buildings();
+
 private:
 	static std::vector<Faction*> _factions;
 	std::vector<Actor*> _owned_tiles;
