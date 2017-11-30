@@ -185,7 +185,7 @@ Status::Status(Player* player, Time* time) : GUI(GameObjects::screen_width - 30,
 
 	_text.push_back(name);
 	
-	_transparency = 0.9f;
+	_transparency = 0.0f;
 	_type = FILLED_BORDERED_BACKGROUND;
 	_player = player;
 	_time = time;
@@ -328,7 +328,7 @@ void MainMenu::front() {
 	_text.clear();
 	_mtext.clear();
 
-	Text title = { (_width / 2) - 50, 5, 100, 50, 
+	Text title = { (_width / 2) - 50, 5, 97, 10, 
 		"`#######                                                `#####    `##                          \n"
 		"`##    `##                                            `##    `##  `##                          \n"
 		"`##    `##     `##       `##   `##  `##  `###          `##      `######   `###     `### `####  \n"
@@ -338,9 +338,9 @@ void MainMenu::front() {
 		"`##      `##   `##         `##   `##`## `#####          `#####     `##   `## `###`###   `## `##\n"
 		"`##                       `##                                                             `##  \n",
 		TCODColor::red };
-	_text.push_back(title);
+	_title_pic = new Picture(title);
 
-	Text pic = { (_width / 2) - 5, 14, 20, 15,
+	Text pic = { (_width / 2) - 5, 15, 13, 20,
 "     #     \n"
 "     #     \n"
 "    ###    \n"
@@ -352,15 +352,17 @@ void MainMenu::front() {
 "   #####   \n"
 "   ## ##   \n"
 "  ##   ##  \n",
-	TCODColor::white };
+	TCODColor::orange };
 
-	_text.push_back(pic);
+	_star_pic = new Picture(pic);
 
-	MText n1 = { (_width / 2) - 5, 28, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
-	MText n2 = { (_width / 2) - 5, 30, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::SAVE_SCREEN };
-	MText n3 = { (_width / 2) - 5, 32, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
+	MText n1 = { (_width / 2) - 4, 28, 20, 1, "New Game", TCODColor::white, 1, GameEvent::STARTUP_NEW_GAME };
+	MText n2 = { (_width / 2) - 4, 30, 20, 1, "Load Game", TCODColor::white, 0, GameEvent::SAVE_SCREEN };
+	MText n3 = { (_width / 2) - 4, 32, 20, 1, "Exit", TCODColor::white, 0, GameEvent::EXIT };
 	
 	_mtext.push_back(n1); _mtext.push_back(n2); _mtext.push_back(n3);
+
+	_type = FILLED_BORDERED_BACKGROUND;
 
 	set_selector();
 	Input::set_mode(Input::MAIN_MENU);
@@ -401,13 +403,18 @@ void MainMenu::draw(bool force) {
 		SelectionBox::draw(force);
 		if (TCODSystem::getFps() != 0) {
 			if (GameObjects::ticks % 180 == 0 && _state == FRONT) {
-				_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
+	//			_text[1].color = TCODColor(std::cos(GameObjects::time) * 255, std::sin(GameObjects::time) * 255, std::tan(GameObjects::time) * 255);
 			}
 		}
 		if (Input::get_last_key().shift && Input::get_last_key().vk == TCODK_1) {
 			GameEvent::set_event(GameEvent::TEST_LEVEL);
 		}
 	}
+}
+
+MainMenu::~MainMenu() {
+	delete _title_pic;
+	delete _star_pic;
 }
 
 ESCMenu::ESCMenu() : SelectionBox(GameObjects::screen_width / 2 - 13, GameObjects::screen_height / 2 - 10, 24, 12, std::vector<Text>()) {
@@ -613,7 +620,7 @@ HealthInfo::HealthInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, 
 	_text.push_back(leftlegh);
 	_text.push_back(rightlegh);
 
-	_transparency = 1.0f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
@@ -636,7 +643,7 @@ TileInfo::TileInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	_text.push_back(timpa);
 	_text.push_back(ttran);
 
-	_transparency = 1.0f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 	_player = p;
 }
@@ -710,7 +717,7 @@ CharInfo::CharInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 
 	_text[1].str += p->get_alias();
 
-	_transparency = 1.0f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
@@ -721,7 +728,7 @@ MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	_text.push_back(title);
 	_text.push_back(time);
 
-	_transparency = 1.0f;
+	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
@@ -782,4 +789,13 @@ void TextBox::draw(bool force) {
 	GUI::draw(true);
 	GUI::make_transparency_work();
 	TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
+}
+
+Picture::Picture(Text t) : GUI(t.x - 1, t.y - 1, t.w, t.h) {
+	t.x = 1;
+	t.y = 1;
+	_text.push_back(t);
+	_transparency = 0.9f;
+	_type = FILLED_BORDERED_BACKGROUND;
+	GUI::draw(true);
 }

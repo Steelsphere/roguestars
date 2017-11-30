@@ -30,7 +30,7 @@ public:
 	
 	GUI();
 	
-	GUI(int x, int y, int w, int h, std::vector<Text> text);
+	GUI(int x, int y, int w, int h, std::vector<Text> text = std::vector<Text>());
 	
 	~GUI();
 
@@ -143,6 +143,11 @@ public:
 	void update_mtext();
 };
 
+class Picture : public GUI {
+public:
+	Picture(Text t);
+};
+
 class MainMenu : public SelectionBox {
 public:
 	enum STATE {
@@ -150,6 +155,7 @@ public:
 	};
 	
 	MainMenu();
+	~MainMenu();
 
 	void front();
 
@@ -159,6 +165,8 @@ public:
 
 private:
 	STATE _state = FRONT;
+	Picture* _title_pic;
+	Picture* _star_pic;
 };
 
 class ESCMenu : public SelectionBox {
