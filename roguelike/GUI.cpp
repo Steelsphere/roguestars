@@ -4,6 +4,7 @@
 #include "Actor.h"
 #include "Player.h"
 #include "Faction.h"
+#include "Tile.h"
 
 #include <algorithm>
 #include <cstring>
@@ -206,6 +207,28 @@ void Status::draw(bool force) {
 		} */
 		if (_player != nullptr) {
 			_tile->update();
+			
+			// Sector view
+			std::vector<Actor*> tiles = Actor::get_actors(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
+			StarSector* sector = nullptr;
+			for (Actor* a : tiles) {
+				if (a->get_type() == typeid(StarSector).name()) {
+					sector = dynamic_cast<StarSector*>(a);
+				}
+			}
+			if (sector != nullptr) {
+				if (_si == nullptr) {
+					_si = new SectorInfo(_x - 25, _y, 25, 11, sector);
+				}
+				else {
+					_si->update();
+				}
+			}
+			else if (_si != nullptr) {
+				delete _si;
+				_si = nullptr;
+			}
+
 		}
 	} 
 	GUI::draw(force);
@@ -369,6 +392,9 @@ void MainMenu::front() {
 }
 
 void MainMenu::save_screen() {
+	delete _title_pic;
+	delete _star_pic;
+	
 	_mtext.clear();
 	
 	MText back = { (_width / 2) - 5, 28, 20, 1, "Back", TCODColor::white, 1, GameEvent::TO_MAIN_MENU };
@@ -435,13 +461,13 @@ InfoViewer::InfoViewer(Actor* aref) : GUI(0, (GameObjects::screen_height - 10), 
 	Text c4 = { 2, 5, _width - 2, 1, "", TCODColor::white };
 	Text c5 = { 2, 6, _width - 2, 1, "", TCODColor::white };
 	Text c6 = { 2, 7, _width - 2, 1, "", TCODColor::white };
-_text.push_back(title);
-_text.push_back(c1); _text.push_back(c2); _text.push_back(c3);
-_text.push_back(c4); _text.push_back(c5); _text.push_back(c6);
+	_text.push_back(title);
+	_text.push_back(c1); _text.push_back(c2); _text.push_back(c3);
+	_text.push_back(c4); _text.push_back(c5); _text.push_back(c6);
 
-_type = FILLED_BORDERED_BACKGROUND;
-_transparency = 0.9;
-_actor = aref;
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0.9;
+	_actor = aref;
 }
 
 void InfoViewer::draw(bool force) {
@@ -732,6 +758,49 @@ MiscInfo::MiscInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	_type = FILLED_BORDERED_BACKGROUND;
 }
 
+SectorInfo::SectorInfo(int x, int y, int w, int h, StarSector* s) : GUI(x, y, w, h) {
+	_transparency = 0.9f;
+	_type = FILLED_BORDERED_BACKGROUND;
+	_sector = s;
+	update();
+}
+
+void SectorInfo::update() {
+	Text title = { 1, 0, _width, 1, "Sector", TCODColor::red };
+	_text.push_back(title);
+	
+	std::vector<std::string> names = {
+		"Food    ",
+		"Water   ",
+		"Air     ",
+		"Con.Gds ",
+		"Ind.Gds ",
+		"Lux.Gds ",
+		"Mil.Gds ",
+		"Minerals",
+		"Workers ",
+	};
+	
+	int i = 0;
+	std::vector<int> supply = _sector->economy.supply.get_vals();
+	std::vector<int> demand = _sector->economy.demand.get_vals();
+	for (int y = 1; y < _height - 1; y++) {
+		
+		Text good = { 1, y, _width, 1, names[i], TCODColor::white};
+		good.str += ":";
+		good.str += "S:";
+		good.str += std::to_string(supply[i]);
+		good.str += "|D:";
+		good.str += std::to_string(demand[i]);
+		_text.push_back(good);
+
+		i++;
+		if (i > names.size() - 1) {
+			break;
+		}
+	}
+}
+
 TextBox::TextBox(int x, int y, int w, int h, std::string title, std::string descr, bool digits_only) : GUI(x, y, w, h, std::vector<Text>()) {
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
@@ -799,3 +868,4 @@ Picture::Picture(Text t) : GUI(t.x - 1, t.y - 1, t.w, t.h) {
 	_type = FILLED_BORDERED_BACKGROUND;
 	GUI::draw(true);
 }
+

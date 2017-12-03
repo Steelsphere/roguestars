@@ -11,6 +11,7 @@
 
 class Player;
 class Level;
+class StarSector;
 
 class GUI
 {
@@ -93,6 +94,16 @@ public:
 	MiscInfo(int x, int y, int w, int h, Player* p);
 };
 
+class SectorInfo : public GUI {
+public:
+	SectorInfo(int x, int y, int w, int h, StarSector* s);
+
+	void update();
+
+private:
+	StarSector* _sector;
+};
+
 class Status : public GUI {
 public:
 	Status(Player* player, Time* time);
@@ -109,6 +120,7 @@ private:
 	TileInfo* _tile;
 	CharInfo* _char;
 	MiscInfo* _misc;
+	SectorInfo* _si = nullptr;
 };
 
 class SelectionBox : public GUI {
