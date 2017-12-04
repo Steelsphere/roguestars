@@ -1,4 +1,7 @@
 #pragma once
+#define TCOD_SDL2
+
+#include <libtcod.hpp>
 
 #include <vector>
 
@@ -66,6 +69,9 @@ public:
 		unsigned int tier = 1;
 
 		std::string name = "Unnamed";
+		std::string initial = "B";
+
+		TCODColor color = TCODColor::white;
 	};
 	
 	~Economy();

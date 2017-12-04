@@ -207,6 +207,8 @@ Economy::Building::Building(Economy* e) : economy(e)
 
 Buildings::FarmingComplex::FarmingComplex(Economy* e) : Economy::Building(e) {
 	name = "Farming Complex";
+	initial = "FC";
+	color = TCODColor::green;
 	cost.industrial_goods = 500;
 }
 
@@ -221,6 +223,8 @@ void Buildings::FarmingComplex::update() {
 
 Buildings::MiningComplex::MiningComplex(Economy* e) : Economy::Building(e) {
 	name = "Mining Complex";
+	initial = "MC";
+	color = TCODColor::blue;
 	cost.industrial_goods = 500;
 }
 
@@ -235,6 +239,8 @@ void Buildings::MiningComplex::update() {
 
 Buildings::IndustrialComplex::IndustrialComplex(Economy* e) : Economy::Building(e) {
 	name = "Industrial Complex";
+	initial = "IC";
+	color = TCODColor::red;
 	cost.industrial_goods = 500;
 }
 
@@ -249,6 +255,8 @@ void Buildings::IndustrialComplex::update() {
 
 Buildings::Infrastructure::Infrastructure(Economy* e) : Economy::Building(e) {
 	name = "Infrastructure";
+	initial = "IF";
+	color = TCODColor::grey;
 	cost.industrial_goods = 250;
 	cost.luxury_goods = 250;
 	cost.consumer_goods = 250;

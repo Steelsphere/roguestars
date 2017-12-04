@@ -766,6 +766,9 @@ SectorInfo::SectorInfo(int x, int y, int w, int h, StarSector* s) : GUI(x, y, w,
 }
 
 void SectorInfo::update() {
+	_cons->clear();
+	_text.clear();
+	
 	Text title = { 1, 0, _width, 1, "Sector", TCODColor::red };
 	_text.push_back(title);
 	
@@ -781,10 +784,14 @@ void SectorInfo::update() {
 		"Workers ",
 	};
 	
+	Text gtitle = { 1, 1, _width, 1, "-----Goods-----", TCODColor::white };
+	_text.push_back(gtitle);
+
+	// Goods
 	int i = 0;
 	std::vector<int> supply = _sector->economy.supply.get_vals();
 	std::vector<int> demand = _sector->economy.demand.get_vals();
-	for (int y = 1; y < _height - 1; y++) {
+	for (int y = 2; y < _height - 1; y++) {
 		
 		Text good = { 1, y, _width, 1, names[i], TCODColor::white};
 		good.str += ":";
@@ -799,6 +806,28 @@ void SectorInfo::update() {
 			break;
 		}
 	}
+	
+	// Buildings
+
+	int by = _text.back().y + 1;
+
+	Text btitle = { 1, by, _width, 1, "-----Buildings-----", TCODColor::white };
+	_text.push_back(btitle);
+
+	by++;
+
+	for (Economy::Building* b : _sector->economy.buildings) {
+		Text building = { 1, by, _width, 1, b->initial + "x" + std::to_string(b->tier), b->color };
+		_text.push_back(building);
+
+		by++;
+	}
+
+	// Clean up
+
+	_height = _text.back().y + 2;
+	delete _cons;
+	_cons = new TCODConsole(_width, _height);
 }
 
 TextBox::TextBox(int x, int y, int w, int h, std::string title, std::string descr, bool digits_only) : GUI(x, y, w, h, std::vector<Text>()) {
