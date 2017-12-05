@@ -218,10 +218,12 @@ void Status::draw(bool force) {
 			}
 			if (sector != nullptr) {
 				if (_si == nullptr) {
-					_si = new SectorInfo(_x - 25, _y, 25, 11, sector);
+					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
 				}
 				else {
-					_si->update();
+					delete _si;
+					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
+					GameObjects::update = true;
 				}
 			}
 			else if (_si != nullptr) {

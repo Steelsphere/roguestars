@@ -213,6 +213,10 @@ void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE 
 				if (_noise.GetNoise(x, y) > 0 && std::pow(x - _width / 2, 2) + std::pow(y - _height / 2, 2) < std::pow(250, 2)) {
 					_map[x][y].back()->set_bcolor(Random::one_to_sixty_four(Random::generator), 0, Random::one_to_sixty_four(Random::generator));
 				}
+				else if (r(Random::generator) == 1) {
+					_map[x][y].back()->set_char('.');
+					_map[x][y].back()->set_color(255, 255, 255);
+				}
 			}
 		}
 		break;

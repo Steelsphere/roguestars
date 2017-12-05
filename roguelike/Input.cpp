@@ -183,6 +183,10 @@ void Input::input(TCOD_key_t key) {
 				_reciever->move("bottomright");
 				GameObjects::new_turn = true;
 				break;
+			case TCODK_KP5:
+				GameObjects::update = true;
+				GameObjects::new_turn = true;
+				break;
 
 			case TCODK_TAB:
 				if (GameEvent::get_last_event() == GameEvent::NEW_INFO_VIEWER) {

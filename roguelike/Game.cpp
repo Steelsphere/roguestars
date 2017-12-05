@@ -10,6 +10,8 @@
 
 #include <filesystem>
 
+#define NO_SAVE
+
 Game::Game() 
 	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
 {
@@ -305,6 +307,8 @@ void Game::startup_new_game() {
 	delete _gui_map;
 	delete _log;
 
+
+#ifndef NO_SAVE
 	int num = 1;
 	for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
 		num++;
@@ -319,6 +323,7 @@ void Game::startup_new_game() {
 	std::experimental::filesystem::create_directory(_savegame_directory + "\\solarsystem");
 	std::experimental::filesystem::create_directory(_savegame_directory + "\\world");
 	std::experimental::filesystem::create_directory(_savegame_directory + "\\surface");
+#endif
 
 	std::cout << "Number of actors: " << Actor::get_buffer()->size() << std::endl;
 
@@ -760,6 +765,7 @@ void Game::load_level() {
 }
 
 void Game::save_level() {
+#ifndef NO_SAVE
 	if (_level == nullptr) {
 		return;
 	}
@@ -769,6 +775,7 @@ void Game::save_level() {
 	_level->save_level_file(_savegame_directory + "\\" + name);
 
 	std::cout << "Saved level with ID: " << name << std::endl;
+#endif
 }
 
 template<typename T>
