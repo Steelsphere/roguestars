@@ -27,6 +27,7 @@ public:
 		std::string str;
 		TCODColor color;
 		bool ovrcolor = false;
+		TCODColor bcolor = TCODColor::black;
 	};
 	
 	GUI();
@@ -131,6 +132,7 @@ public:
 		TCODColor color;
 		bool selected;
 		GameEvent::GAME_EVENT action;
+		TCODColor bcolor = TCODColor::black;
 	};
 	
 	SelectionBox();

@@ -74,7 +74,13 @@ void Game::game_loop() {
 		
 		TCODConsole::flush();
 		
+		// Debug printing
+
+		// MOUSE
+		TCODConsole::root->print(0, 0, (std::to_string(_mouse.cx) + ", " + std::to_string(_mouse.cy)).c_str() );
+		// FPS
 //		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
+		
 		GameObjects::time += 0.01f;
 		GameObjects::ticks++;
 
@@ -82,7 +88,7 @@ void Game::game_loop() {
 }
 
 void Game::on_event(TCOD_event_t e) {
-	Input::input(_key);
+	Input::input(_key, _mouse);
 }
 
 void Game::game_event() {

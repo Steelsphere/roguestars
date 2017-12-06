@@ -8,9 +8,10 @@
 Actor* Input::_reciever;
 Input::MODE Input::_mode = NORMAL;
 TCOD_key_t Input::_lastkey;
+TCOD_mouse_t Input::_lastmouse;
 
 
-void Input::input(TCOD_key_t key) {
+void Input::input(TCOD_key_t key, TCOD_mouse_t mouse) {
 	if (key.pressed) {
 		std::vector<Actor*> actors;
 		switch (_mode) {
@@ -243,5 +244,6 @@ void Input::input(TCOD_key_t key) {
 		}
 		_lastkey = key;
 	}
+	_lastmouse = mouse;
 }
 

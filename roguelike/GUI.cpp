@@ -52,7 +52,7 @@ void GUI::draw(bool force) {
 		
 		// Add text
 		for (int i = 0; i < _text.size(); i++) {
-			_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, TCODColor::black);
+			_cons->setColorControl(TCOD_COLCTRL_1, _text[i].color, _text[i].bcolor);
 			if (!_text[i].ovrcolor) {
 				_cons->printRect(_text[i].x, _text[i].y, _text[i].w, _text[i].h, (std::string("%c") + _text[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 			}
@@ -262,8 +262,10 @@ void SelectionBox::draw(bool force) {
 		GUI::draw(force);
 		
 		for (int i = 0; i < _mtext.size(); i++) {
-			_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, TCODColor::black);
+			_cons->setBackgroundFlag(TCOD_BKGND_SET);
+			_cons->setColorControl(TCOD_COLCTRL_1, _mtext[i].color, _mtext[i].bcolor);
 			_cons->printRect(_mtext[i].x, _mtext[i].y, _mtext[i].w, _mtext[i].h, (std::string("%c") + _mtext[i].str + std::string("%c")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+			_cons->root->setBackgroundFlag(TCOD_BKGND_NONE);
 		}
 		
 		if (_transparency != 1.0f) {
@@ -309,6 +311,21 @@ void SelectionBox::draw(bool force) {
 			if (_mtext[i].selected) {
 				GameEvent::set_event(_mtext[i].action);
 			}
+		}
+	}
+	for (MText& m : _mtext) {
+		int x = Input::get_last_mouse().cx;
+		int y = Input::get_last_mouse().cy;
+		if (x >= m.x && x <= m.x + m.str.length() &&
+			y >= m.y && y <= m.y + m.h) {
+			m.bcolor = TCODColor::blue;
+			if (Input::get_last_mouse().lbutton_pressed) {
+				m.selected = true;
+				GameEvent::set_event(m.action);
+			}
+		}
+		else {
+			m.bcolor = TCODColor::black;
 		}
 	}
 	set_selector();
