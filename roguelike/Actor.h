@@ -62,6 +62,8 @@ public:
 	static Actor* get_actor(int x, int y, int z);
 	/*Params in world pos*/
 	static std::vector<Actor*> get_actors(int x, int y, int z);
+	/*Params in screen pos*/
+	static Actor* get_actor_scr(int x, int y);
 
 	bool is_impassable() { return _impassable; }
 	bool is_transparent() { return _transparent; }

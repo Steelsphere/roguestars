@@ -89,6 +89,7 @@ void Game::game_loop() {
 
 void Game::on_event(TCOD_event_t e) {
 	Input::input(_key, _mouse);
+	GameObjects::update = true;
 }
 
 void Game::game_event() {
@@ -164,6 +165,9 @@ void Game::game_event() {
 		break;
 	case GameEvent::CLOSE_MAP:
 		close_map();
+		break;
+	case GameEvent::MOUSE_MOVE:
+		mouse_move();
 		break;
 	case GameEvent::EXIT:
 		exit_game();
@@ -965,3 +969,54 @@ void Game::textbox_game_loop(TextBox* tb) {
 	}
 }
 
+void Game::mouse_move() {
+	Actor* adest = Actor::get_actor_scr(Input::get_last_mouse().cx, Input::get_last_mouse().cy);
+
+	if (adest == nullptr) {
+		return;
+	}
+
+	int* ppos = _player->get_world_pos();
+
+	int x = 0;
+	int y = 0;
+
+	TCODPath path = TCODPath(Level::get_fov_map(), 1.0f);
+	path.compute(_player->get_world_pos()[0], _player->get_world_pos()[1], adest->get_world_pos()[0], adest->get_world_pos()[1]);
+
+	for (int i = 0; i < path.size(); i++) {
+		path.get(i, &x, &y);
+		
+		if (x < ppos[0] && y < ppos[1]) {
+			_player->move("topleft");
+		}
+		else if (x == ppos[0] && y < ppos[1]) {
+			_player->move("top");
+		}
+		else if (x > ppos[0] && y < ppos[1]) {
+			_player->move("topright");
+		}
+		else if (x < ppos[0] && y == ppos[1]) {
+			_player->move("left");
+		}
+		else if (x > ppos[0] && y == ppos[1]) {
+			_player->move("right");
+		}
+		else if (x < ppos[0] && y > ppos[1]) {
+			_player->move("bottomleft");
+		}
+		else if (x == ppos[0] && y > ppos[1]) {
+			_player->move("bottom");
+		}
+		else if (x > ppos[0] && y > ppos[1]) {
+			_player->move("bottomright");
+		}
+
+		update();
+		for (int i = 0; i < path.size(); i++) {
+			path.get(i, &x, &y);
+			Actor* a = Actor::get_actor(x, y, 0);
+			a->set_bcolor_obj(TCODColor::blue);
+		}
+	}
+}

@@ -36,10 +36,6 @@ void AI::simple_follow(Character* c) {
 	
 	path.get(0, &x, &y);
 	
-	if (x == NULL && y == NULL) {
-		return;
-	}
-
 	if (x < sposx && y < sposy) {
 		c->move("topleft");
 	}

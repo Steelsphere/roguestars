@@ -12,7 +12,7 @@ TCOD_mouse_t Input::_lastmouse;
 
 
 void Input::input(TCOD_key_t key, TCOD_mouse_t mouse) {
-	if (key.pressed) {
+	if (key.pressed || mouse.lbutton_pressed) {
 		std::vector<Actor*> actors;
 		switch (_mode) {
 
@@ -150,6 +150,9 @@ void Input::input(TCOD_key_t key, TCOD_mouse_t mouse) {
 			break;
 		
 		case NORMAL:
+			if (mouse.lbutton_pressed) {
+				GameEvent::set_event(GameEvent::MOUSE_MOVE);
+			}
 			switch (key.vk) {
 				// Movement
 			case TCODK_KP8:

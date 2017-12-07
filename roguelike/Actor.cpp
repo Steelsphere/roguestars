@@ -1,6 +1,7 @@
 ﻿#include "Actor.h"
 #include "GameObjects.h"
 #include "Item.h"
+#include "Input.h"
 
 #include <typeinfo>
 #include <iostream>
@@ -97,7 +98,12 @@ void Actor::draw() {
 	}
 	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
 	TCODConsole::root->setCharForeground(_screen_x, _screen_y, _fcolor);
-	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
+	if (Input::get_last_mouse().cx == _screen_x && Input::get_last_mouse().cy == _screen_y) {
+		TCODConsole::root->setCharBackground(_screen_x, _screen_y, TCODColor::darkGreen);
+	}
+	else {
+		TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
+	}
 }
 
 void Actor::draw_mem() {
@@ -252,4 +258,13 @@ void Actor::set_transparent_background() {
 		return;
 	}
 	_bcolor = vec[idx - 1]->get_bcolor_obj();
+}
+
+Actor* Actor::get_actor_scr(int x, int y) {
+	for (Actor* a : (*_buffer)) {
+		if (a->_screen_x == x && a->_screen_y == y) {
+			return a;
+		}
+	}
+	return nullptr;
 }
