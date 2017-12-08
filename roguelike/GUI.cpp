@@ -34,7 +34,7 @@ GUI::~GUI()
 	
 	TCODConsole::root->rect(_x, _y, _width, _height, true, TCOD_BKGND_ALPHA(0.0f));
 	GameObjects::update = true;
-	std::cout << "GUIs: " << _buffer.size() << std::endl;
+//	std::cout << "GUIs: " << _buffer.size() << std::endl;
 }
 
 void GUI::draw(bool force) {
@@ -847,6 +847,17 @@ void SectorInfo::update() {
 	_height = _text.back().y + 2;
 	delete _cons;
 	_cons = new TCODConsole(_width, _height);
+}
+
+void SectorInfo::draw(bool force) {
+	TCOD_mouse_t m = Input::get_last_mouse();
+	if (m.cx > _x && m.cx < _x + _width &&
+		m.cy > _y && m.cy < _y + _height) {
+		return;
+	}
+	else {
+		GUI::draw(force);
+	}
 }
 
 TextBox::TextBox(int x, int y, int w, int h, std::string title, std::string descr, bool digits_only) : GUI(x, y, w, h, std::vector<Text>()) {

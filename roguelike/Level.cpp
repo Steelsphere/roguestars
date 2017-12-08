@@ -210,7 +210,7 @@ void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE 
 		}
 		for (int x = 0; x < _width; x++) {
 			for (int y = 0; y < _height; y++) {
-				if (_noise.GetNoise(x, y) > 0 && std::pow(x - _width / 2, 2) + std::pow(y - _height / 2, 2) < std::pow(250, 2)) {
+				if (_noise.GetNoise(x, y) > 0 && std::pow(x - _width / 2, 2) + std::pow(y - _height / 2, 2) < std::pow(static_cast<int>((_width + _height) / 4.096), 2)) {
 					_map[x][y].back()->set_bcolor(Random::one_to_sixty_four(Random::generator), 0, Random::one_to_sixty_four(Random::generator));
 				}
 				else if (r(Random::generator) == 1) {

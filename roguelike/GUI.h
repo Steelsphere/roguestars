@@ -101,6 +101,8 @@ public:
 
 	void update();
 
+	virtual void draw(bool force = false) override;
+
 private:
 	StarSector* _sector;
 };

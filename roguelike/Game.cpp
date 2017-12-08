@@ -515,7 +515,7 @@ void Game::new_galaxy() {
 	
 	delete _level;
 	_level = new Level;
-	_level->generate_level(1024, Level::GALAXY);
+	_level->generate_level(512, Level::GALAXY);
 	_level->set_savedir("galaxy");
 	_galaxy_id = _level->id;
 
@@ -976,6 +976,10 @@ void Game::mouse_move() {
 		return;
 	}
 
+	if (!adest->is_in_fov()) {
+		return;
+	}
+
 	int* ppos = _player->get_world_pos();
 
 	int x = 0;
@@ -983,7 +987,18 @@ void Game::mouse_move() {
 
 	TCODPath path = TCODPath(Level::get_fov_map(), 1.0f);
 	path.compute(_player->get_world_pos()[0], _player->get_world_pos()[1], adest->get_world_pos()[0], adest->get_world_pos()[1]);
+	
+	std::vector<TCODColor> colors;
+	std::vector<Actor*> actors;
 
+	for (int i = 0; i < path.size(); i++) {
+		path.get(i, &x, &y);
+		Actor* a = Actor::get_actor(x, y, 0);
+		colors.push_back(a->get_bcolor_obj());
+		actors.push_back(a);
+		a->set_bcolor_obj(TCODColor::red);
+	}
+	
 	for (int i = 0; i < path.size(); i++) {
 		path.get(i, &x, &y);
 		
@@ -1013,10 +1028,11 @@ void Game::mouse_move() {
 		}
 
 		update();
-		for (int i = 0; i < path.size(); i++) {
-			path.get(i, &x, &y);
-			Actor* a = Actor::get_actor(x, y, 0);
-			a->set_bcolor_obj(TCODColor::blue);
-		}
 	}
+
+	for (int i = 0; i < actors.size(); i++) {
+		actors[i]->set_bcolor_obj(colors[i]);
+	}
+
+	GameObjects::update = true;
 }
