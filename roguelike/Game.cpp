@@ -965,6 +965,8 @@ void Game::textbox_game_loop(TextBox* tb) {
 		update_gui(true);
 		Input::refresh();
 
+		GameObjects::ticks++;
+
 		TCODConsole::flush();
 	}
 }

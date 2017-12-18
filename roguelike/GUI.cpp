@@ -865,7 +865,7 @@ TextBox::TextBox(int x, int y, int w, int h, std::string title, std::string desc
 	_type = FILLED_BORDERED_BACKGROUND;
 
 	Text t = { 1, 0, w, 1, title, TCODColor::red };
-	Text input = { 1, h - 2, w, 1, "", TCODColor::white };
+	Text input = { 1, h - 2, w - 2, 1, "", TCODColor::white };
 	Text dscr = { 1, h - 1, w, 1, descr, TCODColor::white };
 
 	_text.push_back(input);
@@ -880,7 +880,9 @@ TextBox::TextBox(int x, int y, int w, int h, std::string title, std::string desc
 
 void TextBox::draw(bool force) {
 	TCOD_key_t key = Input::get_last_key();
-	if (key.pressed && key.c != 0) {
+	if (key.pressed && (key.vk == TCODK_TEXT || 
+						key.vk == TCODK_BACKSPACE || 
+						key.vk == TCODK_ENTER)) {
 		if (key.vk == TCODK_BACKSPACE) {
 			if (_text[0].str.size() > 0) {
 				_text[0].str.pop_back();
@@ -901,7 +903,7 @@ void TextBox::draw(bool force) {
 				_done = true;
 			}
 		}
-		else {
+		else if (_text[0].str.size() < _text[0].w - 1) {
 			if (_digits_only) {
 				if (isdigit(key.c)) {
 					_text[0].str += key.c;
@@ -909,13 +911,27 @@ void TextBox::draw(bool force) {
 			}
 			else {
 				if (isalpha(key.c) || isdigit(key.c)) {
-					_text[0].str += key.c;
+					if (key.shift) {
+						_text[0].str += toupper(key.c);
+					}
+					else {
+						_text[0].str += key.c;
+					}
 				}
 			}
 		}
 	}
+	
 	GUI::draw(true);
 	GUI::make_transparency_work();
+
+	if (GameObjects::ticks % 50 < 25) {
+		_cons->putChar(_text[0].str.size() + 1, _text[0].y, '\\');
+	}
+	else {
+		_cons->putChar(_text[0].str.size() + 1, _text[0].y, '/');
+	}
+
 	TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);
 }
 
