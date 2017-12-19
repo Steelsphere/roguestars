@@ -30,8 +30,8 @@ void Game::init() {
 	_time = Time(0);
 	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
-	_time.pass_time(9223372036854775807);
-	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
+//	_time.pass_time(9223372036854775807);
+//	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
 	GameObjects::log = _log;
 
@@ -187,6 +187,8 @@ void Game::exit_game() {
 }
 
 void Game::update() {
+	
+	// Sim
 	if (GameObjects::new_turn && GameObjects::player_controlled) {
 //		_level->update_tile(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
 		update_characters();
@@ -196,6 +198,23 @@ void Game::update() {
 			_log->message("Turn: " + std::to_string(_turn) + " Pos: " + 
 				std::to_string(_player->get_world_pos()[0]) + " " + 
 				std::to_string(_player->get_world_pos()[1]), TCODColor::white);
+		}
+		
+		// Spawn new nations
+		if (Random::randc(0, 4000) == 1) {
+			// Find suitable spawn points
+			std::vector<Actor*> spawnpoints;
+
+			for (Actor* a : (*_level->get_actors())) {
+				if (a->get_name() == "Star Sector") {
+					spawnpoints.push_back(a);
+				}
+			}
+			
+			int r = Random::randc(0, spawnpoints.size() - 1);
+			new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
+
+			spawnpoints.erase(spawnpoints.begin() + r);
 		}
 		
 		if (_level->get_type() == Level::GALAXY) {
@@ -211,9 +230,11 @@ void Game::update() {
 			}
 		}
 		
+		_time.pass_time(86400 + Random::randc(-250, 250));
 		GameObjects::new_turn = false;
 	}
-	
+	// End sim
+
 	_num_actors_drawn = 0;
 	std::vector<Actor*>* actors = _level->get_actors();
 	TCODMap* fov = nullptr;
@@ -815,7 +836,12 @@ void Game::test_level() {
 }
 
 void Game::open_map() {
-	_gui_map = new Map(_level);
+	if (_level->get_type() == Level::GALAXY) {
+		_gui_map = new Map(_level, true, _player);
+	}
+	else {
+		_gui_map = new Map(_level, false, _player);
+	}
 }
 
 void Game::close_map() {
@@ -871,7 +897,10 @@ void Game::generate_factions() {
 			
 			// Update loading screen
 			if (i % 14 == 0) {
-				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns));
+				_loadingscreen->clear_working_area();
+				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns) + _time.format_time(" Date:%M/%D/%Y %H:%m:%S"));
+				_gui_map->draw(true);
+				GameObjects::log->draw(true);
 				TCODConsole::root->flush();
 			}
 
@@ -884,10 +913,6 @@ void Game::generate_factions() {
 				}
 				_gui_map->update_map(_level, true);
 				_gui_map->draw(true);
-
-				if (Faction::get_factions()[0]->get_ssv().size() > 1) {
-					Faction::get_factions()[0]->get_ssv()[0]->economy.print_values();
-				}
 
 				TCODConsole::root->flush();
 			}
@@ -906,6 +931,8 @@ void Game::generate_factions() {
 //			if (i % 1000 == 0) {
 //				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
 //			}
+
+			_time.pass_time(86400 + Random::randc(-250, 250));
 		}
 	}
 

@@ -101,6 +101,14 @@ void GUI::make_transparency_work() {
 	}
 }
 
+void GUI::clear_working_area() {
+	for (int x = _x; x < _width; x++) {
+		for (int y = _y; y < _height; y++) {
+			TCODConsole::root->putChar(x, y, ' ');
+		}
+	}
+}
+
 Message_Box::Message_Box(std::string text, bool nocontinue) : GUI(GameObjects::screen_width/2 - 13, GameObjects::screen_height/2 - 10, 24, 12, std::vector<Text>()) {
 	Text top = { 6, 0, 12, 2, "Announcement", TCODColor::red };
 	Text message = { 6, 4, 12, 12, text, TCODColor::white };
@@ -145,6 +153,7 @@ Log::Log(int x, int y, int w, int h) : GUI(x, y, w, h, std::vector<Text>()) {
 
 void Log::message(const std::string& message, TCODColor color) {
 	_cons->clear();
+	clear_working_area();
 	for (int i = 1; i < _text.size(); i++) {
 		_text[i].y--;
 		if (_text[i].y <= 0) {
@@ -220,10 +229,9 @@ void Status::draw(bool force) {
 				if (_si == nullptr) {
 					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
 				}
-				else {
+				else if (sector != _si->get_sector()) {
 					delete _si;
 					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
-					GameObjects::update = true;
 				}
 			}
 			else if (_si != nullptr) {
@@ -548,7 +556,7 @@ InventoryPanel::InventoryPanel(Character* c) : SelectionBoxEx(0, 0, GameObjects:
 	_transparency = 0.9;
 }
 
-Map::Map(Level* level, bool background) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
+Map::Map(Level* level, bool background, Player* player) : GUI(0, 0, GameObjects::screen_width - 30, GameObjects::screen_height, std::vector<Text>()) {
 	Text title = { 1, 0, 30, 1, "Map", TCODColor::red };
 	_text.push_back(title);
 
@@ -557,7 +565,7 @@ Map::Map(Level* level, bool background) : GUI(0, 0, GameObjects::screen_width - 
 	
 	// Generate Map
 
-	update_map(level, background);
+	update_map(level, background, player);
 
 }
 
@@ -577,7 +585,7 @@ Map::~Map() {
 	TCODConsole::root->clear();
 }
 
-void Map::update_map(Level* level, bool background) {
+void Map::update_map(Level* level, bool background, Player* player) {
 	int maparea_x = 1;
 	int maparea_y = 1;
 	int maparea_w = _width - 2;
@@ -620,6 +628,15 @@ void Map::update_map(Level* level, bool background) {
 		}
 	}
 
+	// Add player
+
+	int px = 0;
+	int py = 0;
+	if (player != nullptr) {
+		px = player->get_world_pos()[0] * (maparea_w / prev_x);
+		py = player->get_world_pos()[1] * (maparea_h / prev_y);
+	}
+
 	// Display to screen
 
 	_cons->clear();
@@ -627,6 +644,11 @@ void Map::update_map(Level* level, bool background) {
 		for (int y = 0; y < image[x].size(); y++) {
 			_cons->putCharEx(x + maparea_x, y + maparea_y, 0, TCODColor::black, image[x][y]);
 		}
+	}
+
+	if (player != nullptr) {
+		Text pt = { px + maparea_x, py + maparea_y, 1, 1, "@", TCODColor::blue };
+		_text.push_back(pt);
 	}
 }
 

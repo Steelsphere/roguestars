@@ -40,9 +40,11 @@ public:
 
 	static std::vector<GUI*>* get_buffer() { return &_buffer; }
 
+	// Some helper functions
 	virtual void position_text();
-
 	void make_transparency_work();
+	void clear_working_area();
+
 protected:
 	int _x, _y, _width, _height;
 	float _transparency;
@@ -102,6 +104,8 @@ public:
 	void update();
 
 	virtual void draw(bool force = false) override;
+
+	StarSector* get_sector() { return _sector; }
 
 private:
 	StarSector* _sector;
@@ -207,12 +211,12 @@ public:
 
 class Map : public GUI {
 public:
-	Map(Level* level, bool background = false);
+	Map(Level* level, bool background = false, Player* player = nullptr);
 	Map(int x, int y, int w, int h, Level* level, bool background);
 	
 	~Map();
 
-	void update_map(Level* level, bool background);
+	void update_map(Level* level, bool background, Player* player = nullptr);
 };
 
 class LoadingScreen : public GUI {
