@@ -314,6 +314,9 @@ void Game::startup_new_game() {
 	destroy_main_menu();
 	std::cout << "Size of one actor: " << sizeof(Actor) << std::endl;
 	
+	TCODConsole::root->clear();
+	TCODConsole::root->flush();
+
 	GameObjects::new_level_id = Random::random(Random::generator);
 
 	_loadingscreen = new LoadingScreen("Generating the galaxy");
@@ -323,6 +326,10 @@ void Game::startup_new_game() {
 
 	_loadingscreen->draw(true);
 	_log->draw(true);
+
+	GalaxySizeSelection* gui = new GalaxySizeSelection((GameObjects::screen_width / 2) - 11, GameObjects::screen_height / 2, 23, 9);
+	selection_game_loop(gui);
+	delete gui;
 
 	new_galaxy();
 
@@ -536,7 +543,7 @@ void Game::new_galaxy() {
 	
 	delete _level;
 	_level = new Level;
-	_level->generate_level(512, Level::GALAXY);
+	_level->generate_level(GameObjects::galaxy_size, Level::GALAXY);
 	_level->set_savedir("galaxy");
 	_galaxy_id = _level->id;
 
@@ -852,6 +859,7 @@ void Game::close_map() {
 void Game::generate_factions() {
 	
 	// User settings
+	
 	TextBox* tb = new TextBox((GameObjects::screen_width / 2) - 17, GameObjects::screen_height / 2, 33, 3, "Number of turns to simulate", "Leave blank for default (10000)", true);
 	
 	// Mini game loop
@@ -993,6 +1001,29 @@ void Game::textbox_game_loop(TextBox* tb) {
 		Input::refresh();
 
 		GameObjects::ticks++;
+
+		TCODConsole::flush();
+	}
+}
+
+void Game::selection_game_loop(SelectionBox* gui) {
+	while (!gui->selection) {
+		_event = TCODSystem::checkForEvent(TCOD_EVENT_ANY, &_key, &_mouse);
+
+		if (_event) {
+			on_event(_event);
+		}
+
+		if (TCODConsole::isWindowClosed()) {
+			exit_game();
+		}
+
+		update_gui(true);
+		Input::refresh();
+
+		GameObjects::ticks++;
+
+		TCODConsole::root->print(0, 0, (std::to_string(_mouse.cx) + ", " + std::to_string(_mouse.cy)).c_str());
 
 		TCODConsole::flush();
 	}

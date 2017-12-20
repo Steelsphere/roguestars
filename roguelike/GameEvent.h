@@ -52,9 +52,12 @@ public:
 
 	static void reset_event() { _currevent = NONE; }
 
+	static int get_param() { return _param; }
+
 private:
 	static GAME_EVENT _currevent;
 	static GAME_EVENT _lastevent;
 	static bool _locked;
+	static int _param;
 };
 

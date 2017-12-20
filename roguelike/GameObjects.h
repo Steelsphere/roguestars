@@ -13,11 +13,18 @@ class Player;
 class GameObjects
 {
 public:
+	enum Size {
+		SMALL = 256,
+		MEDIUM = 512,
+		LARGE = 1028,
+	};
+	
 	static int screen_width, screen_height;
 	static int ticks;
 	static int level_id_to_load;
 	static int new_level_id;
 	static int old_level_id;
+	static int galaxy_size;
 
 	static float time;
 	

@@ -91,7 +91,9 @@ void GUI::make_transparency_work() {
 		_screencons = new TCODConsole(_width, _height);
 		for (int x = 0; x < _width; x++) {
 			for (int y = 0; y < _height; y++) {
-				_screencons->putCharEx(x, y, std::get<0>(screen[x][y][0]), std::get<1>(screen[x][y][0]), std::get<2>(screen[x][y][0]));
+				if (std::get<0>(screen[x][y][0]) >= 0) {
+					_screencons->putCharEx(x, y, std::get<0>(screen[x][y][0]), std::get<1>(screen[x][y][0]), std::get<2>(screen[x][y][0]));
+				}
 			}
 		}
 		TCODConsole::blit(_screencons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, 1.0f);
@@ -263,6 +265,13 @@ SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<Text> text) :
 	}
 }
 
+SelectionBox::SelectionBox(int x, int y, int w, int h, std::vector<MText> mtext) : GUI(x, y, w, h) {
+	if (_transparency != 1.0f) {
+		make_transparency_work();
+	}
+	_mtext = mtext;
+}
+
 void SelectionBox::draw(bool force) {
 	
 	if (_update || force) {
@@ -317,6 +326,7 @@ void SelectionBox::draw(bool force) {
 	if (Input::get_last_key().vk == TCODK_ENTER && Input::get_last_key().pressed) {
 		for (int i = 0; i < _mtext.size(); i++) {
 			if (_mtext[i].selected) {
+				selection = true;
 				GameEvent::set_event(_mtext[i].action);
 			}
 		}
@@ -324,11 +334,15 @@ void SelectionBox::draw(bool force) {
 	for (MText& m : _mtext) {
 		int x = Input::get_last_mouse().cx;
 		int y = Input::get_last_mouse().cy;
-		if (x >= m.x && x <= m.x + m.str.length() &&
-			y >= m.y && y <= m.y + m.h) {
+		if (x >= (m.x + _x) && x < (m.x + _x) + m.str.length() &&
+			y >= (m.y + _y) && y < (m.y + _y) + m.h) {
 			m.bcolor = TCODColor::blue;
 			if (Input::get_last_mouse().lbutton_pressed) {
+				for (MText& m : _mtext) {
+					m.selected = false;
+				}
 				m.selected = true;
+				selection = true;
 				GameEvent::set_event(m.action);
 			}
 		}
@@ -633,8 +647,8 @@ void Map::update_map(Level* level, bool background, Player* player) {
 	int px = 0;
 	int py = 0;
 	if (player != nullptr) {
-		px = player->get_world_pos()[0] * (maparea_w / prev_x);
-		py = player->get_world_pos()[1] * (maparea_h / prev_y);
+		px = player->get_world_pos()[0] * ((float)maparea_w / (float)prev_x);
+		py = player->get_world_pos()[1] * ((float)maparea_h / (float)prev_y);
 	}
 
 	// Display to screen
@@ -966,3 +980,39 @@ Picture::Picture(Text t) : GUI(t.x - 1, t.y - 1, t.w, t.h) {
 	GUI::draw(true);
 }
 
+GalaxySizeSelection::GalaxySizeSelection(int x, int y, int w, int h) : SelectionBox(x, y, w, h, std::vector<Text>()) {
+	Text title = { 1, 0, w - 1, 1, "Galaxy Size", TCODColor::white };
+	_text.push_back(title);
+	
+	SelectionBox::MText small = { 3, 2, w - 1, 1, "Small - 128x128", TCODColor::white, true, GameEvent::NONE };
+	SelectionBox::MText medium = { 3, 4, w - 1, 1, "Medium - 256x256", TCODColor::white, false, GameEvent::NONE };
+	SelectionBox::MText large = { 3, 6, w - 1, 1, "Large - 1024x1024", TCODColor::white, false, GameEvent::NONE };
+
+	_mtext.push_back(small);
+	_mtext.push_back(medium);
+	_mtext.push_back(large);
+
+	_transparency = 0.9f;
+	_type = FILLED_BORDERED_BACKGROUND;
+}
+
+void GalaxySizeSelection::draw(bool force) {
+	SelectionBox::draw(force);
+	if (selection) {
+		if (_mtext[0].selected) {
+			GameObjects::galaxy_size = GameObjects::SMALL;
+			std::cout << "Small galaxy\n";
+			GameObjects::log->message("Galaxy size: Small", TCODColor::white);
+		}
+		if (_mtext[1].selected) {
+			GameObjects::galaxy_size = GameObjects::MEDIUM;
+			std::cout << "Medium galaxy\n";
+			GameObjects::log->message("Galaxy size: Medium", TCODColor::white);
+		}
+		if (_mtext[2].selected) {
+			GameObjects::galaxy_size = GameObjects::LARGE;
+			std::cout << "Large galaxy\n";
+			GameObjects::log->message("Galaxy size: Large", TCODColor::white);
+		}
+	}
+}

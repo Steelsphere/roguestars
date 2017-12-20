@@ -145,11 +145,15 @@ public:
 
 	SelectionBox(int x, int y, int w, int h, std::vector<Text> text);
 
+	SelectionBox(int x, int y, int w, int h, std::vector<MText> mtext);
+
 	virtual void draw(bool force = false) override;
 
 	virtual void position_text() override;
 
 	void set_selector(bool force = false);
+
+	bool selection = false;
 protected:
 	std::vector<MText> _mtext;
 };
@@ -240,4 +244,11 @@ private:
 	std::string _val = "";
 	bool _done = false;
 	bool _digits_only = false;
+};
+
+class GalaxySizeSelection : public SelectionBox {
+public:
+	GalaxySizeSelection(int x, int y, int w, int h);
+
+	virtual void draw(bool force = false) override;
 };

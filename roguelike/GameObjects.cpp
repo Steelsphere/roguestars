@@ -15,6 +15,7 @@ int GameObjects::ticks;
 int GameObjects::level_id_to_load = 0;
 int GameObjects::new_level_id = 0;
 int GameObjects::old_level_id = 0;
+int GameObjects::galaxy_size = GameObjects::MEDIUM;
 
 float GameObjects::time = 0.0f;
 
