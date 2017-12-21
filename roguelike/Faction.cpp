@@ -241,8 +241,18 @@ void Faction::reinit_factions() {
 void Faction::decide_buildings() {
 	for (StarSector* ss : _ssv) {
 		if (!ss->economy.has_building("Infrastructure")) {
-			ss->economy.build_building(new Buildings::Infrastructure(&ss->economy));
-			std::cout << _name << " has started building Infrastructure in " << ss->alias << std::endl;
+			if (ss->economy.build_building(new Buildings::Infrastructure(&ss->economy))) {
+				std::cout << _name << " has started building Infrastructure in " << ss->alias << std::endl;
+			}
+			else {
+				auto s = Buildings::Infrastructure(&ss->economy).cost.get_vals();
+				auto end = ss->economy.demand.get_vals();
+				for (int i = 0; i < s.size(); i++) {
+					if (end[i] < s[i]) {
+						end[i] += s[i] * 0.25;
+					}
+				}
+			}
 		}
 	}
 }

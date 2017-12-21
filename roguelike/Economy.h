@@ -89,7 +89,7 @@ public:
 
 	std::vector<Building*> underconstruction_buildings;
 
-	void build_building(Building* b);
+	bool build_building(Building* b);
 
 	void construct_buildings();
 
@@ -123,5 +123,9 @@ namespace Buildings {
 		Infrastructure(Economy* e);
 
 		virtual void update() override;
+	};
+
+	class SpacePort : public Economy::Building {
+		SpacePort(Economy* e);
 	};
 }

@@ -146,8 +146,17 @@ void Economy::print_values() {
 	}
 }
 
-void Economy::build_building(Building* b) {
+bool Economy::build_building(Building* b) {
+	auto s = supply.get_vals();
+	auto c = b->cost.get_vals();
+	for (int i = 0; i < supply.get_vals().size(); i++) {
+		if (s[i] < c[i]) {
+			std::cout << "Aborted building building: Insufficient materials\n";
+			return false;
+		}
+	}
 	underconstruction_buildings.push_back(b);
+	return true;
 }
 
 void Economy::construct_buildings() {
@@ -271,4 +280,12 @@ void Buildings::Infrastructure::update() {
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;
 	}
+}
+
+Buildings::SpacePort::SpacePort(Economy* e) : Economy::Building(e) {
+	name = "Space Port";
+	initial = "SP";
+	color = TCODColor::white;
+	cost.industrial_goods = 500;
+	cost.military_goods = 250;
 }

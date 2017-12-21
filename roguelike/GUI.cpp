@@ -986,7 +986,7 @@ GalaxySizeSelection::GalaxySizeSelection(int x, int y, int w, int h) : Selection
 	
 	SelectionBox::MText small = { 3, 2, w - 1, 1, "Small - 128x128", TCODColor::white, true, GameEvent::NONE };
 	SelectionBox::MText medium = { 3, 4, w - 1, 1, "Medium - 256x256", TCODColor::white, false, GameEvent::NONE };
-	SelectionBox::MText large = { 3, 6, w - 1, 1, "Large - 1024x1024", TCODColor::white, false, GameEvent::NONE };
+	SelectionBox::MText large = { 3, 6, w - 1, 1, "Large - 512x512", TCODColor::white, false, GameEvent::NONE };
 
 	_mtext.push_back(small);
 	_mtext.push_back(medium);
