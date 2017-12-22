@@ -126,6 +126,9 @@ namespace Buildings {
 	};
 
 	class SpacePort : public Economy::Building {
+	public:
 		SpacePort(Economy* e);
+
+		virtual void update() override;
 	};
 }

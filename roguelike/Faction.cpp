@@ -1,5 +1,8 @@
 #include "Faction.h"
 #include "GameObjects.h"
+#include "Economy.h"
+#include "Spaceship.h"
+
 
 #include <iostream>
 
@@ -125,6 +128,7 @@ void Faction::simulate() {
 		
 		// Manage economy
 		decide_buildings();
+		decide_ships();
 
 
 		// Create a hero
@@ -254,5 +258,29 @@ void Faction::decide_buildings() {
 				}
 			}
 		}
+		else if(!ss->economy.has_building("Space Port")) {
+			if (ss->economy.build_building(new Buildings::SpacePort(&ss->economy))) {
+				std::cout << _name << " has started building Space Port in " << ss->alias << std::endl;
+			}
+			else {
+				auto s = Buildings::SpacePort(&ss->economy).cost.get_vals();
+				auto end = ss->economy.demand.get_vals();
+				for (int i = 0; i < s.size(); i++) {
+					if (end[i] < s[i]) {
+						end[i] += s[i] * 0.25;
+					}
+				}
+			}
+		}
+	}
+}
+
+void Faction::decide_ships() {
+	if (Random::randc(0, 100) == 0) {
+		Spaceship* s = new Spaceship('S', _capital_tile, this);
+		s->path_to_location(Random::randc(0, 128), Random::randc(0, 128));
+	}
+	for (Spaceship* s : spaceships) {
+		s->update();
 	}
 }

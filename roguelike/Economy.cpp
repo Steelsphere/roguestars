@@ -151,7 +151,7 @@ bool Economy::build_building(Building* b) {
 	auto c = b->cost.get_vals();
 	for (int i = 0; i < supply.get_vals().size(); i++) {
 		if (s[i] < c[i]) {
-			std::cout << "Aborted building building: Insufficient materials\n";
+		//	std::cout << "Aborted building building: Insufficient materials\n";
 			return false;
 		}
 	}
@@ -288,4 +288,8 @@ Buildings::SpacePort::SpacePort(Economy* e) : Economy::Building(e) {
 	color = TCODColor::white;
 	cost.industrial_goods = 500;
 	cost.military_goods = 250;
+}
+
+void Buildings::SpacePort::update() {
+
 }

@@ -6,6 +6,7 @@
 
 #include <vector>
 
+class Spaceship;
 class Faction {
 	friend class Hero;
 
@@ -60,6 +61,8 @@ public:
 		" Resistance",
 	};
 	
+	std::vector<Spaceship*> spaceships;
+
 	Faction();
 	Faction(int startx, int starty);
 	
@@ -96,6 +99,8 @@ public:
 	std::vector<StarSector*> get_ssv() { return _ssv; }
 
 	void decide_buildings();
+
+	void decide_ships();
 
 private:
 	static std::vector<Faction*> _factions;
