@@ -64,6 +64,192 @@ void Economy::goods_change(SUPPLY_TYPES type, std::vector<int>& v) {
 	}
 }
 
+bool operator== (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] != a2v[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator!= (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] == a2v[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Economy::Goods operator+ (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		a1v[i] += a2v[i];
+	}
+	Economy::Goods g;
+	g.set_vals(a1v);
+	return g;
+}
+
+Economy::Goods operator- (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		a1v[i] -= a2v[i];
+	}
+	Economy::Goods g;
+	g.set_vals(a1v);
+	return g;
+}
+
+Economy::Goods operator* (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		a1v[i] *= a2v[i];
+	}
+	Economy::Goods g;
+	g.set_vals(a1v);
+	return g;
+}
+
+Economy::Goods operator/ (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		a1v[i] /= a2v[i];
+	}
+	Economy::Goods g;
+	g.set_vals(a1v);
+	return g;
+}
+
+void operator+= (Economy::Goods &a1, Economy::Goods &a2) {
+	a1 = a1 + a2;
+}
+
+void operator-= (Economy::Goods &a1, Economy::Goods &a2) {
+	a1 = a1 - a2;
+}
+
+void operator*= (Economy::Goods &a1, Economy::Goods &a2) {
+	a1 = a1 * a2;
+}
+
+void operator/= (Economy::Goods &a1, Economy::Goods &a2) {
+	a1 = a1 / a2;
+}
+
+bool operator< (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] >= a2v[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator<= (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] > a2v[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator> (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] <= a2v[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator>= (Economy::Goods &a1, Economy::Goods &a2) {
+	auto a1v = a1.get_vals();
+	auto a2v = a2.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] < a2v[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator== (Economy::Goods &a1, const int &a2) {
+	auto a1v = a1.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] != a2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator!= (Economy::Goods &a1, const int &a2) {
+	auto a1v = a1.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] == a2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator< (Economy::Goods &a1, const int &a2) {
+	auto a1v = a1.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] >= a2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator<= (Economy::Goods &a1, const int &a2) {
+	auto a1v = a1.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] > a2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator> (Economy::Goods &a1, const int &a2) {
+	auto a1v = a1.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] <= a2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator>= (Economy::Goods &a1, const int &a2) {
+	auto a1v = a1.get_vals();
+	for (int i = 0; i < a1v.size(); i++) {
+		if (a1v[i] < a2) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void Economy::update() {
 	// Change the economy dynamically
 	if (supply.workers > supply.food && supply.workers > 0) {

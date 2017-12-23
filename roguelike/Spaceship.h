@@ -11,7 +11,7 @@ public:
 	Spaceship(char c, StarSector* s, Faction* f);
 	~Spaceship();
 
-	void update();
+	virtual void update();
 	void path_to_location(int x, int y);
 	void follow_path();
 
@@ -21,6 +21,24 @@ public:
 
 class Freighter : public Spaceship {
 public:
+	enum FREIGHTER_ACTION {
+		NONE,
+		PICKUP,
+		UNLOAD
+	};
+	
 	Freighter(StarSector* s, Faction* f);
+
+	virtual void update() override;
+
+	void pickup_cargo(StarSector* s, Economy::Goods g);
+	void unload_cargo(StarSector* s);
+
+	Economy::Goods cargo;
+	FREIGHTER_ACTION action = NONE;
+
+private:
+	StarSector* _dest = nullptr;
+	Economy::Goods _willpickup;
 };
 

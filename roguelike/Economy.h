@@ -18,11 +18,11 @@ public:
 		int food = 0;
 		int water = 0;
 		int air = 0;
-		int minerals = 0;
+		int consumer_goods = 0;
 		int industrial_goods = 0;
 		int luxury_goods = 0;
-		int consumer_goods = 0;
 		int military_goods = 0;
+		int minerals = 0;
 		int workers = 0;
 
 		std::vector<int> get_vals() {
@@ -50,6 +50,40 @@ public:
 			minerals = v[7];
 			workers = v[8];
 		}
+
+		void print_vals() {
+			std::cout << food << std::endl;
+			std::cout << water << std::endl;
+			std::cout << air << std::endl;
+			std::cout << consumer_goods << std::endl;
+			std::cout << industrial_goods << std::endl;
+			std::cout << luxury_goods << std::endl;
+			std::cout << military_goods << std::endl;
+			std::cout << minerals << std::endl;
+			std::cout << workers << std::endl;
+		}
+	
+		friend bool operator== (Goods &a1, Goods &a2);
+		friend bool operator!= (Goods &a1, Goods &a2);
+		friend Goods operator+ (Goods &a1, Goods &a2);
+		friend Goods operator- (Goods &a1, Goods &a2);
+		friend Goods operator* (Goods &a1, Goods &a2);
+		friend Goods operator/ (Goods &a1, Goods &a2);
+		friend void operator+= (Goods &a1, Goods &a2);
+		friend void operator-= (Goods &a1, Goods &a2);
+		friend void operator*= (Goods &a1, Goods &a2);
+		friend void operator/= (Goods &a1, Goods &a2);
+		friend bool operator< (Goods &a1, Goods &a2);
+		friend bool operator<= (Goods &a1, Goods &a2);
+		friend bool operator> (Goods &a1, Goods &a2);
+		friend bool operator>= (Goods &a1, Goods &a2);
+		friend bool operator== (Goods &a1, const int &a2);
+		friend bool operator!= (Goods &a1, const int &a2);
+		friend bool operator< (Goods &a1, const int &a2);
+		friend bool operator<= (Goods &a1, const int &a2);
+		friend bool operator> (Goods &a1, const int &a2);
+		friend bool operator>= (Goods &a1, const int &a2);
+	
 	} supply, demand;
 
 	class Building {

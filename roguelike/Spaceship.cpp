@@ -55,7 +55,6 @@ void Spaceship::path_to_location(int x, int y) {
 
 void Spaceship::follow_path() {
 	if (path.size() == 0) {
-		std::cout << "Ship stayed\n";
 		return;
 	}
 	if (path[0]->get_world_pos()[0] < _world_x && path[0]->get_world_pos()[1] < _world_y) {
@@ -82,10 +81,38 @@ void Spaceship::follow_path() {
 	else if (path[0]->get_world_pos()[0] > _world_x && path[0]->get_world_pos()[1] > _world_y) {
 		move("bottomright");
 	}
-	std::cout << "Ship moved\n";
 	path.erase(path.begin());
 }
 
 Freighter::Freighter(StarSector* s, Faction* f) : Spaceship('F', s, f) {
+	cost.military_goods = 25;
+	_fcolor = TCODColor::orange;
+}
 
+void Freighter::update() {
+	Spaceship::update();
+	if (action == PICKUP) {
+		if (path.size() == 0) {
+			if (_dest->economy.supply - _willpickup >= 0) {
+				cargo += _dest->economy.supply;
+				_dest->economy.supply -= _willpickup;
+			}
+			else {
+				std::cout << "Cannot pickup supplies: Target too high\n";
+			}
+		}
+	}
+}
+
+void Freighter::pickup_cargo(StarSector* s, Economy::Goods g) {
+	path_to_location(s->get_world_pos()[0], s->get_world_pos()[1]);
+	action = PICKUP;
+	_dest = s;
+	_willpickup = g;
+}
+
+void Freighter::unload_cargo(StarSector* s) {
+	path_to_location(s->get_world_pos()[0], s->get_world_pos()[1]);
+	action = UNLOAD;
+	_dest = s;
 }
