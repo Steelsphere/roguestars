@@ -190,65 +190,6 @@ bool operator>= (Economy::Goods &a1, Economy::Goods &a2) {
 	return true;
 }
 
-bool operator== (Economy::Goods &a1, const int &a2) {
-	auto a1v = a1.get_vals();
-	for (int i = 0; i < a1v.size(); i++) {
-		if (a1v[i] != a2) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool operator!= (Economy::Goods &a1, const int &a2) {
-	auto a1v = a1.get_vals();
-	for (int i = 0; i < a1v.size(); i++) {
-		if (a1v[i] == a2) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool operator< (Economy::Goods &a1, const int &a2) {
-	auto a1v = a1.get_vals();
-	for (int i = 0; i < a1v.size(); i++) {
-		if (a1v[i] >= a2) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool operator<= (Economy::Goods &a1, const int &a2) {
-	auto a1v = a1.get_vals();
-	for (int i = 0; i < a1v.size(); i++) {
-		if (a1v[i] > a2) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool operator> (Economy::Goods &a1, const int &a2) {
-	auto a1v = a1.get_vals();
-	for (int i = 0; i < a1v.size(); i++) {
-		if (a1v[i] <= a2) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool operator>= (Economy::Goods &a1, const int &a2) {
-	auto a1v = a1.get_vals();
-	for (int i = 0; i < a1v.size(); i++) {
-		if (a1v[i] < a2) {
-			return false;
-		}
-	}
-	return true;
-}
 
 void Economy::update() {
 	// Change the economy dynamically

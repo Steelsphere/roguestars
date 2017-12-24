@@ -62,7 +62,15 @@ public:
 			std::cout << minerals << std::endl;
 			std::cout << workers << std::endl;
 		}
-	
+		
+		void reset() {
+			std::vector<int> v;
+			for (int i = 0; i < get_vals().size(); i++) {
+				v.push_back(0);
+			}
+			set_vals(v);
+		}
+
 		friend bool operator== (Goods &a1, Goods &a2);
 		friend bool operator!= (Goods &a1, Goods &a2);
 		friend Goods operator+ (Goods &a1, Goods &a2);
@@ -77,12 +85,138 @@ public:
 		friend bool operator<= (Goods &a1, Goods &a2);
 		friend bool operator> (Goods &a1, Goods &a2);
 		friend bool operator>= (Goods &a1, Goods &a2);
-		friend bool operator== (Goods &a1, const int &a2);
-		friend bool operator!= (Goods &a1, const int &a2);
-		friend bool operator< (Goods &a1, const int &a2);
-		friend bool operator<= (Goods &a1, const int &a2);
-		friend bool operator> (Goods &a1, const int &a2);
-		friend bool operator>= (Goods &a1, const int &a2);
+		
+#if 1
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend bool operator== (Economy::Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				if (a1v[i] != a2) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend bool operator!= (Economy::Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				if (a1v[i] == a2) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend bool operator< (Economy::Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				if (a1v[i] >= a2) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend bool operator<= (Economy::Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				if (a1v[i] > a2) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend bool operator> (Economy::Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				if (a1v[i] <= a2) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend bool operator>= (Economy::Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				if (a1v[i] < a2) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend Goods operator+ (Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				a1v[i] += a2;
+			}
+			Economy::Goods g;
+			g.set_vals(a1v);
+			return g;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend Goods operator- (Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				a1v[i] -= a2;
+			}
+			Economy::Goods g;
+			g.set_vals(a1v);
+			return g;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend Goods operator* (Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				a1v[i] *= a2;
+			}
+			Economy::Goods g;
+			g.set_vals(a1v);
+			return g;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend Goods operator/ (Goods &a1, const T &a2) {
+			auto a1v = a1.get_vals();
+			for (int i = 0; i < a1v.size(); i++) {
+				a1v[i] /= a2;
+			}
+			Economy::Goods g;
+			g.set_vals(a1v);
+			return g;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend void operator+= (Goods &a1, const T &a2) {
+			a1 = a1 + a2;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend void operator-= (Goods &a1, const T &a2) {
+			a1 = a1 - a2;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend void operator*= (Goods &a1, const T &a2) {
+			a1 = a1 * a2;
+		}
+		
+		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		friend void operator/= (Goods &a1, const T &a2) {
+			a1 = a1 / a2;
+		}
+#endif
 	
 	} supply, demand;
 

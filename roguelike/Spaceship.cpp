@@ -96,10 +96,20 @@ void Freighter::update() {
 			if (_dest->economy.supply - _willpickup >= 0) {
 				cargo += _dest->economy.supply;
 				_dest->economy.supply -= _willpickup;
+				action = NONE;
+				_dest = nullptr;
 			}
 			else {
 				std::cout << "Cannot pickup supplies: Target too high\n";
+				action = NONE;
+				_dest = nullptr;
 			}
+		}
+	}
+	else if (action == UNLOAD) {
+		if (path.size() == 0) {
+			_dest->economy.supply += cargo;
+			cargo.reset();
 		}
 	}
 }

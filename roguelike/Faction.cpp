@@ -249,13 +249,7 @@ void Faction::decide_buildings() {
 				std::cout << _name << " has started building Infrastructure in " << ss->alias << std::endl;
 			}
 			else {
-				auto s = Buildings::Infrastructure(&ss->economy).cost.get_vals();
-				auto end = ss->economy.demand.get_vals();
-				for (int i = 0; i < s.size(); i++) {
-					if (end[i] < s[i]) {
-						end[i] += s[i] * 0.25;
-					}
-				}
+				ss->economy.demand += Buildings::Infrastructure(&ss->economy).cost;
 			}
 		}
 		else if(!ss->economy.has_building("Space Port")) {
@@ -263,13 +257,7 @@ void Faction::decide_buildings() {
 				std::cout << _name << " has started building Space Port in " << ss->alias << std::endl;
 			}
 			else {
-				auto s = Buildings::SpacePort(&ss->economy).cost.get_vals();
-				auto end = ss->economy.demand.get_vals();
-				for (int i = 0; i < s.size(); i++) {
-					if (end[i] < s[i]) {
-						end[i] += s[i] * 0.25;
-					}
-				}
+				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost;
 			}
 		}
 	}
