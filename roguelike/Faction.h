@@ -6,6 +6,8 @@
 
 #include <vector>
 
+#define FREIGHTER_LIMIT 10
+
 class Spaceship;
 class Faction {
 	friend class Hero;
@@ -102,6 +104,8 @@ public:
 
 	void decide_ships();
 
+	void simulate_ships();
+
 private:
 	static std::vector<Faction*> _factions;
 	std::vector<Actor*> _owned_tiles;
@@ -110,5 +114,6 @@ private:
 	TCODColor _color;
 	std::string _name;
 	std::vector<Hero*> _heroes;
+	int _numfreighters;
 };
 

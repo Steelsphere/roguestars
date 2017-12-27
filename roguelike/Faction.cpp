@@ -153,6 +153,8 @@ void Faction::simulate() {
 		h->simulate();
 	}
 	
+	simulate_ships();
+
 	// Check if dead
 	if (!self_own_tile(_capital_tile)) {
 		std::cout << _name << " has collapsed!\n";
@@ -264,11 +266,45 @@ void Faction::decide_buildings() {
 }
 
 void Faction::decide_ships() {
-	if (Random::randc(0, 100) == 0) {
-		Spaceship* s = new Spaceship('S', _capital_tile, this);
-		s->path_to_location(Random::randc(0, 128), Random::randc(0, 128));
+	
+	// Freighters
+	if (Random::randc(1, 4) == 1 && _numfreighters <= FREIGHTER_LIMIT) {
+		for (StarSector* ss : _ssv) {
+			if (ss->economy.demand > 0) {
+				for (StarSector* ss2 : _ssv) {
+					if (ss2->economy.supply > ss->economy.demand) {
+						Freighter* f = new Freighter(ss2, this);
+						if (ss2->economy.build_ship(f, this)) {
+							f->route(ss2, ss, ss->economy.demand);
+							std::cout << "Freighter created\n";
+							_numfreighters++;
+						}
+					}
+				}
+			}
+		}
 	}
+}
+
+void Faction::simulate_ships() {
 	for (Spaceship* s : spaceships) {
+
+		// Freighter management
+		if (s->get_type() == typeid(Freighter).name()) {
+			Freighter* f = dynamic_cast<Freighter*>(s);
+			if (f->action == Freighter::NONE) {
+				for (StarSector* ss : _ssv) {
+					if (ss->economy.demand > 0) {
+						for (StarSector* ss2 : _ssv) {
+							if (ss2->economy.supply > ss->economy.demand) {
+								f->route(ss2, ss, ss->economy.demand);
+							}
+						}
+					}
+				}
+			}
+		}
+
 		s->update();
 	}
 }

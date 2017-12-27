@@ -1,9 +1,12 @@
 #include "Economy.h"
 #include "Random.h"
+#include "Spaceship.h"
+#include "Faction.h"
 
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
 
 Economy::~Economy() {
 	for (Building* b : buildings) {
@@ -283,6 +286,30 @@ bool Economy::build_building(Building* b) {
 		}
 	}
 	underconstruction_buildings.push_back(b);
+	return true;
+}
+
+bool Economy::build_ship(Spaceship* s, Faction* f) {
+	if (!has_building("Space Port")) {
+		delete s;
+		std::cout << "Failed to build ship. Reason: no space port\n";
+		return false;
+	}
+	auto a = supply.get_vals();
+	auto b = s->cost.get_vals();
+	for (int i = 0; i < a.size(); i++) {
+		if (a[i] < b[i]) {
+			delete s;
+			std::cout << "Failed to build ship in. Reason: insufficient materials\n";
+			return false;
+		}
+		else {
+			a[i] -= b[i];
+		}
+	}
+	supply.set_vals(a);
+	f->spaceships.push_back(s);
+	std::cout << "Built ship\n";
 	return true;
 }
 

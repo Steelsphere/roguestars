@@ -6,26 +6,7 @@
 
 
 Spaceship::Spaceship(char c, StarSector* s, Faction* f) : Actor(s->get_world_pos()[0], s->get_world_pos()[1], 0, c, TCODColor::white, TCODColor::black, "Ship")  {
-	if (!s->economy.has_building("Space Port")) {
-		delete this;
-		std::cout << "Failed to build ship in " << s->alias << ". Reason: no space port\n";
-		return;
-	}
-	auto a = s->economy.supply.get_vals();
-	auto b = cost.get_vals();
-	for (int i = 0; i < a.size(); i++) {
-		if (a[i] < b[i]) {
-			delete this;
-			std::cout << "Failed to build ship in " << s->alias << ". Reason: insufficient materials\n";
-			return;
-		}
-		else {
-			a[i] -= b[i];
-		}
-	}
-	s->economy.supply.set_vals(a);
-	f->spaceships.push_back(this);
-	std::cout << "Built ship in " << s->alias << std::endl;
+	_bcolor = f->get_color();
 }
 
 
@@ -43,8 +24,6 @@ void Spaceship::path_to_location(int x, int y) {
 	
 	TCODPath p = TCODPath(Level::get_fov_map());
 	p.compute(_world_x, _world_y, x, y);
-
-	std::cout << "Created path with size " << p.size() << std::endl;
 
 	for (int i = 0; i < p.size(); i++) {
 		p.get(i, &dx, &dy);
@@ -93,36 +72,40 @@ void Freighter::update() {
 	Spaceship::update();
 	if (action == PICKUP) {
 		if (path.size() == 0) {
-			if (_dest->economy.supply - _willpickup >= 0) {
-				cargo += _dest->economy.supply;
-				_dest->economy.supply -= _willpickup;
-				action = NONE;
-				_dest = nullptr;
+			if (load_dest->economy.supply - _willpickup >= 0) {
+				cargo += _willpickup;
+				load_dest->economy.supply -= _willpickup;
+				action = UNLOAD;
+				path_to_location(unload_dest->get_world_pos()[0], unload_dest->get_world_pos()[1]);
+				load_dest = nullptr;
 			}
 			else {
-				std::cout << "Cannot pickup supplies: Target too high\n";
+				std::cout << "Cannot pickup supplies: Insufficient sector supplies\n";
 				action = NONE;
-				_dest = nullptr;
+				load_dest = nullptr;
+				unload_dest = nullptr;
 			}
 		}
 	}
 	else if (action == UNLOAD) {
 		if (path.size() == 0) {
-			_dest->economy.supply += cargo;
-			cargo.reset();
+			if (unload_dest != nullptr) {
+				unload_dest->economy.supply += cargo;
+				cargo.reset();
+				unload_dest = nullptr;
+				action = NONE;
+			}
+			else {
+				action = NONE;
+			}
 		}
 	}
 }
 
-void Freighter::pickup_cargo(StarSector* s, Economy::Goods g) {
-	path_to_location(s->get_world_pos()[0], s->get_world_pos()[1]);
-	action = PICKUP;
-	_dest = s;
+void Freighter::route(StarSector* start, StarSector* end, Economy::Goods g) {
+	load_dest = start;
+	unload_dest = end;
 	_willpickup = g;
-}
-
-void Freighter::unload_cargo(StarSector* s) {
-	path_to_location(s->get_world_pos()[0], s->get_world_pos()[1]);
-	action = UNLOAD;
-	_dest = s;
+	path_to_location(start->get_world_pos()[0], start->get_world_pos()[1]);
+	action = PICKUP;
 }

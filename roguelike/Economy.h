@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+class Spaceship;
+class Faction;
 class Economy {
 public:
 	enum SUPPLY_TYPES {
@@ -100,57 +102,47 @@ public:
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend bool operator!= (Economy::Goods &a1, const T &a2) {
-			auto a1v = a1.get_vals();
-			for (int i = 0; i < a1v.size(); i++) {
-				if (a1v[i] == a2) {
-					return false;
-				}
-			}
-			return true;
+			return !(a1 == a2);
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend bool operator< (Economy::Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
+			int sum = 0;
 			for (int i = 0; i < a1v.size(); i++) {
-				if (a1v[i] >= a2) {
-					return false;
-				}
+				sum += a1v[i];
 			}
-			return true;
+			return sum < a2;
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend bool operator<= (Economy::Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
+			int sum = 0;
 			for (int i = 0; i < a1v.size(); i++) {
-				if (a1v[i] > a2) {
-					return false;
-				}
+				sum += a1v[i];
 			}
-			return true;
+			return sum <= a2;
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend bool operator> (Economy::Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
+			int sum = 0;
 			for (int i = 0; i < a1v.size(); i++) {
-				if (a1v[i] <= a2) {
-					return false;
-				}
+				sum += a1v[i];
 			}
-			return true;
+			return sum > a2;
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend bool operator>= (Economy::Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
+			int sum = 0;
 			for (int i = 0; i < a1v.size(); i++) {
-				if (a1v[i] < a2) {
-					return false;
-				}
+				sum += a1v[i];
 			}
-			return true;
+			return sum >= a2;
 		}
 		
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
@@ -258,6 +250,7 @@ public:
 	std::vector<Building*> underconstruction_buildings;
 
 	bool build_building(Building* b);
+	bool build_ship(Spaceship* s, Faction* f);
 
 	void construct_buildings();
 

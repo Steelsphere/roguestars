@@ -31,14 +31,15 @@ public:
 
 	virtual void update() override;
 
-	void pickup_cargo(StarSector* s, Economy::Goods g);
-	void unload_cargo(StarSector* s);
+	void route(StarSector* start, StarSector* end, Economy::Goods g);
 
 	Economy::Goods cargo;
 	FREIGHTER_ACTION action = NONE;
 
+	StarSector* load_dest = nullptr;
+	StarSector* unload_dest = nullptr;
+
 private:
-	StarSector* _dest = nullptr;
 	Economy::Goods _willpickup;
 };
 
