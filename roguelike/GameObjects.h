@@ -4,12 +4,14 @@
 #include "Actor.h"
 #include "Level.h"
 #include "GUI.h"
+#include "GameObjects.h"
 
 #include <vector>
 #include <map>
 #include <string>
 
 class Player;
+class Camera;
 class GameObjects
 {
 public:
@@ -33,6 +35,7 @@ public:
 	static bool new_turn;
 
 	static Log* log;
+	static Camera* camera;
 	
 	static std::string savegame_path;
 	static std::map<std::string, std::pair<int, int>> map_dir;

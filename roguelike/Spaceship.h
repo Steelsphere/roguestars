@@ -17,6 +17,7 @@ public:
 
 	Economy::Goods cost;
 	std::vector<Actor*> path;
+	Faction* faction;
 };
 
 class Freighter : public Spaceship {
@@ -41,5 +42,20 @@ public:
 
 private:
 	Economy::Goods _willpickup;
+};
+
+class Scout : public Spaceship {
+public:
+	enum SCOUT_ACTION {
+		NONE,
+		SCOUT_BEGIN,
+		SCOUTING
+	};
+
+	Scout(StarSector* s, Faction* f);
+
+	virtual void update() override;
+
+	SCOUT_ACTION action = NONE;
 };
 

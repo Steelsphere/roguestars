@@ -34,6 +34,9 @@ void Game::init() {
 //	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
 	GameObjects::log = _log;
+	GameObjects::camera = _camera;
+
+	std::cout << "CAMERA: " << std::endl << GameObjects::camera->get_world_pos()[0] << std::endl << GameObjects::camera->get_world_pos()[1] << std::endl;
 
 	TCODNamegen::parse("Data\\tcod\\names.cfg");
 
@@ -228,6 +231,11 @@ void Game::update() {
 					a->set_bcolor_obj(f->get_color());
 				}
 			}
+		}
+
+		auto a = Actor::get_actors(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
+		if (a[a.size() - 2]->get_type() == typeid(StarSector).name()) {
+			_status->draw(true);
 		}
 		
 		_time.pass_time(86400 + Random::randc(-250, 250));
@@ -550,6 +558,7 @@ void Game::new_galaxy() {
 	_player = new Player(0, 0, 0, '@', TCODColor::blue);
 	_player->spawn_player(Level::GALAXY);
 
+	level_setup();
 	GameObjects::update = true;
 }
 
@@ -606,6 +615,9 @@ void Game::level_setup() {
 	_camera = new Camera(_player);
 	_camera->set_level(_level);
 	_camera->update();
+	GameObjects::camera = _camera;
+	std::cout << "CAMERA: " << std::endl << GameObjects::camera->get_world_pos()[0] << std::endl << GameObjects::camera->get_world_pos()[1] << std::endl;
+
 }
 
 void Game::enter_spaceship() {

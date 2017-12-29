@@ -7,7 +7,8 @@ class Camera
 {
 public:
 	Camera(Actor* following);
-	
+	Camera(int x, int y);
+
 	~Camera();
 
 	void update();

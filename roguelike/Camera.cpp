@@ -15,12 +15,25 @@ Camera::Camera(Actor* following)
 	_world_z = wxyz[2];
 }
 
+Camera::Camera(int x, int y) {
+	_following = nullptr;
+	_screen_x = x;
+	_screen_y = y;
+	_screen_z = 0;
+	_world_x = x;
+	_world_y = y;
+	_world_z = 0;
+}
 
 Camera::~Camera()
 {
 }
 
 void Camera::update() {
+	if (_following == nullptr) {
+		return;
+	}
+	
 	int* sxyz = _following->get_screen_pos();
 	int* wxyz = _following->get_world_pos();
 	_screen_x = sxyz[0];

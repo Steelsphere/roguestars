@@ -231,7 +231,7 @@ void Status::draw(bool force) {
 				if (_si == nullptr) {
 					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
 				}
-				else if (sector != _si->get_sector()) {
+				else if (sector != _si->get_sector() || GameObjects::new_turn) {
 					delete _si;
 					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
 				}

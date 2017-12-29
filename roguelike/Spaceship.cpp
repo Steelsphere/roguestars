@@ -7,6 +7,7 @@
 
 Spaceship::Spaceship(char c, StarSector* s, Faction* f) : Actor(s->get_world_pos()[0], s->get_world_pos()[1], 0, c, TCODColor::white, TCODColor::black, "Ship")  {
 	_bcolor = f->get_color();
+	faction = f;
 }
 
 
@@ -64,7 +65,7 @@ void Spaceship::follow_path() {
 }
 
 Freighter::Freighter(StarSector* s, Faction* f) : Spaceship('F', s, f) {
-	cost.military_goods = 25;
+	cost.military_goods = 100;
 	_fcolor = TCODColor::orange;
 }
 
@@ -72,19 +73,19 @@ void Freighter::update() {
 	Spaceship::update();
 	if (action == PICKUP) {
 		if (path.size() == 0) {
-			if (load_dest->economy.supply - _willpickup >= 0) {
-				cargo += _willpickup;
-				load_dest->economy.supply -= _willpickup;
-				action = UNLOAD;
-				path_to_location(unload_dest->get_world_pos()[0], unload_dest->get_world_pos()[1]);
-				load_dest = nullptr;
+			for (int i : (load_dest->economy.supply - _willpickup).get_vals()) {
+				if (i < 0) {
+					action = NONE;
+					load_dest = nullptr;
+					unload_dest = nullptr;
+					return;
+				}
 			}
-			else {
-				std::cout << "Cannot pickup supplies: Insufficient sector supplies\n";
-				action = NONE;
-				load_dest = nullptr;
-				unload_dest = nullptr;
-			}
+			cargo += _willpickup;
+			load_dest->economy.supply -= _willpickup;
+			action = UNLOAD;
+			path_to_location(unload_dest->get_world_pos()[0], unload_dest->get_world_pos()[1]);
+			load_dest = nullptr;
 		}
 	}
 	else if (action == UNLOAD) {
@@ -108,4 +109,34 @@ void Freighter::route(StarSector* start, StarSector* end, Economy::Goods g) {
 	_willpickup = g;
 	path_to_location(start->get_world_pos()[0], start->get_world_pos()[1]);
 	action = PICKUP;
+}
+
+Scout::Scout(StarSector* s, Faction* f) : Spaceship('s', s, f) {
+	cost.military_goods = 25;
+	_fcolor = TCODColor::blue;
+}
+
+void Scout::update() {
+	Spaceship::update();
+	if (action == SCOUT_BEGIN) {
+		int xoff = Random::randc(-1, 1);
+		int yoff = Random::randc(-1, 1);
+		Actor* a = Actor::get_actor(_world_x, _world_y, 0);
+		for (int i = 0; i < Random::randc(5, 50); i++) {
+			if (Actor::get_actor(a->get_world_pos()[0] + xoff, a->get_world_pos()[1] + yoff, 0) == nullptr) {
+				int xoff = Random::randc(-1, 1);
+				int yoff = Random::randc(-1, 1);
+			}
+			else {
+				a = Actor::get_actor(_world_x + xoff, _world_y + yoff, 0);
+			}
+		}
+		path_to_location(a->get_world_pos()[0], a->get_world_pos()[1]);
+		action = SCOUTING;
+	}
+	else if (action == SCOUTING) {
+		if (path.size() == 0) {
+			action = NONE;
+		}
+	}
 }

@@ -2,6 +2,7 @@
 #include "GameObjects.h"
 #include "Item.h"
 #include "Input.h"
+#include "Camera.h"
 
 #include <typeinfo>
 #include <iostream>
@@ -14,8 +15,8 @@ Actor::Actor()
 }
 
 Actor::Actor(int x, int y, int z, const std::string& name) :
-	_screen_x(x), 
-	_screen_y(y), 
+	_screen_x(x - GameObjects::camera->get_world_pos()[0]),
+	_screen_y(y - GameObjects::camera->get_world_pos()[1]),
 	_screen_z(z), 
 	_world_x(x), 
 	_world_y(y), 
@@ -33,8 +34,8 @@ Actor::Actor(int x, int y, int z, const std::string& name) :
 }
 
 Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, const std::string& name) : 
-	_screen_x(x), 
-	_screen_y(y), 
+	_screen_x(x - GameObjects::camera->get_world_pos()[0] + GameObjects::screen_width / 2), 
+	_screen_y(y - GameObjects::camera->get_world_pos()[1] + GameObjects::screen_height / 2),
 	_screen_z(z), 
 	_c(c), 
 	_fcolor(fcolor), 

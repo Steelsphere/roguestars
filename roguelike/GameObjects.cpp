@@ -3,6 +3,7 @@
 #include "Item.h"
 #include "Player.h"
 #include "Hero.h"
+#include "Camera.h"
 
 #include <typeinfo>
 #include <string>
@@ -24,6 +25,7 @@ bool GameObjects::player_controlled = false;
 bool GameObjects::new_turn = false;
 
 Log* GameObjects::log;
+Camera* GameObjects::camera;
 
 std::string GameObjects::savegame_path;
 

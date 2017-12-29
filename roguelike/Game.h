@@ -134,7 +134,7 @@ private:
 
 	// Level stuff
 	Level* _level = nullptr;
-	Camera* _camera = nullptr;
+	Camera* _camera = new Camera(0, 0);
 	World* _world = nullptr;
 	
 	// Player stuff

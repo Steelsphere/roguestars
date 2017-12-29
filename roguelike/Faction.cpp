@@ -81,7 +81,8 @@ void Faction::simulate() {
 			for (int i = ex_points.size() - 1; i >= 0; i--) {
 				if (ex_points[i] == nullptr || 
 					self_own_tile(ex_points[i]) ||
-					ex_points[i]->get_bcolor_obj() == TCODColor::black) {
+					ex_points[i]->get_bcolor_obj() == TCODColor::black ||
+					!(ex_points[i]->get_type() == typeid(Tile).name() || ex_points[i]->get_type() == typeid(StarSector).name())) {
 					ex_points.erase(ex_points.begin() + i);
 				}
 			}
@@ -284,6 +285,12 @@ void Faction::decide_ships() {
 			}
 		}
 	}
+	// Scouts
+	if (Random::randc(0, 10) == 0 && _numscouts <= SCOUT_LIMIT) {
+		_capital_tile->economy.build_ship(new Scout(_capital_tile, this), this);
+		std::cout << "Scout created\n";
+		_numscouts++;
+	}
 }
 
 void Faction::simulate_ships() {
@@ -302,6 +309,12 @@ void Faction::simulate_ships() {
 						}
 					}
 				}
+			}
+		}
+		else if (s->get_type() == typeid(Scout).name()) {
+			Scout* sc = dynamic_cast<Scout*>(s);
+			if (sc->action == Scout::NONE) {
+				sc->action = Scout::SCOUT_BEGIN;
 			}
 		}
 

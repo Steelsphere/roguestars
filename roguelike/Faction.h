@@ -7,6 +7,7 @@
 #include <vector>
 
 #define FREIGHTER_LIMIT 10
+#define SCOUT_LIMIT 3
 
 class Spaceship;
 class Faction {
@@ -114,6 +115,7 @@ private:
 	TCODColor _color;
 	std::string _name;
 	std::vector<Hero*> _heroes;
-	int _numfreighters;
+	int _numfreighters = 0;
+	int _numscouts = 0;
 };
 
