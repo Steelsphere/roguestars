@@ -138,6 +138,7 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		_name = "Sandstone";
 		break;
 	
+	/*
 	case SPACE:
 		_c = 0;
 		_fcolor = TCODColor::black;
@@ -145,7 +146,8 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 
 		_name = "Space";
 		break;
-	
+	*/
+
 	case STAR:
 		_c = '*';
 		_fcolor = TCODColor::yellow;
@@ -271,6 +273,7 @@ void TravelPoint::colonize(Faction* f) {
 	economy.supply.workers = Random::randc(10, 100);
 
 	colonized = true;
+	faction = f;
 }
 
 StarSector::StarSector(int x, int y, int z) : TravelPoint(x, y, z) {
@@ -508,4 +511,12 @@ void Door::on_keypress_c() {
 		_isopen = true;
 		GameObjects::update = true;
 	}
+}
+
+Space::Space(int x, int y) : Actor(x, y, 0) {
+	_c = 0;
+	_fcolor = TCODColor::black;
+	_bcolor = TCODColor::black;
+
+	_name = "Space";
 }

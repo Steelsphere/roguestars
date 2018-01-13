@@ -5,6 +5,7 @@
 #include "Hero.h"
 
 #include <vector>
+#include <map>
 
 #define FREIGHTER_LIMIT 10
 #define SCOUT_LIMIT 3
@@ -65,6 +66,7 @@ public:
 	};
 	
 	std::vector<Spaceship*> spaceships;
+	std::map<Faction*, int> diplomatic_relations;
 
 	Faction();
 	Faction(int startx, int starty);
@@ -106,6 +108,10 @@ public:
 	void decide_ships();
 
 	void simulate_ships();
+
+	void meet_nations();
+
+	void discover_nation(Faction* f);
 
 private:
 	static std::vector<Faction*> _factions;

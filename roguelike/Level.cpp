@@ -147,7 +147,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 void Level::generate_space() {
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
-			new Tile(x, y, 0, Tile::SPACE);
+			new Space(x, y);
 		}
 	}
 }

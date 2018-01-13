@@ -48,6 +48,7 @@ public:
 	Economy economy;
 	std::string alias = TCODNamegen::generate("object");
 	bool colonized = false;
+	Faction* faction = nullptr;
 
 	void colonize(Faction* f);
 };
@@ -120,4 +121,10 @@ public:
 	virtual void on_keypress_c() override;
 private:
 	bool _isopen = false;
+};
+
+class Space : public Actor {
+public:
+	Space(int x, int y);
+	Faction* faction = nullptr;
 };

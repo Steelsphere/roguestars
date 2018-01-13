@@ -79,10 +79,13 @@ void Faction::simulate() {
 		while (true) {
 			ex_points = _owned_tiles[offset]->get_adjacent_actors_vec();
 			for (int i = ex_points.size() - 1; i >= 0; i--) {
-				if (ex_points[i] == nullptr || 
+				if (ex_points[i] == nullptr) {
+					ex_points.erase(ex_points.begin() + i);
+				}
+				else if (
 					self_own_tile(ex_points[i]) ||
 					ex_points[i]->get_bcolor_obj() == TCODColor::black ||
-					!(ex_points[i]->get_type() == typeid(Tile).name() || ex_points[i]->get_type() == typeid(StarSector).name())) {
+					!(ex_points[i]->get_type() == typeid(Space).name() || ex_points[i]->get_type() == typeid(StarSector).name())) {
 					ex_points.erase(ex_points.begin() + i);
 				}
 			}
@@ -120,6 +123,13 @@ void Faction::simulate() {
 					std::cout << _name + " has reached the " + std::to_string(_ssv.size()) + " number of star sectors colonized milestone" << std::endl;
 				}
 			}
+			else {
+				ss->faction = this;
+			}
+		}
+		else if (ex_points[idx2]->get_type() == typeid(Space).name()) {
+			Space* s = dynamic_cast<Space*>(ex_points[idx2]);
+			s->faction = this;
 		}
 
 		_owned_tiles.push_back(ex_points[idx2]);
@@ -155,6 +165,10 @@ void Faction::simulate() {
 	}
 	
 	simulate_ships();
+
+	// Check if any other faction is met
+
+	meet_nations();
 
 	// Check if dead
 	if (!self_own_tile(_capital_tile)) {
@@ -320,4 +334,75 @@ void Faction::simulate_ships() {
 
 		s->update();
 	}
+}
+
+void Faction::meet_nations() {
+	for (StarSector* s : _ssv) {
+		for (Actor* a : s->get_adjacent_actors_vec()) {
+			if (a == nullptr) {
+				continue;
+			}
+			if (a->get_type() == typeid(StarSector).name()) {
+				StarSector* b = dynamic_cast<StarSector*>(a);
+				if (b->faction != nullptr && b->faction != this) {
+					if (diplomatic_relations.count(b->faction) == 0) {
+						discover_nation(b->faction);
+					}
+				}
+			}
+			else if (a->get_type() == typeid(Spaceship).name()) {
+				Spaceship * b = dynamic_cast<Spaceship*>(a);
+				if (b->faction != nullptr && b->faction != this) {
+					if (diplomatic_relations.count(b->faction) == 0) {
+						discover_nation(b->faction);
+					}
+				}
+			}
+			else if (a->get_type() == typeid(Space).name()) {
+				Space* b = dynamic_cast<Space*>(a);
+				if (b->faction != nullptr && b->faction != this) {
+					if (diplomatic_relations.count(b->faction) == 0) {
+						discover_nation(b->faction);
+					}
+				}
+			}
+		}
+	}
+	for (Spaceship* sp : spaceships) {
+		for (Actor* a : sp->get_adjacent_actors_vec()) {
+			if (a == nullptr) {
+				continue;
+			}
+			if (a->get_type() == typeid(StarSector).name()) {
+				StarSector* b = dynamic_cast<StarSector*>(a);
+				if (b->faction != nullptr && b->faction != this) {
+					if (diplomatic_relations.count(b->faction) == 0) {
+						discover_nation(b->faction);
+					}
+				}
+			}
+			else if (a->get_type() == typeid(Spaceship).name()) {
+				Spaceship* b = dynamic_cast<Spaceship*>(a);
+				if (b->faction != nullptr && b->faction != this) {
+					if (diplomatic_relations.count(b->faction) == 0) {
+						discover_nation(b->faction);
+					}
+				}
+			}
+			else if (a->get_type() == typeid(Space).name()) {
+				Space* b = dynamic_cast<Space*>(a);
+				if (b->faction != nullptr && b->faction != this) {
+					if (diplomatic_relations.count(b->faction) == 0) {
+						discover_nation(b->faction);
+					}
+				}
+			}
+		}
+	}
+}
+
+void Faction::discover_nation(Faction* f) {
+	diplomatic_relations[f] = Random::randc(-25, 25);
+	f->diplomatic_relations[this] = Random::randc(-25, 25);
+	std::cout << _name << " has met " << f->get_name() << " " << diplomatic_relations[f] << " " << f->diplomatic_relations[this] << std::endl;
 }
