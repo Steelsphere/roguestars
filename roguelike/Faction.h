@@ -75,9 +75,9 @@ public:
 
 	static std::vector<Faction*> get_factions() { return _factions; }
 
-	static bool any_own_tile(const Actor* t);
+	static bool any_own_tile(Actor* t);
 
-	static Faction* who_owns_tile(const Actor* t);
+	static Faction* who_owns_tile(Actor* t);
 
 	static void save_faction_map(const std::string& path, int size);
 
@@ -89,9 +89,9 @@ public:
 
 	void simulate();
 
-	bool self_own_tile(const Actor* t);
+	bool self_own_tile(Actor* t);
 
-	bool other_own_tile(const Actor* t);
+	bool other_own_tile(Actor* t);
 
 	void remove_tile(const Actor* t);
 

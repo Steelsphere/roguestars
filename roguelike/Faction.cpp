@@ -22,6 +22,7 @@ Faction::Faction(int startx, int starty) {
 	}
 	else {
 		_capital_tile = capital;
+		_capital_tile->faction = this;
 		std::vector<int> newvals;
 		for (int i = 0; i < _capital_tile->economy.supply_values().size(); i++) {
 			newvals.push_back(Random::randc(10000, 1000000));
@@ -179,47 +180,62 @@ void Faction::simulate() {
 	}
 }
 
-bool Faction::any_own_tile(const Actor* t) {
-	for (Faction* f : _factions) {
-		for (Actor* a : f->get_owned_tiles()) {
-			if (t == a) {
-				return true;
-			}
+bool Faction::any_own_tile(Actor* t) {
+	if (t->get_type() == typeid(Space).name()) {
+		Space* a = dynamic_cast<Space*>(t);
+		if (a->faction != nullptr) {
+			return true;
 		}
 	}
-	return false;
-}
-
-bool Faction::self_own_tile(const Actor* t) {
-	for (Actor* a : _owned_tiles) {
-		if (t == a) {
+	else if (t->get_type() == typeid(StarSector).name()) {
+		StarSector* a = dynamic_cast<StarSector*>(t);
+		if (a->faction != nullptr) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Faction::other_own_tile(const Actor* t) {
-	for (Faction* f : _factions) {
-		if (f == this) {
-			continue;
+bool Faction::self_own_tile(Actor* t) {
+	if (t->get_type() == typeid(Space).name()) {
+		Space* a = dynamic_cast<Space*>(t);
+		if (a->faction == this) {
+			return true;
 		}
-		for (Actor* a : f->get_owned_tiles()) {
-			if (t == a) {
-				return true;
-			}
+	}
+	else if (t->get_type() == typeid(StarSector).name()) {
+		StarSector* a = dynamic_cast<StarSector*>(t);
+		if (a->faction == this) {
+			return true;
 		}
 	}
 	return false;
 }
 
-Faction* Faction::who_owns_tile(const Actor* t) {
-	for (Faction* f : _factions) {
-		for (Actor* a : f->get_owned_tiles()) {
-			if (t == a) {
-				return f;
-			}
+bool Faction::other_own_tile(Actor* t) {
+	if (t->get_type() == typeid(Space).name()) {
+		Space* a = dynamic_cast<Space*>(t);
+		if (a->faction != this && a->faction != nullptr) {
+			return true;
 		}
+	}
+	else if (t->get_type() == typeid(StarSector).name()) {
+		StarSector* a = dynamic_cast<StarSector*>(t);
+		if (a->faction != this && a->faction != nullptr) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Faction* Faction::who_owns_tile(Actor* t) {
+	if (t->get_type() == typeid(Space).name()) {
+		Space* a = dynamic_cast<Space*>(t);
+		return a->faction;
+	}
+	else if (t->get_type() == typeid(StarSector).name()) {
+		StarSector* a = dynamic_cast<StarSector*>(t);
+		return a->faction;
 	}
 	return nullptr;
 }
