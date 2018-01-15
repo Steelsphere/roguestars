@@ -11,7 +11,9 @@ Spaceship::Spaceship(char c, StarSector* s, Faction* f) : Actor(s->get_world_pos
 }
 
 
-Spaceship::~Spaceship() {}
+Spaceship::~Spaceship() {
+	delete_actor();
+}
 
 void Spaceship::update() {
 	follow_path();

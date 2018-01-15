@@ -56,9 +56,7 @@ Actor::Actor(int x, int y, int z, char c, TCODColor fcolor, TCODColor bcolor, co
 }
 
 
-Actor::~Actor()
-{
-}
+Actor::~Actor() {}
 
 int* Actor::get_screen_pos() {
 	static int a[3];
@@ -135,7 +133,7 @@ std::vector<Actor*> Actor::get_actors(int x, int y, int z) {
 	}
 
 	for (int i = 0; i < (*_map)[x][y].size(); i++) {
-			a.push_back((*_map)[x][y][i]);
+		a.push_back((*_map)[x][y][i]);
 	}
 	
 	return a;
@@ -268,4 +266,10 @@ Actor* Actor::get_actor_scr(int x, int y) {
 		}
 	}
 	return nullptr;
+}
+
+void Actor::delete_actor() {
+	_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this));
+	auto* m = Actor::get_map();
+	(*m)[_world_x][_world_y].erase(std::remove((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
 }

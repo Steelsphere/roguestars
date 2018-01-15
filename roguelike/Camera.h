@@ -16,6 +16,8 @@ public:
 	int* get_screen_pos();
 	int* get_world_pos();
 
+	void set_world_pos(int x, int y) { _world_x = x; _world_y = y; }
+
 	void set_level(Level* level) { _level = level; }
 
 	void set_following(Actor* actor) { _following = actor; }

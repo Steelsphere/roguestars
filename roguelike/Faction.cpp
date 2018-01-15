@@ -181,6 +181,9 @@ void Faction::simulate() {
 }
 
 bool Faction::any_own_tile(Actor* t) {
+	if (t == nullptr) {
+		return nullptr;
+	}
 	if (t->get_type() == typeid(Space).name()) {
 		Space* a = dynamic_cast<Space*>(t);
 		if (a->faction != nullptr) {
@@ -197,6 +200,9 @@ bool Faction::any_own_tile(Actor* t) {
 }
 
 bool Faction::self_own_tile(Actor* t) {
+	if (t == nullptr) {
+		return nullptr;
+	}
 	if (t->get_type() == typeid(Space).name()) {
 		Space* a = dynamic_cast<Space*>(t);
 		if (a->faction == this) {
@@ -213,6 +219,9 @@ bool Faction::self_own_tile(Actor* t) {
 }
 
 bool Faction::other_own_tile(Actor* t) {
+	if (t == nullptr) {
+		return nullptr;
+	}
 	if (t->get_type() == typeid(Space).name()) {
 		Space* a = dynamic_cast<Space*>(t);
 		if (a->faction != this && a->faction != nullptr) {
@@ -229,6 +238,9 @@ bool Faction::other_own_tile(Actor* t) {
 }
 
 Faction* Faction::who_owns_tile(Actor* t) {
+	if (t == nullptr) {
+		return nullptr;
+	}
 	if (t->get_type() == typeid(Space).name()) {
 		Space* a = dynamic_cast<Space*>(t);
 		return a->faction;
@@ -358,7 +370,7 @@ void Faction::meet_nations() {
 			if (a == nullptr) {
 				continue;
 			}
-			if (a->get_type() == typeid(StarSector).name()) {
+			else if (a->get_type() == typeid(StarSector).name()) {
 				StarSector* b = dynamic_cast<StarSector*>(a);
 				if (b->faction != nullptr && b->faction != this) {
 					if (diplomatic_relations.count(b->faction) == 0) {
@@ -389,7 +401,7 @@ void Faction::meet_nations() {
 			if (a == nullptr) {
 				continue;
 			}
-			if (a->get_type() == typeid(StarSector).name()) {
+			else if (a->get_type() == typeid(StarSector).name()) {
 				StarSector* b = dynamic_cast<StarSector*>(a);
 				if (b->faction != nullptr && b->faction != this) {
 					if (diplomatic_relations.count(b->faction) == 0) {

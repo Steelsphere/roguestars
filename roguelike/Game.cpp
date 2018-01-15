@@ -339,6 +339,7 @@ void Game::startup_new_game() {
 	selection_game_loop(gui);
 	delete gui;
 
+	_camera = new Camera(0, 0);
 	new_galaxy();
 
 	TCODConsole::root->clear();
@@ -470,8 +471,7 @@ void Game::destroy_garbage() {
 }
 
 void Game::new_info_viewer() {
-	_dummy = new Dummy(_player->get_screen_pos()[0], _player->get_screen_pos()[1], 0, 'X', TCODColor::yellow);
-	_dummy->set_world_position(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
+	_dummy = new Dummy(_player->get_world_pos()[0], _player->get_world_pos()[1], 0, 'X', TCODColor::yellow);
 	_info_viewer = new InfoViewer(_dummy);
 	_dummy->set_info(_info_viewer);
 	Input::set_input_reciever(_dummy);
@@ -517,6 +517,7 @@ void Game::new_solar_system() {
 	
 	delete _level;
 	_level = new Level;
+	_camera->set_world_pos(0, 0);
 	_level->generate_level(256, Level::SOLAR_SYSTEM);
 	_level->set_savedir("solarsystem");
 	_solarsystem_id = _level->id;
@@ -535,6 +536,7 @@ void Game::new_star_sector() {
 	
 	delete _level;
 	_level = new Level;
+	_camera->set_world_pos(0, 0);
 	_level->generate_level(512, Level::STAR_SECTOR);
 	_level->set_savedir("starsector");
 	_starsector_id = _level->id;
@@ -551,6 +553,7 @@ void Game::new_galaxy() {
 	
 	delete _level;
 	_level = new Level;
+	_camera->set_world_pos(0, 0);
 	_level->generate_level(GameObjects::galaxy_size, Level::GALAXY);
 	_level->set_savedir("galaxy");
 	_galaxy_id = _level->id;
@@ -843,6 +846,7 @@ void Game::test_level() {
 	TCODConsole::root->clear();
 
 	_level = new Level;
+	_camera->set_world_pos(0, 0);
 	_level->generate_level(128, Level::TEST);
 	
 	_player = new Player(32, 32, 0, '@', TCODColor::blue);
@@ -916,7 +920,7 @@ void Game::generate_factions() {
 			std::cout << i << "/" << simturns << "\r";
 			
 			// Update loading screen
-			if (i % 14 == 0) {
+			if (i % 5 == 0) {
 				_loadingscreen->clear_working_area();
 				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns) + _time.format_time(" Date:%M/%D/%Y %H:%m:%S"));
 				_gui_map->draw(true);
@@ -925,7 +929,7 @@ void Game::generate_factions() {
 			}
 
 			// Update map
-			if (i % 100 == 0) {
+			if (i % 25 == 0) {
 				for (Faction* f : Faction::get_factions()) {
 					for (Actor* a : f->get_owned_tiles()) {
 						a->set_bcolor_obj(f->get_color());

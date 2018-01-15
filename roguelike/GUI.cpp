@@ -216,15 +216,17 @@ void Status::draw(bool force) {
 				_text[1].color = TCODColor::red;
 			}
 		} */
-		if (_player != nullptr) {
+		if (_player != nullptr && GameObjects::player_controlled) {
 			_tile->update();
 			
 			// Sector view
 			std::vector<Actor*> tiles = Actor::get_actors(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
 			StarSector* sector = nullptr;
 			for (Actor* a : tiles) {
-				if (a->get_type() == typeid(StarSector).name()) {
-					sector = dynamic_cast<StarSector*>(a);
+				if (a != nullptr) {
+					if (a->get_type() == typeid(StarSector).name()) {
+						sector = dynamic_cast<StarSector*>(a);
+					}
 				}
 			}
 			if (sector != nullptr) {

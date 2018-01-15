@@ -131,9 +131,11 @@ void Player::draw() {
 
 Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {
 	GameObjects::player_controlled = false;
+	delete_actor();
 }
 
 Dummy::~Dummy() {
+	Character::~Character();
 	GameObjects::player_controlled = true;
 }
 

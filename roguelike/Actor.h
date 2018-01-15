@@ -85,7 +85,9 @@ public:
 
 	void set_transparent_background();
 
-	std::string get_type() { return typeid(*this).name(); }
+	std::string get_type() { return std::string(typeid(*this).name()); }
+
+	void delete_actor();
 
 protected:
 	int _screen_x, _screen_y, _screen_z;
