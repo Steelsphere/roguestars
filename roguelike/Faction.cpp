@@ -327,12 +327,13 @@ void Faction::decide_ships() {
 			}
 		}
 	}
-	// Scouts
+	// Scouts 
+	
 	if (Random::randc(0, 10) == 0 && _numscouts <= SCOUT_LIMIT) {
 		_capital_tile->economy.build_ship(new Scout(_capital_tile, this), this);
 		std::cout << "Scout created\n";
 		_numscouts++;
-	}
+	} 
 }
 
 void Faction::simulate_ships() {

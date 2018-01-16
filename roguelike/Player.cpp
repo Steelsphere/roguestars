@@ -131,7 +131,8 @@ void Player::draw() {
 
 Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {
 	GameObjects::player_controlled = false;
-	delete_actor();
+	auto* m = Actor::get_map();
+	(*m)[_world_x][_world_y].erase(std::remove((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
 }
 
 Dummy::~Dummy() {

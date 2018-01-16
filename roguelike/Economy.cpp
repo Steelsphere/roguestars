@@ -239,7 +239,7 @@ void Economy::update() {
 	// Make demand go down if supply outnumbers demand
 	for (int i = 0; i < sv.size(); i++) {
 		if (sv[i] > dv[i] && dv[i] > 0) {
-			dv[i]--;
+			dv[i] -= std::ceil(std::log(sv[i]) - dv[i]);
 		}
 		// Set to zero if negative
 		if (sv[i] < 0) {

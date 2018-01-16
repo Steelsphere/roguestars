@@ -72,7 +72,13 @@ Freighter::Freighter(StarSector* s, Faction* f) : Spaceship('F', s, f) {
 }
 
 void Freighter::update() {
+	// Loiter
+	if (Random::randc(0, 5) == 0) {
+		return;
+	}
+	
 	Spaceship::update();
+	
 	if (action == PICKUP) {
 		if (path.size() == 0) {
 			for (int i : (load_dest->economy.supply - _willpickup).get_vals()) {
