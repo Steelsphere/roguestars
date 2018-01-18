@@ -292,4 +292,11 @@ namespace Buildings {
 
 		virtual void update() override;
 	};
+
+	class MIC : public Economy::Building {
+	public:
+		MIC(Economy* e);
+
+		virtual void update() override;
+	};
 }

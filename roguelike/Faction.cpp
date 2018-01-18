@@ -305,6 +305,14 @@ void Faction::decide_buildings() {
 				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost;
 			}
 		}
+		else if (!ss->economy.has_building("Military Industrial Complex")) {
+			if (ss->economy.build_building(new Buildings::MIC(&ss->economy))) {
+				std::cout << _name << " has started building Military Industrial Complex in " << ss->alias << std::endl;
+			}
+			else {
+				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost;
+			}
+		}
 	}
 }
 
@@ -334,6 +342,13 @@ void Faction::decide_ships() {
 		std::cout << "Scout created\n";
 		_numscouts++;
 	} 
+
+	// Warships
+
+	if (Random::randc(0, 100) == 0) {
+		_capital_tile->economy.build_ship(new Warship(_capital_tile, this), this);
+		std::cout << "Warship created\n";
+	}
 }
 
 void Faction::simulate_ships() {
@@ -354,10 +369,20 @@ void Faction::simulate_ships() {
 				}
 			}
 		}
+		
+		// Scout management
 		else if (s->get_type() == typeid(Scout).name()) {
 			Scout* sc = dynamic_cast<Scout*>(s);
 			if (sc->action == Scout::NONE) {
 				sc->action = Scout::SCOUT_BEGIN;
+			}
+		}
+
+		// Warship management
+		else if (s->get_type() == typeid(Warship).name()) {
+			Warship* ws = dynamic_cast<Warship*>(s);
+			if (ws->action == Warship::NONE) {
+				ws->action = Warship::PATROL_BEGIN;
 			}
 		}
 

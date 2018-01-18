@@ -148,3 +148,48 @@ void Scout::update() {
 		}
 	}
 }
+
+Warship::Warship(StarSector* s, Faction* f) : Spaceship('M', s, f) {
+	cost.military_goods = 100;
+	_fcolor = TCODColor::red;
+}
+
+void Warship::update() {
+	Spaceship::update();
+	if (action == PATROL_BEGIN) {
+		std::vector<StarSector*> sv = faction->get_ssv();
+		
+		if (sv.size() == 0) {
+			action = NONE;
+			return;
+		}
+
+		std::vector<int> indices;
+
+		for (int i = 0; i < Random::randc(3, 10); i++) {
+			indices.push_back(Random::randc(0, sv.size() - 1));
+		}
+
+		_patrol_points.clear();
+		for (int i : indices) {
+			_patrol_points.push_back(sv[i]);
+		}
+
+		action = PATROLLING;
+	}
+	else if (action == PATROLLING) {
+		if (path.size() == 0) {
+			if (_patrol_points.size() == 0) {
+				action = NONE;
+			}
+			else {
+				path_to_location(_patrol_points[0]->get_world_pos()[0], _patrol_points[0]->get_world_pos()[1]);
+				_patrol_points.erase(_patrol_points.begin());
+			}
+		}
+	}
+}
+
+void Warship::patrol() {
+	action = PATROL_BEGIN;
+}

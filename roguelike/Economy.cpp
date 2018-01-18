@@ -403,7 +403,7 @@ void Buildings::MiningComplex::update() {
 Buildings::IndustrialComplex::IndustrialComplex(Economy* e) : Economy::Building(e) {
 	name = "Industrial Complex";
 	initial = "IC";
-	color = TCODColor::red;
+	color = TCODColor::lightAmber;
 	cost.industrial_goods = 500;
 }
 
@@ -446,4 +446,21 @@ Buildings::SpacePort::SpacePort(Economy* e) : Economy::Building(e) {
 
 void Buildings::SpacePort::update() {
 
+}
+
+Buildings::MIC::MIC(Economy* e) : Economy::Building(e) {
+	name = "Military Industrial Complex";
+	initial = "MIC";
+	color = TCODColor::red;
+	cost.industrial_goods = 500;
+	cost.military_goods = 500;
+}
+
+void Buildings::MIC::update() {
+	if (economy->supply.workers / std::log(tier + 1) > 1) {
+		economy->supply.military_goods += Random::randc(std::log(tier + 1) * 750, std::log(tier + 1) * 1250);
+	}
+	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
+		economy->demand.workers++;
+	}
 }

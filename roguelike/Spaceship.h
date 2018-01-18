@@ -59,3 +59,27 @@ public:
 	SCOUT_ACTION action = NONE;
 };
 
+class Warship : public Spaceship {
+public:
+	enum MILSHIP_ACTION {
+		NONE,
+		PATROL_BEGIN,
+		PATROLLING,
+		ATTACK_BEGIN,
+		ATTACKING,
+		DEFEND_BEGIN,
+		DEFENDING
+	};
+
+	Warship(StarSector* s, Faction* f);
+
+	virtual void update() override;
+
+	void patrol();
+
+	MILSHIP_ACTION action = NONE;
+
+private:
+	std::vector<StarSector*> _patrol_points;
+};
+
