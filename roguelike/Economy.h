@@ -1,5 +1,6 @@
 #pragma once
 #define TCOD_SDL2
+#define MAX_GVAL 9999
 
 #include <libtcod.hpp>
 

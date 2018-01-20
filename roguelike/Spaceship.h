@@ -1,5 +1,7 @@
 #pragma once
 
+#define FREIGHTER_MAX_CARGO 1000
+
 #include "Actor.h"
 #include "Economy.h"
 
@@ -25,7 +27,8 @@ public:
 	enum FREIGHTER_ACTION {
 		NONE,
 		PICKUP,
-		UNLOAD
+		UNLOAD,
+		IDLE
 	};
 	
 	Freighter(StarSector* s, Faction* f);
@@ -74,9 +77,7 @@ public:
 	Warship(StarSector* s, Faction* f);
 
 	virtual void update() override;
-
-	void patrol();
-
+	
 	MILSHIP_ACTION action = NONE;
 
 private:

@@ -233,22 +233,30 @@ void Economy::update() {
 	}
 	construct_buildings();
 
-	std::vector<int> sv = supply_values();
-	std::vector<int> dv = demand_values();
+	std::vector<int> sv = supply.get_vals();
+	std::vector<int> dv = demand.get_vals();
 
-	// Make demand go down if supply outnumbers demand
+	// Make demand go down
 	for (int i = 0; i < sv.size(); i++) {
-		if (sv[i] > dv[i] && dv[i] > 0) {
-			dv[i] -= std::ceil(std::log(sv[i]) - dv[i]);
-		}
-		// Set to zero if negative
+		dv[i] -= (sv[i] / 6) * sv[i];
+		
+		// Constraints
 		if (sv[i] < 0) {
 			sv[i] = 0;
 		}
+		if (dv[i] < 0) {
+			dv[i] = 0;
+		}
+		if (sv[i] > MAX_GVAL) {
+			sv[i] = MAX_GVAL;
+		}
+		if (dv[i] > MAX_GVAL) {
+			dv[i] = MAX_GVAL;
+		}
 	}
 
-	goods_change(SUPPLY, sv);
-	goods_change(DEMAND, dv);
+	supply.set_vals(sv);
+	demand.set_vals(dv);
 }
 
 void Economy::print_values() {
@@ -430,6 +438,9 @@ void Buildings::Infrastructure::update() {
 		economy->supply.food += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
 		economy->supply.water += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
 		economy->supply.air += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		economy->supply.luxury_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		economy->supply.consumer_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;

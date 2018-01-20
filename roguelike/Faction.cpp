@@ -64,6 +64,14 @@ Faction::~Faction() {
 	
 	for (Actor* a : _owned_tiles) {
 		a->set_bcolor(Random::one_to_sixty_four(Random::generator), 0, Random::one_to_sixty_four(Random::generator));
+		if (a->get_type() == typeid(Space).name()) {
+			Space* t = dynamic_cast<Space*>(a);
+			t->faction = nullptr;
+		}
+		else if (a->get_type() == typeid(StarSector).name()) {
+			StarSector* t = dynamic_cast<StarSector*>(a);
+			t->faction = nullptr;
+		}
 	}
 
 	std::cout << "Number of factions: " << _factions.size() << std::endl;
@@ -358,13 +366,30 @@ void Faction::simulate_ships() {
 		if (s->get_type() == typeid(Freighter).name()) {
 			Freighter* f = dynamic_cast<Freighter*>(s);
 			if (f->action == Freighter::NONE) {
-				for (StarSector* ss : _ssv) {
-					if (ss->economy.demand > 0) {
-						for (StarSector* ss2 : _ssv) {
-							if (ss2->economy.supply > ss->economy.demand) {
-								f->route(ss2, ss, ss->economy.demand);
+				for (StarSector* target : _ssv) {
+					if (target->economy.demand > 0) {
+						for (StarSector* donor : _ssv) {
+							if (donor == target) {
+								continue;
+							}
+							
+							auto v1 = target->economy.supply.get_vals();
+							auto v2 = donor->economy.supply.get_vals();
+							
+							for (int i = 0; i < v1.size(); i++) {
+								if (v2[i] > v1[i]) {
+									f->route(donor, target, target->economy.demand);
+									break;
+								}
+							}
+
+							if (f->action != Freighter::NONE) {
+								break;
 							}
 						}
+					}
+					if (f->action != Freighter::NONE) {
+						break;
 					}
 				}
 			}

@@ -114,7 +114,17 @@ void Freighter::update() {
 void Freighter::route(StarSector* start, StarSector* end, Economy::Goods g) {
 	load_dest = start;
 	unload_dest = end;
+	
+	auto v = g.get_vals();
+	for (int i = 0; i < v.size(); i++) {
+		if (v[i] > FREIGHTER_MAX_CARGO) {
+			v[i] = FREIGHTER_MAX_CARGO;
+		}
+	}
+	g.set_vals(v);
+
 	_willpickup = g;
+	
 	path_to_location(start->get_world_pos()[0], start->get_world_pos()[1]);
 	action = PICKUP;
 }
@@ -188,8 +198,4 @@ void Warship::update() {
 			}
 		}
 	}
-}
-
-void Warship::patrol() {
-	action = PATROL_BEGIN;
 }
