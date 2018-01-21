@@ -290,6 +290,7 @@ bool Economy::build_building(Building* b) {
 	for (int i = 0; i < supply.get_vals().size(); i++) {
 		if (s[i] < c[i]) {
 		//	std::cout << "Aborted building building: Insufficient materials\n";
+			delete b;
 			return false;
 		}
 	}
@@ -395,7 +396,7 @@ void Buildings::FarmingComplex::update() {
 Buildings::MiningComplex::MiningComplex(Economy* e) : Economy::Building(e) {
 	name = "Mining Complex";
 	initial = "MC";
-	color = TCODColor::blue;
+	color = TCODColor::orange;
 	cost.industrial_goods = 500;
 }
 
@@ -417,7 +418,14 @@ Buildings::IndustrialComplex::IndustrialComplex(Economy* e) : Economy::Building(
 
 void Buildings::IndustrialComplex::update() {
 	if (economy->supply.workers / std::log(tier + 1) > 1) {
-		economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 500, std::log(tier + 1) * 1000);
+		int minus = Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		if (economy->supply.minerals - minus > 0) {
+			economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 500, std::log(tier + 1) * 1000);
+			economy->supply.minerals -= minus;
+		}
+		else {
+			economy->demand.minerals++;
+		}
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;
@@ -438,9 +446,9 @@ void Buildings::Infrastructure::update() {
 		economy->supply.food += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
 		economy->supply.water += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
 		economy->supply.air += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
-		economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
-		economy->supply.luxury_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
-		economy->supply.consumer_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		economy->supply.industrial_goods += Random::randc(std::log(tier + 1) * 5, std::log(tier + 1) * 10);
+		economy->supply.luxury_goods += Random::randc(std::log(tier + 1) * 5, std::log(tier + 1) * 10);
+		economy->supply.consumer_goods += Random::randc(std::log(tier + 1) * 5, std::log(tier + 1) * 10);
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;
@@ -469,7 +477,38 @@ Buildings::MIC::MIC(Economy* e) : Economy::Building(e) {
 
 void Buildings::MIC::update() {
 	if (economy->supply.workers / std::log(tier + 1) > 1) {
-		economy->supply.military_goods += Random::randc(std::log(tier + 1) * 750, std::log(tier + 1) * 1250);
+		int minus = Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		if (economy->supply.industrial_goods - minus > 0) {
+			economy->supply.military_goods += Random::randc(std::log(tier + 1) * 750, std::log(tier + 1) * 1250);
+			economy->supply.industrial_goods -= minus;
+		}
+		else {
+			economy->demand.industrial_goods++;
+		}
+	}
+	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
+		economy->demand.workers++;
+	}
+}
+
+Buildings::Commercial::Commercial(Economy* e) : Economy::Building(e) {
+	name = "Commercial District";
+	initial = "C";
+	color = TCODColor::blue;
+	cost.industrial_goods = 500;
+}
+
+void Buildings::Commercial::update() {
+	if (economy->supply.workers / std::log(tier + 1) > 1) {
+		int minus = Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+		if (economy->supply.industrial_goods - minus > 0) {
+			economy->supply.consumer_goods += Random::randc(std::log(tier + 1) * 250, std::log(tier + 1) * 500);
+			economy->supply.luxury_goods += Random::randc(std::log(tier + 1) * 100, std::log(tier + 1) * 200);
+			economy->supply.industrial_goods -= minus;
+		}
+		else {
+			economy->demand.industrial_goods++;
+		}
 	}
 	else if (economy->demand.workers < economy->supply.food / 2 + economy->supply.water / 2) {
 		economy->demand.workers++;

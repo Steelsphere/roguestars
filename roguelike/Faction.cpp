@@ -297,28 +297,77 @@ void Faction::reinit_factions() {
 
 void Faction::decide_buildings() {
 	for (StarSector* ss : _ssv) {
+		// Priority 0
+		
+		int priority1_rand = Random::randc(0, 2);
+		int priority3_rand = Random::randc(0, 1);
+
 		if (!ss->economy.has_building("Infrastructure")) {
 			if (ss->economy.build_building(new Buildings::Infrastructure(&ss->economy))) {
 				std::cout << _name << " has started building Infrastructure in " << ss->alias << std::endl;
 			}
 			else {
-				ss->economy.demand += Buildings::Infrastructure(&ss->economy).cost;
+				ss->economy.demand += Buildings::Infrastructure(&ss->economy).cost / 4;
 			}
 		}
-		else if(!ss->economy.has_building("Space Port")) {
+		
+		// Priority 1
+		
+		else if (!ss->economy.has_building("Farming Complex") && priority1_rand == 0) {
+			if (ss->economy.build_building(new Buildings::FarmingComplex(&ss->economy))) {
+				std::cout << _name << " has started building Farming Complex in " << ss->alias << std::endl;
+			}
+			else {
+				ss->economy.demand += Buildings::FarmingComplex(&ss->economy).cost / 4;
+			}
+		}
+
+		else if (!ss->economy.has_building("Mining Complex") && priority1_rand == 1) {
+			if (ss->economy.build_building(new Buildings::MiningComplex(&ss->economy))) {
+				std::cout << _name << " has started building Mining Complex in " << ss->alias << std::endl;
+			}
+			else {
+				ss->economy.demand += Buildings::MiningComplex(&ss->economy).cost / 4;
+			}
+		}
+
+		else if (!ss->economy.has_building("Industrial Complex") && priority1_rand == 2) {
+			if (ss->economy.build_building(new Buildings::IndustrialComplex(&ss->economy))) {
+				std::cout << _name << " has started building Industrial Complex in " << ss->alias << std::endl;
+			}
+			else {
+				ss->economy.demand += Buildings::IndustrialComplex(&ss->economy).cost / 4;
+			}
+		}
+
+		// Priority 2
+		
+		else if (!ss->economy.has_building("Commercial District")) {
+			if (ss->economy.build_building(new Buildings::Commercial(&ss->economy))) {
+				std::cout << _name << " has started building Commercial District in " << ss->alias << std::endl;
+			}
+			else {
+				ss->economy.demand += Buildings::Commercial(&ss->economy).cost / 4;
+			}
+		}
+
+		// Priority 3
+
+		else if(!ss->economy.has_building("Space Port") && priority3_rand == 0) {
 			if (ss->economy.build_building(new Buildings::SpacePort(&ss->economy))) {
 				std::cout << _name << " has started building Space Port in " << ss->alias << std::endl;
 			}
 			else {
-				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost;
+				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost / 4;
 			}
 		}
-		else if (!ss->economy.has_building("Military Industrial Complex")) {
+		
+		else if (!ss->economy.has_building("Military Industrial Complex") && priority3_rand == 1) {
 			if (ss->economy.build_building(new Buildings::MIC(&ss->economy))) {
 				std::cout << _name << " has started building Military Industrial Complex in " << ss->alias << std::endl;
 			}
 			else {
-				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost;
+				ss->economy.demand += Buildings::SpacePort(&ss->economy).cost / 4;
 			}
 		}
 	}

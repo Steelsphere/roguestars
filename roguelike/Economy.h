@@ -300,4 +300,11 @@ namespace Buildings {
 
 		virtual void update() override;
 	};
+
+	class Commercial : public Economy::Building {
+	public:
+		Commercial(Economy* e);
+
+		virtual void update() override;
+	};
 }
