@@ -1018,3 +1018,24 @@ void GalaxySizeSelection::draw(bool force) {
 		}
 	}
 }
+
+SimulationScreen::SimulationScreen() : GUI(0, 0, GameObjects::screen_width, GameObjects::screen_height, std::vector<Text>()) {
+	Text info0 = { 5, _height - 8, 20, 1, "-----Info-----", TCODColor::white };
+	Text info1 = { 5, _height - 7, 20, 1, "Simulating...", TCODColor::white };
+	Text info2 = { 5, _height - 6, 90, 1, "", TCODColor::white };
+	Text info3 = { 5, _height - 5, 90, 1, "", TCODColor::white };
+	_text.push_back(info0);
+	_text.push_back(info1);
+	_text.push_back(info2);
+	_text.push_back(info3);
+	
+	_type = FILLED_BORDERED_BACKGROUND;
+	_transparency = 0;
+
+	draw(true);
+}
+
+void SimulationScreen::set_text(int idx, std::string& text) {
+	_text[idx].str = text;
+	draw(true);
+}

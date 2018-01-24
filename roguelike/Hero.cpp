@@ -26,7 +26,7 @@ Hero::Hero(int x, int y, Faction* f) : Actor(x, y, 0) {
 }
 
 Hero::~Hero() {
-
+	delete_actor();
 }
 
 void Hero::leave_playarea() {

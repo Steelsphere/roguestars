@@ -252,3 +252,10 @@ public:
 
 	virtual void draw(bool force = false) override;
 };
+
+class SimulationScreen : public GUI {
+public:
+	SimulationScreen();
+
+	void set_text(int idx, std::string& text);
+};

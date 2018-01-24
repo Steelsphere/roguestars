@@ -9,6 +9,7 @@
 #include "Faction.h"
 
 #include <filesystem>
+#include <thread>
 
 #define NO_SAVE
 
@@ -348,9 +349,11 @@ void Game::startup_new_game() {
 	_gui_map->draw(true);
 	TCODConsole::root->flush();
 
+	delete _loadingscreen;
+	TCODConsole::root->clear();
+	TCODConsole::root->flush();
 	generate_factions();
 	
-	delete _loadingscreen;
 	delete _gui_map;
 	delete _log;
 
@@ -913,7 +916,36 @@ void Game::generate_factions() {
 	// Simulate
 	std::cout << "Beginning faction simulation for " << simturns << " turns!\n";
 	Faction::save_faction_map("Data\\anim\\0.png", _level->get_size());
+	_sgui = new SimulationScreen;
 
+	_simturn = 0;
+	_sim = true;
+	
+	// Worker thread - simulation
+	std::thread t1(&Game::simulation_sim_thread, this, simturns);
+	
+	// Main thread - update gui
+	while (_sim) {
+		
+		_sgui->set_text(2, "Simulating the galaxy, turns simulated:" + std::to_string(_simturn) + "/" + std::to_string(simturns));
+		_sgui->set_text(3, _time.format_time("Date:%M/%D/%Y %H:%m:%S"));
+		
+		for (Faction* f : Faction::get_factions()) {
+			for (Actor* a : f->get_owned_tiles()) {
+				a->set_bcolor_obj(f->get_color());
+			}
+		}
+		_gui_map->update_map(_level, true);
+		_gui_map->draw(true);
+		GameObjects::log->draw(true);
+
+		TCODConsole::root->flush();
+		
+	}
+
+	t1.join();
+
+	/*
 	for (int i = 0; i < simturns; i++) {
 		for (Faction* f : Faction::get_factions()) {
 			f->simulate();
@@ -921,8 +953,8 @@ void Game::generate_factions() {
 			
 			// Update loading screen
 			if (i % 5 == 0) {
-				_loadingscreen->clear_working_area();
-				_loadingscreen->set_text("Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns) + _time.format_time(" Date:%M/%D/%Y %H:%m:%S"));
+				_sgui->set_text(2, "Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns));
+				_sgui->set_text(3, _time.format_time("Date:%M/%D/%Y %H:%m:%S"));
 				_gui_map->draw(true);
 				GameObjects::log->draw(true);
 				TCODConsole::root->flush();
@@ -959,7 +991,7 @@ void Game::generate_factions() {
 			_time.pass_time(86400 + Random::randc(-250, 250));
 		}
 	}
-
+	*/
 	// Set color of tiles on the level
 	for (Faction* f : Faction::get_factions()) {
 		for (Actor* a : f->get_owned_tiles()) {
@@ -998,6 +1030,7 @@ void Game::generate_factions() {
 		_player->set_alias(player_alias_tb->get_value());
 	}
 
+	delete _sgui;
 	delete player_alias_tb;
 }
 
@@ -1111,4 +1144,70 @@ void Game::mouse_move() {
 	}
 
 	GameObjects::update = true;
+}
+
+void Game::simulation_sim_thread(int simturns) {
+	std::vector<Actor*> spawnpoints;
+	std::vector<Actor*> actors = (*_level->get_actors());
+
+	for (Actor* a : actors) {
+		if (a->get_name() == "Star Sector") {
+			spawnpoints.push_back(a);
+		}
+	}
+	
+	for (int i = 1; i <= simturns; i++) {
+		for (Faction* f : Faction::get_factions()) {
+			f->simulate();
+			std::cout << i << "/" << simturns << "\r";
+			_simturn = i;
+
+			// Spawn new nations
+			if (Random::randc(0, 4000) == 1) {
+				int r = Random::randc(0, spawnpoints.size() - 1);
+				new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
+
+				spawnpoints.erase(spawnpoints.begin() + r);
+				if (spawnpoints.size() == 0) {
+					break;
+				}
+			}
+
+			//			if (i % 1000 == 0) {
+			//				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
+			//			}
+
+			_time.pass_time(86400 + Random::randc(-250, 250));
+		}
+	}
+
+	_sim = false;
+}
+
+void Game::simulation_gui_thread(int simturns) {
+	
+	// Update loading screen
+	
+	while (true) {
+		if (_simturn % 5 == 0) {
+			_sgui->set_text(2, "Simulating the galaxy, turns simulated:" + std::to_string(_simturn) + "/" + std::to_string(simturns));
+			_sgui->set_text(3, _time.format_time("Date:%M/%D/%Y %H:%m:%S"));
+			_gui_map->draw(true);
+			GameObjects::log->draw(true);
+			TCODConsole::root->flush();
+		}
+
+		// Update map
+		if (_simturn % 25 == 0) {
+			for (Faction* f : Faction::get_factions()) {
+				for (Actor* a : f->get_owned_tiles()) {
+					a->set_bcolor_obj(f->get_color());
+				}
+			}
+			_gui_map->update_map(_level, true);
+			_gui_map->draw(true);
+
+			TCODConsole::root->flush();
+		}
+	}
 }

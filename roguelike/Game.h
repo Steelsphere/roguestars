@@ -121,10 +121,15 @@ public:
 
 	void selection_game_loop(SelectionBox* gui);
 
+	void simulation_gui_thread(int simturns);
+
+	void simulation_sim_thread(int simturns);
+
 private:
 	
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
-	int _galaxy_id = 0; int _starsector_id = 0; int _solarsystem_id = 0; int _world_id = 0;
+	int _galaxy_id = 0; int _starsector_id = 0; int _solarsystem_id = 0; int _world_id = 0; int _simturn = 0;
+	bool _sim = false;
 	
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
@@ -155,4 +160,5 @@ private:
 	InventoryPanel* _inv_panel = nullptr;
 	Map* _gui_map = nullptr;
 	LoadingScreen* _loadingscreen = nullptr;
+	SimulationScreen* _sgui = nullptr;
 };
