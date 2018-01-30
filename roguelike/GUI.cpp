@@ -231,11 +231,11 @@ void Status::draw(bool force) {
 			}
 			if (sector != nullptr) {
 				if (_si == nullptr) {
-					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
+					_si = new SectorInfo(_x - 26, _y, 26, 12, sector);
 				}
 				else if (sector != _si->get_sector() || GameObjects::new_turn) {
 					delete _si;
-					_si = new SectorInfo(_x - 25, _y, 25, 12, sector);
+					_si = new SectorInfo(_x - 26, _y, 26, 12, sector);
 				}
 			}
 			else if (_si != nullptr) {
@@ -844,6 +844,9 @@ void SectorInfo::update() {
 	Text gtitle = { 1, 1, _width, 1, "-----Goods-----", TCODColor::white };
 	_text.push_back(gtitle);
 
+	std::vector<int> trend_icon_pos_s;
+	std::vector<int> trend_icon_pos_d;
+
 	// Goods
 	int i = 0;
 	std::vector<int> supply = _sector->economy.supply.get_vals();
@@ -852,9 +855,15 @@ void SectorInfo::update() {
 		
 		Text good = { 1, y, _width, 1, names[i], TCODColor::white};
 		good.str += ":";
-		good.str += "S:";
+		good.str += "S :";
+
+		trend_icon_pos_s.push_back(good.str.size() - 1);
+
 		good.str += std::to_string(supply[i]);
-		good.str += "|D:";
+		good.str += "|D :";
+
+		trend_icon_pos_d.push_back(good.str.size() - 1);
+
 		good.str += std::to_string(demand[i]);
 		_text.push_back(good);
 
@@ -864,6 +873,28 @@ void SectorInfo::update() {
 		}
 	}
 	
+	// Trend icons
+	std::vector<Text> buffer;
+	int y = 2;
+	i = 0;
+	for (Text t : _text) {
+		if (t.y == y) {
+			Text icon1 = { trend_icon_pos_s[i], y, 1, 1, std::string(1, 30), TCODColor::green };
+			Text icon2 = { trend_icon_pos_d[i], y, 1, 1, std::string(1, 31), TCODColor::red };
+			buffer.push_back(icon1);
+			buffer.push_back(icon2);
+			y++;
+			i++;
+		}
+		else {
+			continue;
+		}
+	}
+
+	for (Text t : buffer) {
+		_text.push_back(t);
+	}
+
 	// Buildings
 
 	int by = _text.back().y + 1;

@@ -945,53 +945,6 @@ void Game::generate_factions() {
 
 	t1.join();
 
-	/*
-	for (int i = 0; i < simturns; i++) {
-		for (Faction* f : Faction::get_factions()) {
-			f->simulate();
-			std::cout << i << "/" << simturns << "\r";
-			
-			// Update loading screen
-			if (i % 5 == 0) {
-				_sgui->set_text(2, "Simulating the galaxy, turns simulated:" + std::to_string(i) + "/" + std::to_string(simturns));
-				_sgui->set_text(3, _time.format_time("Date:%M/%D/%Y %H:%m:%S"));
-				_gui_map->draw(true);
-				GameObjects::log->draw(true);
-				TCODConsole::root->flush();
-			}
-
-			// Update map
-			if (i % 25 == 0) {
-				for (Faction* f : Faction::get_factions()) {
-					for (Actor* a : f->get_owned_tiles()) {
-						a->set_bcolor_obj(f->get_color());
-					}
-				}
-				_gui_map->update_map(_level, true);
-				_gui_map->draw(true);
-
-				TCODConsole::root->flush();
-			}
-			
-			// Spawn new nations
-			if (Random::randc(0, 4000) == 1) {
-				int r = Random::randc(0, spawnpoints.size() - 1);
-				new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
-				
-				spawnpoints.erase(spawnpoints.begin() + r);
-				if (spawnpoints.size() == 0) {
-					break;
-				}
-			}
-
-//			if (i % 1000 == 0) {
-//				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
-//			}
-
-			_time.pass_time(86400 + Random::randc(-250, 250));
-		}
-	}
-	*/
 	// Set color of tiles on the level
 	for (Faction* f : Faction::get_factions()) {
 		for (Actor* a : f->get_owned_tiles()) {
