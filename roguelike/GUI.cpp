@@ -711,20 +711,20 @@ TileInfo::TileInfo(int x, int y, int w, int h, Player* p) : GUI(x, y, w, h, std:
 	Text title = { 1, 0, w, 1, "Tile", TCODColor::red };
 	
 	Text tname = { 1, 1, w - 2, 1, "Name: %cTest%c", TCODColor::red, true };
-	Text tdesc = { 1, 2, w - 2, 1, "Description: ", TCODColor::white, true };
-	Text tfact = { 1, 3, w - 2, 1, "Faction: ", TCODColor::white, true };
-	Text tappr = { 1, 4, w - 2, 1, "Appearance: ", TCODColor::white, true };
-	Text timpa = { 1, 5, w - 2, 1, "Impassable: ", TCODColor::white, true };
-	Text ttran = { 1, 6, w - 2, 1, "Transparent: ", TCODColor::white, true };
+	Text tdesc = { 1, 2, w - 2, 3, "Description: ", TCODColor::white, true };
+	Text tfact = { 1, 5, w - 2, 2, "Faction: ", TCODColor::white, true };
+//	Text tappr = { 1, 4, w - 2, 1, "Appearance: ", TCODColor::white, true };
+//	Text timpa = { 1, 5, w - 2, 1, "Impassable: ", TCODColor::white, true };
+//	Text ttran = { 1, 6, w - 2, 1, "Transparent: ", TCODColor::white, true };
 
 	_text.push_back(title);
 
 	_text.push_back(tname);
 	_text.push_back(tdesc);
 	_text.push_back(tfact);
-	_text.push_back(tappr);
-	_text.push_back(timpa);
-	_text.push_back(ttran);
+//	_text.push_back(tappr);
+//	_text.push_back(timpa);
+//	_text.push_back(ttran);
 
 	_transparency = 0.9f;
 	_type = FILLED_BORDERED_BACKGROUND;
@@ -737,9 +737,9 @@ void TileInfo::update() {
 		_text[1].str = "Name: ";
 		_text[2].str = "Description: ";
 		_text[3].str = "Faction: ";
-		_text[4].str = "Appearance: ";
-		_text[5].str = "Impassable: ";
-		_text[6].str = "Transparent: ";
+	//	_text[4].str = "Appearance: ";
+	//	_text[5].str = "Impassable: ";
+	//	_text[6].str = "Transparent: ";
 	}
 	else {
 		Actor* a = v[v.size() - 2];
@@ -758,21 +758,29 @@ void TileInfo::update() {
 		if (f != nullptr) {
 			_text[3].str = "Faction: " + std::string("%c") + f->get_name() + std::string("%c");
 			_text[3].color = f->get_color();
-
+			/*
 			if (_text[3].str.length() > _text[3].w - 2) {
 				while (_text[3].str.length() > _text[3].w - 2) {
 					_text[3].str.pop_back();
 				}
 				_text[3].str.append("%c");
 			}
-		
+			*/
 		}
 		else {
 			_text[3].str = "Faction: None";
 			_text[3].color = TCODColor::white;
 		}
+
+		if (a->get_name() != "Space") {
+			_text[2].str = "Description: " + GameObjects::get_description(a);
+		}
+		else {
+			_text[2].str = "Description: ";
+		}
 //		_text[4].str = "Appearance: " + std::string("%c") + a->get_char() + std::string("%c");
 //		_text[4].color = a->get_color_obj();
+		/*
 		if (a->is_impassable()) {
 			_text[5].str = "Impassable: %cTrue%c";
 			_text[5].color = TCODColor::green;
@@ -789,6 +797,7 @@ void TileInfo::update() {
 			_text[6].str = "Transparent: %False%c";
 			_text[6].color = TCODColor::red;
 		}
+		*/
 	}
 }
 
@@ -874,13 +883,48 @@ void SectorInfo::update() {
 	}
 	
 	// Trend icons
+	std::vector<int> trendsupply = _sector->economy.trend(Economy::SUPPLY).get_vals();
+	std::vector<int> trenddemand = _sector->economy.trend(Economy::DEMAND).get_vals();
+	
 	std::vector<Text> buffer;
 	int y = 2;
 	i = 0;
 	for (Text t : _text) {
 		if (t.y == y) {
-			Text icon1 = { trend_icon_pos_s[i], y, 1, 1, std::string(1, 30), TCODColor::green };
-			Text icon2 = { trend_icon_pos_d[i], y, 1, 1, std::string(1, 31), TCODColor::red };
+			char s1 = 0;
+			TCODColor s1_col = TCODColor::black;
+
+			char d2 = 0;
+			TCODColor d2_col = TCODColor::black;
+			
+			if (trendsupply[i] > 0) {
+				s1 = 30;
+				s1_col = TCODColor::green;
+			}
+			else if (trendsupply[i] < 0) {
+				s1 = 31;
+				s1_col = TCODColor::red;
+			}
+			else {
+				s1 = '-';
+				s1_col = TCODColor::yellow;
+			}
+
+			if (trenddemand[i] > 0) {
+				d2 = 30;
+				d2_col = TCODColor::green;
+			}
+			else if (trenddemand[i] < 0) {
+				d2 = 31;
+				d2_col = TCODColor::red;
+			}
+			else {
+				d2 = '-';
+				d2_col = TCODColor::yellow;
+			}
+			
+			Text icon1 = { trend_icon_pos_s[i], y, 1, 1, std::string(1, s1), s1_col };
+			Text icon2 = { trend_icon_pos_d[i], y, 1, 1, std::string(1, d2), d2_col };
 			buffer.push_back(icon1);
 			buffer.push_back(icon2);
 			y++;

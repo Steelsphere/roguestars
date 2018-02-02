@@ -250,12 +250,17 @@ public:
 
 	std::vector<Building*> underconstruction_buildings;
 
+	std::vector<Goods> supply_history;
+	std::vector<Goods> demand_history;
+
 	bool build_building(Building* b);
 	bool build_ship(Spaceship* s, Faction* f);
 
 	void construct_buildings();
 
 	bool has_building(const std::string& type);
+
+	Goods trend(SUPPLY_TYPES type);
 };
 
 namespace Buildings {

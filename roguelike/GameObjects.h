@@ -52,5 +52,7 @@ public:
 	static bool is_directory_empty(const std::string& path);
 
 	static int num_files_in_directory(const std::string& path);
+
+	static std::string get_description(Actor* a);
 };
 

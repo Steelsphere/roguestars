@@ -257,6 +257,16 @@ void Economy::update() {
 
 	supply.set_vals(sv);
 	demand.set_vals(dv);
+
+	// Update history
+	supply_history.push_back(supply);
+	demand_history.push_back(demand);
+	if (supply_history.size() > 5) {
+		supply_history.erase(supply_history.begin());
+	}
+	if (demand_history.size() > 5) {
+		demand_history.erase(demand_history.begin());
+	}
 }
 
 void Economy::print_values() {
@@ -372,6 +382,25 @@ bool Economy::has_building(const std::string& name) {
 			return true;
 	}
 	return false;
+}
+
+Economy::Goods Economy::trend(Economy::SUPPLY_TYPES type) {
+	if (type == Economy::SUPPLY) {
+		if (supply_history.size() == 0) {
+			return Goods();
+		}
+		else {
+			return (supply - supply_history.front());
+		}
+	}
+	else if (type == Economy::DEMAND) {
+		if (demand_history.size() == 0) {
+			return Goods();
+		}
+		else {
+			return (demand - demand_history.front());
+		}
+	}
 }
 
 Economy::Building::Building(Economy* e) : economy(e)

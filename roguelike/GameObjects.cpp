@@ -87,3 +87,12 @@ Player* GameObjects::find_player(Level* level) {
 	}
 	throw "Player was not found!\n";
 }
+
+std::string GameObjects::get_description(Actor* a) {
+	if (a->get_type() == typeid(StarSector).name()) {
+		return "An area that stands out within the sea of stars";
+	}
+	else {
+		return "One of the many unsignificant objects in the universe";
+	}
+}
