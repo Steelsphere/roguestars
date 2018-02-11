@@ -54,5 +54,11 @@ public:
 	static int num_files_in_directory(const std::string& path);
 
 	static std::string get_description(Actor* a);
+
+	template <typename T>
+	static void replace_by(T*& a, T* b) {
+		delete a;
+		a = b;
+	}
 };
 

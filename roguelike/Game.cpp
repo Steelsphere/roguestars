@@ -11,7 +11,7 @@
 #include <filesystem>
 #include <thread>
 
-#define NO_SAVE
+//#define NO_SAVE
 
 Game::Game() 
 	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
@@ -205,7 +205,7 @@ void Game::update() {
 		}
 		
 		// Spawn new nations
-		if (Random::randc(0, 4000) == 1) {
+		if (Random::randc(0, 4000) == 1 && _level->get_type() == Level::GALAXY) {
 			// Find suitable spawn points
 			std::vector<Actor*> spawnpoints;
 
@@ -358,7 +358,9 @@ void Game::startup_new_game() {
 	delete _log;
 
 
-#ifndef NO_SAVE
+#ifndef NO_SAVE 
+	std::cout << "Saving is on\b";
+	
 	int num = 1;
 	for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
 		num++;

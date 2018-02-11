@@ -74,6 +74,30 @@ public:
 			set_vals(v);
 		}
 
+		void serialize(TCODZip* zip) {
+			zip->putInt(food);
+			zip->putInt(water);
+			zip->putInt(air);
+			zip->putInt(consumer_goods);
+			zip->putInt(industrial_goods);
+			zip->putInt(luxury_goods);
+			zip->putInt(military_goods);
+			zip->putInt(minerals);
+			zip->putInt(workers);
+		}
+
+		void deserialize(TCODZip* zip) {
+			food = zip->getInt();
+			water = zip->getInt();
+			air = zip->getInt();
+			consumer_goods = zip->getInt();
+			industrial_goods = zip->getInt();
+			luxury_goods = zip->getInt();
+			military_goods = zip->getInt();
+			minerals = zip->getInt();
+			workers = zip->getInt();
+		}
+
 		friend bool operator== (Goods &a1, Goods &a2);
 		friend bool operator!= (Goods &a1, Goods &a2);
 		friend Goods operator+ (Goods &a1, Goods &a2);
@@ -233,6 +257,9 @@ public:
 		std::string initial = "B";
 
 		TCODColor color = TCODColor::white;
+
+		virtual void serialize(TCODZip* zip);
+		virtual void deserialize(TCODZip* zip);
 	};
 	
 	~Economy();

@@ -51,6 +51,9 @@ public:
 	Faction* faction = nullptr;
 
 	void colonize(Faction* f);
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 };
 
 class StarSector : public TravelPoint {
@@ -119,12 +122,19 @@ public:
 
 	virtual void on_collide() override;
 	virtual void on_keypress_c() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 private:
 	bool _isopen = false;
 };
 
 class Space : public Actor {
 public:
+	Space() {}
 	Space(int x, int y);
 	Faction* faction = nullptr;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 };

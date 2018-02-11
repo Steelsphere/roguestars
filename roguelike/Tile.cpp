@@ -276,6 +276,15 @@ void TravelPoint::colonize(Faction* f) {
 	faction = f;
 }
 
+void TravelPoint::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(id);
+}
+
+void TravelPoint::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+}
+
 StarSector::StarSector(int x, int y, int z) : TravelPoint(x, y, z) {
 	_c = '*';
 	_fcolor = TCODColor::white;
@@ -513,10 +522,28 @@ void Door::on_keypress_c() {
 	}
 }
 
+void Door::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_isopen);
+}
+
+void Door::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_isopen = zip->getInt();
+}
+
 Space::Space(int x, int y) : Actor(x, y, 0) {
 	_c = 0;
 	_fcolor = TCODColor::black;
 	_bcolor = TCODColor::black;
 
 	_name = "Space";
+}
+
+void Space::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+}
+
+void Space::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
 }

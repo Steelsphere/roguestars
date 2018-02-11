@@ -2,6 +2,7 @@
 #include "Random.h"
 #include "Spaceship.h"
 #include "Faction.h"
+#include "GameObjects.h"
 
 #include <iostream>
 #include <string>
@@ -405,6 +406,18 @@ Economy::Goods Economy::trend(Economy::SUPPLY_TYPES type) {
 
 Economy::Building::Building(Economy* e) : economy(e)
 {}
+
+void Economy::Building::serialize(TCODZip * zip) {
+	cost.serialize(zip);
+	zip->putInt(tier);
+	zip->putString(name.c_str());
+	zip->putString(initial.c_str());
+	zip->putColor(&color);
+}
+
+void Economy::Building::deserialize(TCODZip * zip) {
+
+}
 
 Buildings::FarmingComplex::FarmingComplex(Economy* e) : Economy::Building(e) {
 	name = "Farming Complex";

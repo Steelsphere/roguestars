@@ -51,6 +51,7 @@ std::map<std::string, Actor*(*)()> GameObjects::type_map = {
 	{ typeid(Biome).name(), create_actor_instance<Biome> },
 	{ typeid(Door).name(), create_actor_instance<Door> },
 	{ typeid(Hero).name(), create_actor_instance<Hero> },
+	{ typeid(Space).name(), create_actor_instance<Space> },
 };
 
 bool GameObjects::file_in_filesystem(const std::string& path, const std::string& file) {

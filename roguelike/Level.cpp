@@ -440,6 +440,10 @@ Level* Level::load_level_file(std::string path) {
 			break;
 		}
 
+		if (GameObjects::type_map.count(typestring) == 0) {
+			throw std::runtime_error(typestring + " is unloadable");
+		}
+
 		Actor* actor = GameObjects::type_map[typestring]();
 
 		actor->deserialize(&zip);
