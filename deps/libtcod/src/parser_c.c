@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -930,4 +930,3 @@ TCOD_list_t TCOD_parser_get_list_property(TCOD_parser_t parser, const char *name
 	value=TCOD_get_property(parser,TCOD_TYPE_LIST|type,name);
 	return value ? value->list : empty_list;
 }
-

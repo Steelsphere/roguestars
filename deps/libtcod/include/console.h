@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -131,13 +131,6 @@ TCODLIB_API void TCOD_console_delete(TCOD_console_t console);
 TCODLIB_API void TCOD_console_credits(void);
 TCODLIB_API void TCOD_console_credits_reset(void);
 TCODLIB_API bool TCOD_console_credits_render(int x, int y, bool alpha);
-
-/* REXPaint support */
-TCODLIB_API TCOD_console_t TCOD_console_from_xp(const char *filename);
-TCODLIB_API bool TCOD_console_load_xp(TCOD_console_t con, const char *filename);
-TCODLIB_API bool TCOD_console_save_xp(TCOD_console_t con, const char *filename, int compress_level);
-TCODLIB_API TCOD_list_t TCOD_console_list_from_xp(const char *filename);
-TCODLIB_API bool TCOD_console_list_save_xp(TCOD_list_t console_list, const char *filename, int compress_level);
 #ifdef __cplusplus
 }
 #endif

@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -98,6 +98,9 @@
 #elif defined (__APPLE__) && defined (__MACH__)
 #  define TCOD_MACOSX
 #  define TCOD_GCC
+#  if __WORDSIZE == 64
+#    define TCOD_64BITS
+#  endif
 #endif
 
 /* unicode rendering functions support */
@@ -123,12 +126,10 @@
 #undef TCOD_IMAGE_SUPPORT
 #undef TCOD_OSUTIL_SUPPORT
 
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 #define TCOD_CONSOLE_SUPPORT
 #define TCOD_IMAGE_SUPPORT
 #define TCOD_OSUTIL_SUPPORT
-#else
-#define TCOD_BARE
 #endif
 
 /* int types */

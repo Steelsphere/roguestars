@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -167,8 +167,8 @@ public :
 		TCOD_EVENT_MOUSE_PRESS=8,
 		TCOD_EVENT_MOUSE_RELEASE=16,
 		TCOD_EVENT_MOUSE=TCOD_EVENT_MOUSE_MOVE|TCOD_EVENT_MOUSE_PRESS|TCOD_EVENT_MOUSE_RELEASE,
-		TCOD_EVENT_ANY=TCOD_EVENT_KEY|TCOD_EVENT_MOUSE,		
-	} TCOD_event_t; 
+		TCOD_EVENT_ANY=TCOD_EVENT_KEY|TCOD_EVENT_MOUSE,
+	} TCOD_event_t;
 	static TCOD_event_t TCODSystem::waitForEvent(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse, bool flush)
 	@C TCOD_event_t TCOD_sys_wait_for_event(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse, bool flush)
 	@Py sys_wait_for_event(eventMask,key,mouse,flush)
@@ -185,7 +185,7 @@ public :
 		TCOD_key_t key;
 		TCOD_mouse_t mouse;
 		TCOD_event_t ev = TCOD_sys_wait_for_event(TCOD_EVENT_ANY,&key,&mouse,true);
-		if ( ev == TCOD_EVENT_KEY_PRESS && key.c == 'i' ) { ... open inventory ... }	
+		if ( ev == TCOD_EVENT_KEY_PRESS && key.c == 'i' ) { ... open inventory ... }
 	*/
 	static TCOD_event_t waitForEvent(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse, bool flush);
 
@@ -202,8 +202,8 @@ public :
 		TCOD_EVENT_MOUSE_PRESS=8,
 		TCOD_EVENT_MOUSE_RELEASE=16,
 		TCOD_EVENT_MOUSE=TCOD_EVENT_MOUSE_MOVE|TCOD_EVENT_MOUSE_PRESS|TCOD_EVENT_MOUSE_RELEASE,
-		TCOD_EVENT_ANY=TCOD_EVENT_KEY|TCOD_EVENT_MOUSE,		
-	} TCOD_event_t; 
+		TCOD_EVENT_ANY=TCOD_EVENT_KEY|TCOD_EVENT_MOUSE,
+	} TCOD_event_t;
 	static TCOD_event_t TCODSystem::checkForEvent(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse)
 	@C TCOD_event_t TCOD_sys_check_for_event(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse)
 	@Py sys_check_for_event(eventMask,key,mouse)
@@ -219,12 +219,12 @@ public :
 		TCOD_key_t key;
 		TCOD_mouse_t mouse;
 		TCOD_event_t ev = TCOD_sys_check_for_event(TCOD_EVENT_ANY,&key,&mouse);
-		if ( ev == TCOD_EVENT_KEY_PRESS && key.c == 'i' ) { ... open inventory ... }	
+		if ( ev == TCOD_EVENT_KEY_PRESS && key.c == 'i' ) { ... open inventory ... }
 	*/
 	static TCOD_event_t checkForEvent(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse);
 #endif
 
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 	/**
 	@PageName system_screenshots
 	@PageFather system
@@ -331,7 +331,7 @@ public :
 		    // do something with buf
 		    free(buf);
 		}
-	*/	
+	*/
 	static bool readFile(const char *filename, unsigned char **buf, size_t *size);
 	/**
 	@PageName system_filesystem
@@ -346,7 +346,7 @@ public :
 		TCODSystem::writeFile("myfile.dat",buf,size));
 	@CEx
 		TCOD_sys_write_file("myfile.dat",buf,size));
-	*/		
+	*/
 	static bool writeFile(const char *filename, unsigned char *buf, uint32_t size);
 	/**
 	@PageName system_sdlcbk
@@ -402,7 +402,7 @@ public :
 	@Param x,y,w,h Part of the root console you want to redraw even if nothing has changed in the console back/fore/char.
 	*/
 
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 	/**
 	@PageName system_misc
 	@PageFather system
@@ -483,7 +483,7 @@ public :
 	static void updateChar(int asciiCode, int fontx, int fonty,const TCODImage *img,int x,int y);
 #endif
 
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 	/**
 	@PageName system_misc
 	@FuncTitle Dynamically change libtcod's internal renderer

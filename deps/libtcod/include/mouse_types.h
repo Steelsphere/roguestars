@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -42,9 +42,9 @@ typedef struct {
   bool lbutton ; /* left button status */
   bool rbutton ; /* right button status */
   bool mbutton ; /* middle button status */
-  bool lbutton_pressed ; /* left button pressed event */ 
-  bool rbutton_pressed ; /* right button pressed event */ 
-  bool mbutton_pressed ; /* middle button pressed event */ 
+  bool lbutton_pressed ; /* left button pressed event */
+  bool rbutton_pressed ; /* right button pressed event */
+  bool mbutton_pressed ; /* middle button pressed event */
   bool wheel_up ; /* wheel up event */
   bool wheel_down ; /* wheel down event */
 } TCOD_mouse_t;

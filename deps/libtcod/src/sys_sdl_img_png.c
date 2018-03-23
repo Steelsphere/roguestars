@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -24,7 +24,7 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 
 #include <sys.h>
 
@@ -64,7 +64,7 @@ SDL_Surface *TCOD_sys_read_png(const char *filename) {
 	if ( bpp == 24 ) {
 		/* don't convert to 32 bits because libtcod's 24bits renderer is faster */
 		state.info_raw.colortype=LCT_RGB;
-	} else if (  bpp != 24 && bpp != 32 ) { 
+	} else if (  bpp != 24 && bpp != 32 ) {
 		/* paletted png. convert to 24 bits */
 		state.info_raw.colortype=LCT_RGB;
 		state.info_raw.bitdepth=8;
@@ -77,7 +77,7 @@ SDL_Surface *TCOD_sys_read_png(const char *filename) {
 		lodepng_state_cleanup(&state);
 		return NULL;
 	}
-		
+
 	/* create the SDL surface */
 	bitmap=TCOD_sys_get_surface(width,height,bpp==32);
 	source=image;
@@ -89,7 +89,7 @@ SDL_Surface *TCOD_sys_read_png(const char *filename) {
 	}
 
 	lodepng_state_cleanup(&state);
-	free(image);	
+	free(image);
 	return bitmap;
 }
 
@@ -119,4 +119,4 @@ void TCOD_sys_write_png(const SDL_Surface *surf, const char *filename) {
 	}
 }
 
-#endif /* TCOD_SDL2 */
+#endif /* TCOD_BARE */

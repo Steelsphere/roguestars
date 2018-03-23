@@ -17,5 +17,3 @@ Rogue Stars is a space simulation roguelike.
 ## How To Build
 
 Open the .sln file with Visual Studio, right click on the solution and select "Build Solution"
-
-Copy the files from essentialfiles into the build directory
