@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -32,12 +32,12 @@
 #define _TCOD_LEX_HPP
 
 #include "lex.h"
- 
+
 class TCODLIB_API TCODLex {
 public :
 	TCODLex();
-	TCODLex( const char **symbols, const char **keywords, const char *simpleComment="//", 
-		const char *commentStart="/*", const char *commentStop="*/", const char *javadocCommentStart="/**", 
+	TCODLex( const char **symbols, const char **keywords, const char *simpleComment="//",
+		const char *commentStart="/*", const char *commentStop="*/", const char *javadocCommentStart="/**",
 		const char *stringDelim="\"", int flags=TCOD_LEX_FLAG_NESTING_COMMENT);
 	~TCODLex();
 

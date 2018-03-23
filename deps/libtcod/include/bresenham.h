@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -47,10 +47,10 @@ typedef struct {
 	int e;
 	int deltax;
 	int deltay;
-	int origx; 
-	int origy; 
-	int destx; 
-	int desty; 
+	int origx;
+	int origy;
+	int destx;
+	int desty;
 } TCOD_bresenham_data_t;
 
 TCODLIB_API void TCOD_line_init_mt(int xFrom, int yFrom, int xTo, int yTo, TCOD_bresenham_data_t *data);

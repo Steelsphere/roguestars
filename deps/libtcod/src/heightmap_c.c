@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -89,7 +89,7 @@ void TCOD_heightmap_normalize(TCOD_heightmap_t *hm, float min, float max) {
 	for (y=0; y < hm->h; y++) {
 		for (x=0; x < hm->w; x++) {
 			*value = min + (*value - curmin) * invmax ;
-			value++;			
+			value++;
 		}
 	}
 }

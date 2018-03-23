@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -301,7 +301,7 @@ void TCOD_image_delete_internal(TCOD_image_t image) {
 		free(img->mipmaps);
 	}
 	if ( img->sys_img ) {
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 		TCOD_sys_delete_bitmap(img->sys_img);
 #endif
 	}
@@ -333,7 +333,7 @@ void TCOD_image_blit(TCOD_image_t image, TCOD_console_t console, float x, float 
 	if ( scalex == 0.0f || scaley == 0.0f || bkgnd_flag == TCOD_BKGND_NONE ) return;
 	TCOD_image_get_size(image,&width,&height);
 	rx = x - width * 0.5f;
-	ry = y - height * 0.5f; 
+	ry = y - height * 0.5f;
 	if ( scalex == 1.0f && scaley == 1.0f && angle == 0.0f && rx == ((int)rx) && ry == ((int)ry)) {
 		/* clip the image */
 		int ix = (int)(x - width*0.5f);

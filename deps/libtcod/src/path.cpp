@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -136,4 +136,3 @@ int TCODDijkstra::size() const {
 void TCODDijkstra::get(int index, int *x, int *y) const {
 	return TCOD_dijkstra_get(data,index,x,y);
 }
-

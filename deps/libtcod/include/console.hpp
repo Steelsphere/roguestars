@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -29,6 +29,7 @@
 #define _TCOD_CONSOLE_HPP
 
 #include "console.h"
+#include "console_rexpaint.h"
 
 #ifdef TCOD_CONSOLE_SUPPORT
 
@@ -1541,7 +1542,7 @@ public :
 		tcod.console.blit(offscreenConsole,0,0,40,20,libtcod.TCODConsole_root,5,5,255)
 	*/
 	TCODConsole(int w, int h);
-	
+
 	/**
 	@PageName console_offscreen
 	@FuncTitle Creating an offscreen console from a .asc or .apf file

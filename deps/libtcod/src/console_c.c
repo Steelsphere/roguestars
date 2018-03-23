@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -37,6 +37,7 @@
 #include <wctype.h>
 #endif
 
+#include <console_rexpaint.h>
 #include <noise.h>
 #include <mersenne.h>
 #include <libtcod_int.h>
@@ -60,7 +61,7 @@ TCOD_internal_context_t TCOD_ctx={
 	8,8,
 	"terminal.png","",
 	NULL,NULL,NULL,0,false,0,0,0,0,0,0,
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 	/* default renderer to use */
 	TCOD_RENDERER_GLSL,
 	NULL,
@@ -71,7 +72,7 @@ TCOD_internal_context_t TCOD_ctx={
 	{0},
 	/* window closed ? */
 	false,
-	/* mouse focus ? */ 
+	/* mouse focus ? */
 	false,
 	/* application active ? */
 	true,
@@ -118,7 +119,7 @@ bool TCOD_console_has_mouse_focus(void) {
 	return TCOD_ctx.app_has_mouse_focus;
 }
 
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 bool TCOD_console_is_active(void) {
 	return TCOD_ctx.app_is_active;
 }
@@ -1033,7 +1034,7 @@ void TCOD_console_init_root(int w, int h, const char*title, bool fullscreen, TCO
 		con->w=w;
 		con->h=h;
 		TCOD_ctx.root=con;
-#ifdef TCOD_SDL2
+#ifndef TCOD_BARE
 		TCOD_ctx.renderer=renderer;
 #endif
 		for (i=0; i < TCOD_COLCTRL_NUMBER; i++) {
@@ -1457,7 +1458,7 @@ static void TCOD_console_read_asc(TCOD_console_t con,FILE *f,int width, int heig
 		    back.b = fgetc(f);
 		    /* skip solid/walkable info */
 		    if ( version >= 0.3f ) {
-		    	fgetc(f); 
+		    	fgetc(f);
 		    	fgetc(f);
 		    }
 		    TCOD_console_put_char_ex(con,x,y,c,fore,back);
@@ -1568,17 +1569,17 @@ bool TCOD_console_save_asc(TCOD_console_t pcon, const char *filename) {
 		for(y = 0; y < con->h; y++) {
 			TCOD_color_t fore,back;
 			int c=TCOD_console_get_char(con,x,y);
-			fore=TCOD_console_get_char_foreground(con,x,y);			
+			fore=TCOD_console_get_char_foreground(con,x,y);
 			back=TCOD_console_get_char_background(con,x,y);
 			fputc(c, f);
-			fputc(fore.r,f);			
-			fputc(fore.g,f);			
-			fputc(fore.b,f);			
-			fputc(back.r,f);			
-			fputc(back.g,f);			
+			fputc(fore.r,f);
+			fputc(fore.g,f);
+			fputc(fore.b,f);
+			fputc(back.r,f);
+			fputc(back.g,f);
 			fputc(back.b,f);
 			fputc(0,f); /* solid */
-			fputc(1,f); /* walkable */			
+			fputc(1,f); /* walkable */
 		}
 	}
 	fclose(f);
@@ -1784,7 +1785,7 @@ bool TCOD_console_save_apf(TCOD_console_t pcon, const char *filename) {
 		/*  riff header*/
 		putFourCC("RIFF",fp);
 		fgetpos(fp,&posRiffSize);
-		put32(0,fp); 
+		put32(0,fp);
 
 			/* APF_ header */
 			putFourCC("apf ",fp);
@@ -1813,7 +1814,7 @@ bool TCOD_console_save_apf(TCOD_console_t pcon, const char *filename) {
 				imgDetailsSize = sizeof(uint32_t) + sizeof imgData;
 				putFourCC("imgd",fp);
 				put32(l32(imgDetailsSize),fp);
-				put32(l32(1),fp); 
+				put32(l32(1),fp);
 				putData((void*)&imgData,sizeof imgData,fp);
 				if (imgDetailsSize&1){
 					put8(0,fp);
@@ -1848,14 +1849,14 @@ bool TCOD_console_save_apf(TCOD_console_t pcon, const char *filename) {
 						for(y = 0; y < con->h; y++) {
 							TCOD_color_t fore,back;
 							int c=TCOD_console_get_char(con,x,y);
-							fore=TCOD_console_get_char_foreground(con,x,y);			
+							fore=TCOD_console_get_char_foreground(con,x,y);
 							back=TCOD_console_get_char_background(con,x,y);
 							put8(c, fp);
-							put8(fore.r,fp);			
-							put8(fore.g,fp);			
-							put8(fore.b,fp);			
-							put8(back.r,fp);			
-							put8(back.g,fp);			
+							put8(fore.r,fp);
+							put8(fore.g,fp);
+							put8(fore.b,fp);
+							put8(back.r,fp);
+							put8(back.g,fp);
 							put8(back.b,fp);
 						}
 					}
@@ -1896,7 +1897,7 @@ bool TCOD_console_load_apf(TCOD_console_t pcon, const char *filename) {
 	*/
 	uint32_t layr = fourCC("layr");
 	FILE* fp ;
-	Data data; 
+	Data data;
 	TCOD_console_data_t *con=pcon ? (TCOD_console_data_t *)pcon : TCOD_ctx.root;
 	TCOD_IFNOT(con != NULL) return false;
 

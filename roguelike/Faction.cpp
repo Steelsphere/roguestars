@@ -85,7 +85,7 @@ void Faction::simulate() {
 		std::vector<Actor*> ex_points;
 		
 		// Determine suitable expansion tiles
-		while (true) {
+		while (true && offset > -1) {
 			ex_points = _owned_tiles[offset]->get_adjacent_actors_vec();
 			for (int i = ex_points.size() - 1; i >= 0; i--) {
 				if (ex_points[i] == nullptr) {

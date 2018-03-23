@@ -1,5 +1,5 @@
 /*
-* libtcod 1.6.3
+* libtcod 1.6.4
 * Copyright (c) 2008,2009,2010,2012,2013,2016,2017 Jice & Mingos & rmtew
 * All rights reserved.
 *
@@ -34,5 +34,3 @@ void StatusBar::render() {
 		con->printRectEx(x+1,y,w,h,TCOD_BKGND_NONE,TCOD_LEFT,focus->tip);
 	}
 }
-
-
