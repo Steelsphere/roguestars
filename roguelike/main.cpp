@@ -2,7 +2,9 @@
 
 // Non-platform independent file
 
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 int main() {
 
@@ -14,12 +16,16 @@ int main() {
 	Game game = Game();
 	game.init();
 
+#ifdef _WIN32
 	try {
+#endif
 		game.start();
+#ifdef _WIN32
 	}
 	catch (std::exception& e) {
 		std::string error = std::string("An error has occured: ") + std::string(e.what());
 		MessageBox(NULL, error.c_str(), NULL, MB_ICONERROR);
 	}
+#endif
 	return 0;
 }

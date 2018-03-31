@@ -14,9 +14,9 @@ public:
 		int height = 0;
 		float biome_noise = 0.0f;
 	};
-	
+
 	World();
-	
+
 	World(int size);
 
 	~World();
@@ -56,7 +56,7 @@ private:
 	std::vector<Level::LEVEL_TYPE> cold_biomes = {
 		Level::SNOWY_TAIGA,
 	};
-	
+
 	int _width, _height;
 	int _numlevels = 0;
 	int _temperature = 250;
@@ -66,4 +66,3 @@ private:
 	FastNoise _terrain_n;
 	FastNoise _biome_n;
 };
-

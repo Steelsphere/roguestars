@@ -2,21 +2,20 @@
 #define TCOD_SDL2
 #include <random>
 
-class Random
-{
+class Random {
 public:
 	static std::random_device device;
-	
+
 	static std::mt19937_64 generator;
-	
+
 	static std::uniform_int_distribution<int> random;
 
 	static std::uniform_int_distribution<int> one_to_four;
-	
+
 	static std::uniform_int_distribution<int> big_number;
-	
+
 	static std::uniform_int_distribution<int> one_to_sixteen;
-	
+
 	static std::uniform_int_distribution<int> coinflip;
 
 	static std::uniform_int_distribution<int> one_to_thirty_two;

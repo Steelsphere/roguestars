@@ -35,13 +35,12 @@ public:
 		NONE,
 		INFO_VIEWER_OPEN,
 	};
-	
-	
+
 	GameEvent();
 	~GameEvent();
 
 	static GAME_EVENT get_event() { return _currevent; }
-	
+
 	static GAME_EVENT get_last_event() { return _lastevent; }
 
 	static void set_event(GAME_EVENT ev) { if (!_locked) { _currevent = ev; _lastevent = ev; } }
@@ -60,4 +59,3 @@ private:
 	static bool _locked;
 	static int _param;
 };
-

@@ -30,7 +30,7 @@ public:
 		UNLOAD,
 		IDLE
 	};
-	
+
 	Freighter(StarSector* s, Faction* f);
 
 	virtual void update() override;
@@ -77,10 +77,9 @@ public:
 	Warship(StarSector* s, Faction* f);
 
 	virtual void update() override;
-	
+
 	MILSHIP_ACTION action = NONE;
 
 private:
 	std::vector<StarSector*> _patrol_points;
 };
-

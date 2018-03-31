@@ -4,6 +4,7 @@
 #include "GameObjects.h"
 #include "Structure.h"
 #include "Character.h"
+#include "Benchmark.h"
 
 #include <fstream>
 #include <cstdlib>
@@ -19,10 +20,10 @@ Level::~Level() {
 		delete _actors[i];
 	}
 	delete _fovmap;
-	
+
 	_actors.~vector();
 	Actor::get_map()->~vector();
-	
+
 	(*Character::get_chbuff()).clear();
 	Actor::set_buffer(nullptr);
 	Actor::set_map(nullptr);
@@ -35,7 +36,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 
 	_noise.SetSeed(time(NULL));
 	_noise.SetNoiseType(FastNoise::PerlinFractal);
-	
+
 	Actor::set_buffer(&_actors);
 	Actor::set_map(&_map);
 
@@ -47,9 +48,8 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	for (int i = 0; i < _map.size(); i++) {
 		_map[i].resize(_width);
 	}
-	
+
 	switch (type) {
-	
 	case TEST:
 		generate_test_level();
 		break;
@@ -68,12 +68,12 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_space();
 		generate_space_obj(Random::one_to_thirty_two, SOLAR_SYSTEM);
 		break;
-	
+
 	case SPACE:
 		generate_space();
 		generate_space_obj(Random::one_to_thirty_two, SPACE);
 		break;
-	
+
 	case GRASSLAND:
 		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
 			Tile::WATER,
@@ -83,7 +83,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_trees(Random::one_to_one_twenty_eight);
 		generate_flora(Random::one_to_one_twenty_eight);
 		break;
-	
+
 	case HILLS:
 		generate_terrain(0.01f, 0.0f, 0.25f, 0.01f,
 			Tile::WATER,
@@ -93,7 +93,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_trees(Random::one_to_sixteen);
 		generate_flora(Random::one_to_sixty_four);
 		break;
-	
+
 	case FOREST:
 		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
 			Tile::WATER,
@@ -104,10 +104,10 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_trees(Random::one_to_eight);
 		generate_flora(Random::one_to_two_fifty_six);
 		break;
-	
+
 	case DESERT:
-		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f, 
-			Tile::SAND, 
+		generate_terrain(0.01f, -0.25f, 0.25f, 0.01f,
+			Tile::SAND,
 			Tile::SAND,
 			Tile::SANDSTONE,
 			Tile::SAND);
@@ -123,7 +123,7 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		generate_trees(Random::one_to_eight, Level::COLD_FLORA);
 		generate_flora(Random::one_to_two_fifty_six, Level::COLD_FLORA);
 		break;
-	
+
 	case OCEAN:
 		generate_terrain(0.01f, 1.0f, 0.0f, 0.0f,
 			Tile::WATER,
@@ -133,15 +133,17 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 		break;
 	}
 
-//	for (int i = 0; i < _actors.size(); i++) {
-//		_map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]].push_back(_actors[i]);
-//	}
-	
+	//	for (int i = 0; i < _actors.size(); i++) {
+	//		_map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]].push_back(_actors[i]);
+	//	}
+
 	_fovmap = new TCODMap(_width, _height);
-	
+
 	for (int i = 0; i < _actors.size(); i++) {
 		_fovmap->setProperties(_actors[i]->get_world_pos()[0], _actors[i]->get_world_pos()[1], _actors[i]->is_transparent(), !_actors[i]->is_impassable());
 	}
+
+	generate_chunks();
 
 	std::cout << "LEVEL UPDATED\n";
 	std::cout << "Buffer status: " << Actor::get_buffer()->size() << std::endl;
@@ -158,27 +160,25 @@ void Level::generate_space() {
 
 void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE type) {
 	int numplanets = Random::one_to_eight(Random::generator);
-	
+
 	switch (type) {
 	case SPACE:
 		for (int i = 0; i < _actors.size(); i++) {
+			if (r(Random::generator) == 1) {
+				new Tile(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0, Tile::DISTANT_STAR);
+			}
+		}
 
-			if (r(Random::generator) == 1) {
-				new Tile(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0, Tile::DISTANT_STAR);
-			}
-		}
-		
 		break;
-	
+
 	case SOLAR_SYSTEM:
-		
+
 		for (int i = 0; i < _actors.size(); i++) {
-			
 			if (r(Random::generator) == 1) {
 				new Tile(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0, Tile::DISTANT_STAR);
 			}
 		}
-		
+
 		new Tile(_width / 2, _height / 2, 0, Tile::STAR);
 
 		for (int i = 0; i < numplanets; i++) {
@@ -187,7 +187,7 @@ void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE 
 		}
 
 		break;
-	
+
 	case STAR_SECTOR:
 		for (int i = 0; i < _actors.size(); i++) {
 			int rnd = r(Random::generator);
@@ -198,9 +198,9 @@ void Level::generate_space_obj(std::uniform_int_distribution<int> r, LEVEL_TYPE 
 				new SolarSystem(_actors[i]->get_screen_pos()[0], _actors[i]->get_screen_pos()[1], 0);
 			}
 		}
-	
+
 		break;
-	
+
 	case GALAXY:
 		TCODImage im = TCODImage::TCODImage("Data\\Galaxy1.png");
 		for (int x = 0; x < _width; x++) {
@@ -264,9 +264,8 @@ void Level::generate_terrain(float frequency, float water_threshold, float terra
 	Tile::TILE_TYPE terrain,
 	Tile::TILE_TYPE wall,
 	Tile::TILE_TYPE beach) {
-	
 	_noise.SetFrequency(frequency);
-	
+
 	float c;
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
@@ -296,25 +295,19 @@ void Level::generate_trees(std::uniform_int_distribution<int> r, Level::GENERATI
 	switch (flag) {
 	case TEMPERATE_FLORA:
 		for (int i = 0; i < _actors.size(); i++) {
-
 			if (_actors.operator[](i)->get_name() == "Grass") {
-
 				if (r(Random::generator) == 1) {
 					new Tile(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Tile::TREE);
 				}
-
 			}
 		}
 		break;
 	case COLD_FLORA:
 		for (int i = 0; i < _actors.size(); i++) {
-
 			if (_actors.operator[](i)->get_name() == "Snow") {
-
 				if (r(Random::generator) == 1) {
 					new Tile(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Tile::SNOWY_TREE);
 				}
-
 			}
 		}
 	}
@@ -322,50 +315,45 @@ void Level::generate_trees(std::uniform_int_distribution<int> r, Level::GENERATI
 
 void Level::generate_flora(std::uniform_int_distribution<int> r, Level::GENERATION_FLAG flag) {
 	switch (flag) {
+	case TEMPERATE_FLORA:
+		for (int i = 0; i < _actors.size(); i++) {
+			if (_actors.operator[](i)->get_name() == "Grass") {
+				if (r(Random::generator) == 1) {
+					new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::FLOWER);
+				}
 
-		case TEMPERATE_FLORA:
-			for (int i = 0; i < _actors.size(); i++) {
-				if (_actors.operator[](i)->get_name() == "Grass") {
-
-					if (r(Random::generator) == 1) {
-						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::FLOWER);
-					}
-
-					if (r(Random::generator) == 1) {
-						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::BUSH);
-					}
+				if (r(Random::generator) == 1) {
+					new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::BUSH);
 				}
 			}
-			break;
-		case DESERT_FLORA:
-			for (int i = 0; i < _actors.size(); i++) {
-				if (_actors.operator[](i)->get_name() == "Sand") {
+		}
+		break;
+	case DESERT_FLORA:
+		for (int i = 0; i < _actors.size(); i++) {
+			if (_actors.operator[](i)->get_name() == "Sand") {
+				if (r(Random::generator) == 1) {
+					new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::CACTUS);
+				}
 
-					if (r(Random::generator) == 1) {
-						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::CACTUS);
-					}
-				
-					if (r(Random::generator) == 1) {
-						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::DEAD_BUSH);
-					}
+				if (r(Random::generator) == 1) {
+					new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::DEAD_BUSH);
 				}
 			}
-			break;
-		case COLD_FLORA:
-			for (int i = 0; i < _actors.size(); i++) {
-				if (_actors.operator[](i)->get_name() == "Snow") {
-
-					if (r(Random::generator) == 1) {
-						new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::SNOW_BUSH);
-					}
+		}
+		break;
+	case COLD_FLORA:
+		for (int i = 0; i < _actors.size(); i++) {
+			if (_actors.operator[](i)->get_name() == "Snow") {
+				if (r(Random::generator) == 1) {
+					new Item(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Item::SNOW_BUSH);
 				}
 			}
+		}
 	}
 }
 
 void Level::generate_structures(int num) {
 	for (int i = 0; i < num; i++) {
-		
 		int rnd = 0;
 		while (true) {
 			rnd = Random::randc(0, _actors.size());
@@ -394,7 +382,7 @@ void Level::save_level_image(std::string path) {
 		_actors[i]->get_color(&h, &s, &v);
 		map[_actors[i]->get_world_pos()[0]][_actors[i]->get_world_pos()[1]] = TCODColor(h, s, v);
 	}
-	
+
 	TCODImage img(_width, _height);
 
 	for (int x = 0; x < _width; x++) {
@@ -408,22 +396,22 @@ void Level::save_level_image(std::string path) {
 
 void Level::save_level_file(std::string path) {
 	TCODZip zip;
-	
+
 	int size = _width + _height;
 	zip.putInt(size);
 	zip.putInt(_type);
-	
+
 	for (int i = 0; i < _actors.size(); i++) {
 		_actors[i]->serialize(&zip);
 	}
-	
+
 	zip.saveToFile(path.c_str());
 }
 
 Level* Level::load_level_file(std::string path) {
 	TCODZip zip;
 	Level* level = new Level;
-	
+
 	zip.loadFromFile(path.c_str());
 
 	int size;
@@ -435,7 +423,7 @@ Level* Level::load_level_file(std::string path) {
 
 	while (true) {
 		std::string typestring = zip.getString();
-		
+
 		if (typestring.size() == 0) {
 			break;
 		}
@@ -449,23 +437,22 @@ Level* Level::load_level_file(std::string path) {
 		actor->deserialize(&zip);
 		level->_actors.push_back(actor);
 	}
-	
+
 	level->generate_level(size, Level::NONE);
 	level->set_type(static_cast<LEVEL_TYPE>(type));
 	level->update();
-	
+
 	return level;
 }
 
 void Level::generate_test_level() {
-	
 	//Generate the floor
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			new Tile(x, y, 0, Tile::STEEL_FLOOR);
 		}
 	}
-	
+
 	//Generate the border
 	for (int x = 0; x < _width; x++) {
 		new Tile(x, 0, 0, Tile::STEEL_WALL);
@@ -490,4 +477,43 @@ void Level::generate_test_level() {
 	new Monster(_width - 2, 2, 0);
 	new Monster(2, _height - 2, 0);
 	new Monster(_width - 2, _height - 2, 0);
+}
+
+void Level::generate_chunks() {
+	if (_width % CHUNK_SIZE == 0 && _height % CHUNK_SIZE == 0) {
+		_chunks.resize(CHUNK_SIZE * CHUNK_SIZE);
+		int i = 0;
+		int xpos = 0;
+		int ypos = 0;
+		for (int x = 0; x < _width / CHUNK_SIZE; x++) {
+			for (int y = 0; y < _height / CHUNK_SIZE; y++) {
+				_chunks[i].pos.x = xpos;
+				_chunks[i].pos.y = ypos;
+				ypos += CHUNK_SIZE;
+				i++;
+			}
+			if (i == _chunks.size()) {
+				break;
+			}
+			xpos += CHUNK_SIZE;
+			ypos = 0;
+			_chunks[i].pos.x = xpos;
+			_chunks[i].pos.y = ypos;
+		}
+		xpos = 0;
+		ypos = 0;
+		int chunk_index = 0;
+		for (int chunk_index = 0; chunk_index < _chunks.size(); chunk_index++) {
+			for (int i = 0; i < _actors.size(); i++) {
+				Chunk& c = _chunks[chunk_index];
+				if (_actors[i]->get_world_position() >= c.pos &&
+					_actors[i]->get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE)) {
+					c.chunktile.push_back(Chunk::ChunkTile(_actors[i]));
+				}
+			}
+		}
+	}
+	else {
+		abort();
+	}
 }

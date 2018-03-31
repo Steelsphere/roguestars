@@ -274,3 +274,11 @@ void Actor::delete_actor() {
 	(*m)[_world_x][_world_y].erase(std::remove((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
 	std::cout << "Deleted actor at " << this << std::endl;
 }
+
+Vec2 Actor::get_screen_position() {
+	return Vec2(_screen_x, _screen_y);
+}
+
+Vec2 Actor::get_world_position() {
+	return Vec2(_world_x, _world_y);
+}

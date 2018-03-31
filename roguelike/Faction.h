@@ -64,13 +64,13 @@ public:
 		" Freedom Fighters",
 		" Resistance",
 	};
-	
+
 	std::vector<Spaceship*> spaceships;
 	std::map<Faction*, int> diplomatic_relations;
 
 	Faction();
 	Faction(int startx, int starty);
-	
+
 	~Faction();
 
 	static std::vector<Faction*> get_factions() { return _factions; }
@@ -124,4 +124,3 @@ private:
 	int _numfreighters = 0;
 	int _numscouts = 0;
 };
-

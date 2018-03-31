@@ -33,14 +33,14 @@ public:
 
 protected:
 	static int _playertime;
-	
+
 	int _health = 100;
 	int _speed = 100;
 	int _selftime;
 	bool _action_available = true;
 	std::vector<Item*> _inventory = std::vector<Item*>();
 	std::vector<Bodypart> _bodyparts;
-	
+
 private:
 	static std::vector<Character*> _chbuf;
 };
@@ -49,4 +49,3 @@ class Monster : public Character {
 public:
 	Monster(int x, int y, int z);
 };
-

@@ -2,8 +2,7 @@
 #define TCOD_SDL2
 #include "Actor.h"
 
-class Item : public Actor
-{
+class Item : public Actor {
 public:
 	enum ITEM_TYPE {
 		FLOWER,
@@ -13,7 +12,7 @@ public:
 		SNOW_BUSH,
 		DIGITAL_WATCH,
 	};
-	
+
 	Item();
 	Item(int x, int y, int z, Item::ITEM_TYPE type);
 	~Item();
@@ -26,4 +25,3 @@ public:
 protected:
 	bool _is_in_inv = false;
 };
-

@@ -19,8 +19,7 @@
 #include <memory>
 #include <functional>
 
-class Game
-{
+class Game {
 public:
 	Game();
 
@@ -45,9 +44,9 @@ public:
 	void level_setup();
 
 	void loading_screen();
-	
+
 	void exit_game();
-	
+
 	void startup_new_game();
 
 	void startup_load_game();
@@ -126,22 +125,22 @@ public:
 	void simulation_sim_thread(int simturns);
 
 private:
-	
+
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
 	int _galaxy_id = 0; int _starsector_id = 0; int _solarsystem_id = 0; int _world_id = 0; int _simturn = 0;
 	bool _sim = false;
-	
+
 	TCOD_key_t _key;
 	TCOD_mouse_t _mouse;
 	TCOD_event_t _event;
-	
+
 	std::string _savegame_directory;
 
 	// Level stuff
 	Level* _level = nullptr;
 	Camera* _camera = new Camera(0, 0);
 	World* _world = nullptr;
-	
+
 	// Player stuff
 	Player* _player = nullptr;
 	Player* _dummy = nullptr;
@@ -150,7 +149,7 @@ private:
 	// Systems
 	Light::LightSystem _lightsystem;
 	Time _time;
-	
+
 	// GUI stuff
 	Log* _log = nullptr;
 	Status* _status = nullptr;

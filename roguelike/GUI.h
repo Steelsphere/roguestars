@@ -13,15 +13,14 @@ class Player;
 class Level;
 class StarSector;
 
-class GUI
-{
+class GUI {
 public:
 	enum GUI_TYPE {
 		NO_BACKGROUND,
 		FILLED_BACKGROUND,
 		FILLED_BORDERED_BACKGROUND,
 	};
-	
+
 	struct Text {
 		int x, y, w, h;
 		std::string str;
@@ -29,11 +28,11 @@ public:
 		bool ovrcolor = false;
 		TCODColor bcolor = TCODColor::black;
 	};
-	
+
 	GUI();
-	
+
 	GUI(int x, int y, int w, int h, std::vector<Text> text = std::vector<Text>());
-	
+
 	~GUI();
 
 	virtual void draw(bool force = false);
@@ -122,7 +121,7 @@ public:
 private:
 	Player* _player;
 	Time* _time;
-	
+
 	HealthInfo* _health;
 	TileInfo* _tile;
 	CharInfo* _char;
@@ -140,7 +139,7 @@ public:
 		GameEvent::GAME_EVENT action;
 		TCODColor bcolor = TCODColor::black;
 	};
-	
+
 	SelectionBox();
 
 	SelectionBox(int x, int y, int w, int h, std::vector<Text> text);
@@ -161,7 +160,7 @@ protected:
 class SelectionBoxEx : public SelectionBox {
 public:
 	const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	
+
 	SelectionBoxEx(int x, int y, int w, int h);
 
 	void update_mtext();
@@ -177,7 +176,7 @@ public:
 	enum STATE {
 		FRONT,
 	};
-	
+
 	MainMenu();
 	~MainMenu();
 
@@ -217,7 +216,7 @@ class Map : public GUI {
 public:
 	Map(Level* level, bool background = false, Player* player = nullptr);
 	Map(int x, int y, int w, int h, Level* level, bool background);
-	
+
 	~Map();
 
 	void update_map(Level* level, bool background, Player* player = nullptr);

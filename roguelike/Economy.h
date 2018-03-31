@@ -16,7 +16,7 @@ public:
 		SUPPLY,
 		DEMAND
 	};
-	
+
 	struct Goods {
 		int food = 0;
 		int water = 0;
@@ -65,7 +65,7 @@ public:
 			std::cout << minerals << std::endl;
 			std::cout << workers << std::endl;
 		}
-		
+
 		void reset() {
 			std::vector<int> v;
 			for (int i = 0; i < get_vals().size(); i++) {
@@ -112,7 +112,7 @@ public:
 		friend bool operator<= (Goods &a1, Goods &a2);
 		friend bool operator> (Goods &a1, Goods &a2);
 		friend bool operator>= (Goods &a1, Goods &a2);
-		
+
 #if 1
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend bool operator== (Economy::Goods &a1, const T &a2) {
@@ -169,7 +169,7 @@ public:
 			}
 			return sum >= a2;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend Goods operator+ (Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
@@ -180,7 +180,7 @@ public:
 			g.set_vals(a1v);
 			return g;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend Goods operator- (Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
@@ -191,7 +191,7 @@ public:
 			g.set_vals(a1v);
 			return g;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend Goods operator* (Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
@@ -202,7 +202,7 @@ public:
 			g.set_vals(a1v);
 			return g;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend Goods operator/ (Goods &a1, const T &a2) {
 			auto a1v = a1.get_vals();
@@ -213,28 +213,27 @@ public:
 			g.set_vals(a1v);
 			return g;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend void operator+= (Goods &a1, const T &a2) {
 			a1 = a1 + a2;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend void operator-= (Goods &a1, const T &a2) {
 			a1 = a1 - a2;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend void operator*= (Goods &a1, const T &a2) {
 			a1 = a1 * a2;
 		}
-		
+
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		friend void operator/= (Goods &a1, const T &a2) {
 			a1 = a1 / a2;
 		}
 #endif
-	
 	} supply, demand;
 
 	class Building {
@@ -244,7 +243,7 @@ public:
 			MINING_COMPLEX,
 			INDUSTRIAL_COMPLEX,
 		};
-		
+
 		Building::Building(Economy* e);
 
 		virtual void update() { std::cout << "DEBUG ERROR: A BUILDING HAS NO UPDATE FUNCTION\n"; }
@@ -261,7 +260,7 @@ public:
 		virtual void serialize(TCODZip* zip);
 		virtual void deserialize(TCODZip* zip);
 	};
-	
+
 	~Economy();
 
 	void update();
@@ -291,52 +290,52 @@ public:
 };
 
 namespace Buildings {
-	class FarmingComplex : public Economy::Building {
-	public:
-		FarmingComplex(Economy* e);
-		
-		virtual void update() override;
-	};
+class FarmingComplex : public Economy::Building {
+public:
+	FarmingComplex(Economy* e);
 
-	class MiningComplex : public Economy::Building {
-	public:
-		MiningComplex(Economy* e);
-		
-		virtual void update() override;
-	};
+	virtual void update() override;
+};
 
-	class IndustrialComplex : public Economy::Building {
-	public:
-		IndustrialComplex(Economy* e);
+class MiningComplex : public Economy::Building {
+public:
+	MiningComplex(Economy* e);
 
-		virtual void update() override;
-	};
+	virtual void update() override;
+};
 
-	class Infrastructure : public Economy::Building {
-	public:
-		Infrastructure(Economy* e);
+class IndustrialComplex : public Economy::Building {
+public:
+	IndustrialComplex(Economy* e);
 
-		virtual void update() override;
-	};
+	virtual void update() override;
+};
 
-	class SpacePort : public Economy::Building {
-	public:
-		SpacePort(Economy* e);
+class Infrastructure : public Economy::Building {
+public:
+	Infrastructure(Economy* e);
 
-		virtual void update() override;
-	};
+	virtual void update() override;
+};
 
-	class MIC : public Economy::Building {
-	public:
-		MIC(Economy* e);
+class SpacePort : public Economy::Building {
+public:
+	SpacePort(Economy* e);
 
-		virtual void update() override;
-	};
+	virtual void update() override;
+};
 
-	class Commercial : public Economy::Building {
-	public:
-		Commercial(Economy* e);
+class MIC : public Economy::Building {
+public:
+	MIC(Economy* e);
 
-		virtual void update() override;
-	};
+	virtual void update() override;
+};
+
+class Commercial : public Economy::Building {
+public:
+	Commercial(Economy* e);
+
+	virtual void update() override;
+};
 }

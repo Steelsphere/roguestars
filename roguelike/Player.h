@@ -6,7 +6,6 @@
 
 #include <iostream>
 
-
 class Player : public Character {
 public:
 	Player();
@@ -44,4 +43,3 @@ public:
 
 	virtual void draw_mem() override;
 };
-

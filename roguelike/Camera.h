@@ -3,8 +3,7 @@
 #include "Actor.h"
 #include "Level.h"
 
-class Camera
-{
+class Camera {
 public:
 	Camera(Actor* following);
 	Camera(int x, int y);

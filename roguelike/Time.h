@@ -5,7 +5,7 @@
 
 class Time {
 public:
-	
+
 	Time() {}
 	Time(unsigned long long start_time);
 	~Time();
@@ -18,7 +18,7 @@ public:
 
 private:
 	unsigned long long _timestamp = 0;
-	
+
 	/*
 	int _year;
 	int _month;
@@ -28,4 +28,3 @@ private:
 	int _second;
 	*/
 };
-

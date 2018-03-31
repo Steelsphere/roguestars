@@ -12,15 +12,14 @@
 
 class Player;
 class Camera;
-class GameObjects
-{
+class GameObjects {
 public:
 	enum Size {
 		SMALL = 256,
 		MEDIUM = 512,
-		LARGE = 1028,
+		LARGE = 1024,
 	};
-	
+
 	static int screen_width, screen_height;
 	static int ticks;
 	static int level_id_to_load;
@@ -29,20 +28,20 @@ public:
 	static int galaxy_size;
 
 	static float time;
-	
+
 	static bool update;
 	static bool player_controlled;
 	static bool new_turn;
 
 	static Log* log;
 	static Camera* camera;
-	
+
 	static std::string savegame_path;
 	static std::map<std::string, std::pair<int, int>> map_dir;
 
 	template <typename T>
 	static Actor* create_actor_instance() { return new T; }
-	
+
 	static std::map<std::string, Actor*(*)()> type_map;
 
 	static Player* find_player(Level* level);
@@ -61,4 +60,3 @@ public:
 		a = b;
 	}
 };
-

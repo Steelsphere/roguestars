@@ -12,7 +12,7 @@ public:
 		DEFENDING,
 		NUM_ACTIONS,
 	};
-	
+
 	Hero();
 	Hero(int x, int y, Faction* f);
 	~Hero();
@@ -32,4 +32,3 @@ private:
 	Actor* _destination;
 	bool _moving;
 };
-

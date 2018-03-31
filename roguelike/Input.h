@@ -7,8 +7,7 @@
 #include <iostream>
 #include <typeinfo>
 
-class Input
-{
+class Input {
 public:
 	enum MODE {
 		NONE,
@@ -22,13 +21,13 @@ public:
 		TEXTBOX,
 		MAIN_MENU,
 	};
-	
+
 	static void input(TCOD_key_t key, TCOD_mouse_t mouse);
-	
+
 	static void set_input_reciever(Actor* r) { _reciever = r; }
-	
+
 	static MODE get_mode() { return _mode; }
-	
+
 	static void set_mode(MODE mode) { _mode = mode; }
 
 	static TCOD_key_t get_last_key() { return _lastkey; }

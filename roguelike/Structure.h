@@ -9,8 +9,7 @@ public:
 		CABIN,
 		TINY_SPACESHIP,
 	};
-	
+
 	Structure(int x, int y, S_TYPE type);
 	~Structure();
 };
-

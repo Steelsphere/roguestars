@@ -6,7 +6,7 @@
 
 class Light {
 public:
-	
+
 	class LightSystem {
 	public:
 		LightSystem();
@@ -25,4 +25,3 @@ public:
 		std::map<Actor*, TCODColor> _original_colors;
 	};
 };
-

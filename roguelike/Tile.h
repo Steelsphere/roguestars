@@ -35,7 +35,7 @@ public:
 	};
 
 	Tile();
-	
+
 	Tile(int x, int y, int z, TILE_TYPE type, TCODColor color = TCODColor::black);
 };
 
@@ -43,7 +43,7 @@ class TravelPoint : public Actor {
 public:
 	TravelPoint(int x, int y, int z);
 	TravelPoint() : Actor() {}
-	
+
 	int id;
 	Economy economy;
 	std::string alias = TCODNamegen::generate("object");
@@ -74,7 +74,7 @@ public:
 		DWARF,
 		GIANT,
 	};
-	
+
 	SolarSystem() {}
 	SolarSystem(int x, int y, int z);
 
@@ -89,7 +89,7 @@ public:
 	enum PLANET_TYPE {
 		TERRA,
 	};
-	
+
 	Planet() {}
 	Planet(int x, int y, int z, PLANET_TYPE type);
 
@@ -116,7 +116,7 @@ public:
 		WOOD,
 		STEEL,
 	};
-	
+
 	Door();
 	Door(int x, int y, int z, int type);
 

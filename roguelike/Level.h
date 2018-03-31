@@ -3,15 +3,38 @@
 
 #include "Actor.h"
 #include "Tile.h"
+#include "Vec2.h"
 
 #include <FastNoise.h>
 #include <string>
 #include <iostream>
 #include <vector>
+#include <array>
 
-class Level
-{
+#define CHUNK_SIZE 16
+
+class Level {
 public:
+	struct Chunk {
+		struct ChunkTile {
+			ChunkTile(Actor* a) {
+				actor = a;
+			}
+
+			Actor* actor;
+			Vec2 relpos;
+		};
+
+		Chunk() {}
+		Chunk(int x, int y) {
+			pos.x = x;
+			pos.y = y;
+		}
+
+		std::vector<ChunkTile> chunktile;
+		Vec2 pos;
+	};
+
 	enum LEVEL_TYPE {
 		NONE,
 		TEST,
@@ -19,10 +42,10 @@ public:
 		STAR_SECTOR,
 		SOLAR_SYSTEM,
 		SPACE,
-		
+
 		// ALL LEVEL TYPES GREATER THAN WORLD_MAP ARE SURFACE LEVELS
 		WORLD_MAP,
-		
+
 		GRASSLAND,
 		FOREST,
 		HILLS,
@@ -30,20 +53,20 @@ public:
 		SNOWY_TAIGA,
 		OCEAN,
 	};
-	
+
 	enum GENERATION_FLAG {
 		TEMPERATE_FLORA,
 		DESERT_FLORA,
 		COLD_FLORA,
 	};
-	
+
 	int id;
 
 	Level();
 	~Level();
 
 	void generate_level(int size, LEVEL_TYPE type);
-	
+
 	std::vector<Actor*>* get_actors() { return &_actors; }
 
 	void set_actors(std::vector<Actor*>* v) { _actors = (*v); }
@@ -53,7 +76,7 @@ public:
 	static TCODMap* get_fov_map() { return _fovmap; }
 
 	void generate_terrain(float frequency, float water_threshold, float terrain_threshold, float beach_size,
-		Tile::TILE_TYPE water = Tile::WATER, 
+		Tile::TILE_TYPE water = Tile::WATER,
 		Tile::TILE_TYPE terrain = Tile::GRASS,
 		Tile::TILE_TYPE wall = Tile::DIRT_WALL,
 		Tile::TILE_TYPE beach = Tile::SAND);
@@ -92,6 +115,8 @@ public:
 
 	void set_size(int s) { _width = s / 2; _height = s / 2; }
 
+	void generate_chunks();
+
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;
@@ -100,4 +125,5 @@ private:
 	FastNoise _noise;
 	LEVEL_TYPE _type;
 	std::string _savedir = "";
+	std::vector<Chunk> _chunks;
 };

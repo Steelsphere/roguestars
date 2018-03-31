@@ -8,7 +8,7 @@ public:
 		NONE,
 		SIMPLE_FOLLOW,
 	};
-	
+
 	AI();
 	AI(Character* body, AI_TYPE type);
 	~AI();
@@ -21,4 +21,3 @@ private:
 	static void simple_follow(Character* c);
 	static Player* _player;
 };
-
