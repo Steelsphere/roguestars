@@ -124,6 +124,8 @@ public:
 
 	void simulation_sim_thread(int simturns);
 
+	void test_level2();
+
 private:
 
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;

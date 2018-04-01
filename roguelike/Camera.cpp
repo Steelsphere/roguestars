@@ -70,3 +70,11 @@ int* Camera::get_world_pos() {
 	a[2] = _world_z;
 	return a;
 }
+
+Vec2 Camera::get_screen_position() const {
+	return Vec2(_screen_x, _screen_y);
+}
+
+Vec2 Camera::get_world_position() const {
+	return Vec2(_world_x, _world_y);
+}

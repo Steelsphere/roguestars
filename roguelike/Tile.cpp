@@ -66,6 +66,9 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		case 4:
 			_c = '~';
 			break;
+		default:
+			_c = '.';
+			break;
 		}
 		if (color == TCODColor::black) {
 			_fcolor = TCODColor::sepia;
@@ -78,7 +81,7 @@ Tile::Tile(int x, int y, int z, TILE_TYPE type, TCODColor color) : Actor(x, y, z
 		break;
 
 	case DIRT_WALL:
-		_c = 219;
+		_c = 1;
 		_fcolor = TCODColor::sepia;
 		_bcolor = TCODColor::sepia;
 

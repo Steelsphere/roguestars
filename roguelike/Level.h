@@ -13,12 +13,18 @@
 
 #define CHUNK_SIZE 16
 
+class Camera;
+
 class Level {
 public:
 	struct Chunk {
 		struct ChunkTile {
 			ChunkTile(Actor* a) {
 				actor = a;
+			}
+			ChunkTile(Actor* a, const Vec2& pos) {
+				actor = a;
+				relpos = pos;
 			}
 
 			Actor* actor;
@@ -30,9 +36,11 @@ public:
 			pos.x = x;
 			pos.y = y;
 		}
+		void load_chunk(const Camera& camera);
 
-		std::vector<ChunkTile> chunktile;
+		std::vector<ChunkTile> chunktiles;
 		Vec2 pos;
+		bool loaded = false;
 	};
 
 	enum LEVEL_TYPE {
@@ -117,6 +125,14 @@ public:
 
 	void generate_chunks();
 
+	void update_chunks(const Camera& camera);
+
+	std::vector<Actor*> get_loaded_actors();
+
+	void chunk_add_actor(Actor* a);
+
+	void chunk_delete_actor(Actor* a);
+
 private:
 	int _width, _height;
 	std::vector<Actor*> _actors;
@@ -126,4 +142,5 @@ private:
 	LEVEL_TYPE _type;
 	std::string _savedir = "";
 	std::vector<Chunk> _chunks;
+	std::vector<Chunk*> _loaded_chunks;
 };

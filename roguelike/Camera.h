@@ -2,6 +2,7 @@
 #define TCOD_SDL2
 #include "Actor.h"
 #include "Level.h"
+#include "Vec2.h"
 
 class Camera {
 public:
@@ -12,8 +13,13 @@ public:
 
 	void update();
 
+	// OLd
 	int* get_screen_pos();
 	int* get_world_pos();
+	//
+
+	Vec2 get_screen_position() const;
+	Vec2 get_world_position() const;
 
 	void set_world_pos(int x, int y) { _world_x = x; _world_y = y; }
 

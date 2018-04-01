@@ -173,6 +173,9 @@ void Game::game_event() {
 	case GameEvent::MOUSE_MOVE:
 		mouse_move();
 		break;
+	case GameEvent::TEST_LEVEL2:
+		test_level2();
+		break;
 	case GameEvent::EXIT:
 		exit_game();
 		break;
@@ -191,19 +194,19 @@ void Game::exit_game() {
 }
 
 void Game::update() {
-	
+
 	// Sim
 	if (GameObjects::new_turn && GameObjects::player_controlled) {
-//		_level->update_tile(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
+		//		_level->update_tile(_player->get_world_pos()[0], _player->get_world_pos()[1], 0);
 		update_characters();
 		_turn++;
-		
+
 		if (_log != nullptr) {
-			_log->message("Turn: " + std::to_string(_turn) + " Pos: " + 
-				std::to_string(_player->get_world_pos()[0]) + " " + 
+			_log->message("Turn: " + std::to_string(_turn) + " Pos: " +
+				std::to_string(_player->get_world_pos()[0]) + " " +
 				std::to_string(_player->get_world_pos()[1]), TCODColor::white);
 		}
-		
+
 		// Spawn new nations
 		if (Random::randc(0, 4000) == 1 && _level->get_type() == Level::GALAXY) {
 			// Find suitable spawn points
@@ -214,15 +217,15 @@ void Game::update() {
 					spawnpoints.push_back(a);
 				}
 			}
-			
+
 			int r = Random::randc(0, spawnpoints.size() - 1);
 			new Faction(spawnpoints[r]->get_world_pos()[0], spawnpoints[r]->get_world_pos()[1]);
 
 			spawnpoints.erase(spawnpoints.begin() + r);
 		}
-		
+
 		if (_level->get_type() == Level::GALAXY) {
-		
+
 			for (Faction* f : Faction::get_factions()) {
 				f->simulate();
 			}
@@ -238,14 +241,19 @@ void Game::update() {
 		if (a[a.size() - 2]->get_type() == typeid(StarSector).name()) {
 			_status->draw(true);
 		}
-		
+
 		_time.pass_time(86400 + Random::randc(-250, 250));
 		GameObjects::new_turn = false;
 	}
 	// End sim
 
 	_num_actors_drawn = 0;
-	std::vector<Actor*>* actors = _level->get_actors();
+	//	std::vector<Actor*>* actors = _level->get_actors();
+	std::vector<Actor*> actors;
+	if (_level != nullptr) {
+		actors = _level->get_loaded_actors();
+		_level->update_chunks((*_camera));
+	}
 	TCODMap* fov = nullptr;
 
 	Actor* a;
@@ -261,9 +269,9 @@ void Game::update() {
 	}
 
 	if (_level != nullptr) {
-		for (int i = 0; i < actors->size(); i++) {
+		for (int i = 0; i < actors.size(); i++) {
 
-			a = actors->operator[](i);
+			a = actors.operator[](i);
 
 			ar = a->get_screen_pos();
 			cr = _camera->get_screen_pos();
@@ -624,6 +632,8 @@ void Game::level_setup() {
 	_camera->set_level(_level);
 	_camera->update();
 	GameObjects::camera = _camera;
+	_level->update_chunks((*_camera));
+	_level->chunk_add_actor(_player);
 	std::cout << "CAMERA: " << std::endl << GameObjects::camera->get_world_pos()[0] << std::endl << GameObjects::camera->get_world_pos()[1] << std::endl;
 
 }
@@ -1165,4 +1175,24 @@ void Game::simulation_gui_thread(int simturns) {
 			TCODConsole::root->flush();
 		}
 	}
+}
+
+void Game::test_level2() {
+	destroy_main_menu();
+	TCODConsole::root->clear();
+
+	_camera = new Camera(0, 0);
+	GameObjects::camera = _camera;
+
+	_level = new Level;
+	_camera->set_world_pos(0, 0);
+	_level->generate_level(512, Level::GRASSLAND);
+
+	_player = new Player(0, 0, 0, '@', TCODColor::blue);
+	level_setup();
+
+	_log = new Log;
+	_status = new Status(_player, &_time);
+
+	GameObjects::update = true;
 }

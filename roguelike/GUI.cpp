@@ -478,6 +478,9 @@ void MainMenu::draw(bool force) {
 		if (Input::get_last_key().shift && Input::get_last_key().vk == TCODK_1) {
 			GameEvent::set_event(GameEvent::TEST_LEVEL);
 		}
+		if (Input::get_last_key().shift && Input::get_last_key().vk == TCODK_2) {
+			GameEvent::set_event(GameEvent::TEST_LEVEL2);
+		}
 	}
 }
 

@@ -29,7 +29,13 @@ Actor::Actor(int x, int y, int z, const std::string& name) :
 {
 	_buffer->push_back(this);
 	if (_map != nullptr) {
-		(*_map)[x][y].push_back(this);
+		if (x < _map->size() && y < _map->size()) {
+			(*_map)[x][y].push_back(this);
+		}
+		else {
+			std::cout << "CORRUPTED ACTOR: " << x << " " << y << std::endl;
+			abort();
+		}
 	}
 }
 
@@ -282,3 +288,14 @@ Vec2 Actor::get_screen_position() {
 Vec2 Actor::get_world_position() {
 	return Vec2(_world_x, _world_y);
 }
+
+void Actor::set_screen_position(Vec2 pos) {
+	_screen_x = pos.x;
+	_screen_y = pos.y;
+}
+
+void Actor::set_world_position(Vec2 pos) {
+	_world_x = pos.x;
+	_world_y = pos.y;
+}
+

@@ -5,11 +5,14 @@
 #include "Structure.h"
 #include "Character.h"
 #include "Benchmark.h"
+#include "Camera.h"
 
 #include <fstream>
 #include <cstdlib>
 #include <Ctime>
 #include <string>
+
+#define CHUNK_SIZE 32
 
 TCODMap* Level::_fovmap = nullptr;
 
@@ -295,9 +298,9 @@ void Level::generate_trees(std::uniform_int_distribution<int> r, Level::GENERATI
 	switch (flag) {
 	case TEMPERATE_FLORA:
 		for (int i = 0; i < _actors.size(); i++) {
-			if (_actors.operator[](i)->get_name() == "Grass") {
+			if (_actors[i]->get_name() == "Grass") {
 				if (r(Random::generator) == 1) {
-					new Tile(_actors.operator[](i)->get_screen_pos()[0], _actors.operator[](i)->get_screen_pos()[1], 0, Tile::TREE);
+					new Tile(_actors[i]->get_screen_position().x, _actors[i]->get_screen_position().y, 0, Tile::TREE);
 				}
 			}
 		}
@@ -356,7 +359,7 @@ void Level::generate_structures(int num) {
 	for (int i = 0; i < num; i++) {
 		int rnd = 0;
 		while (true) {
-			rnd = Random::randc(0, _actors.size());
+			rnd = Random::randc(0, _actors.size() - 1);
 			if (_actors[rnd]->is_impassable()) {
 				continue;
 			}
@@ -481,7 +484,7 @@ void Level::generate_test_level() {
 
 void Level::generate_chunks() {
 	if (_width % CHUNK_SIZE == 0 && _height % CHUNK_SIZE == 0) {
-		_chunks.resize(CHUNK_SIZE * CHUNK_SIZE);
+		_chunks.resize((_width * _height) / (CHUNK_SIZE * CHUNK_SIZE));
 		int i = 0;
 		int xpos = 0;
 		int ypos = 0;
@@ -508,12 +511,63 @@ void Level::generate_chunks() {
 				Chunk& c = _chunks[chunk_index];
 				if (_actors[i]->get_world_position() >= c.pos &&
 					_actors[i]->get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE)) {
-					c.chunktile.push_back(Chunk::ChunkTile(_actors[i]));
+					c.chunktiles.push_back(Chunk::ChunkTile(_actors[i], _actors[i]->get_world_position() - c.pos));
 				}
 			}
 		}
 	}
 	else {
 		abort();
+	}
+}
+
+void Level::Chunk::load_chunk(const Camera& camera) {
+	for (ChunkTile& c : chunktiles) {
+		Vec2 scrpos;
+		scrpos.x = c.actor->get_world_position().x - camera.get_world_position().x + GameObjects::screen_width / 2;
+		scrpos.y = c.actor->get_world_position().y - camera.get_world_position().y + GameObjects::screen_height / 2;
+		
+		c.actor->set_screen_position(scrpos);
+		loaded = true;
+	}
+}
+
+void Level::update_chunks(const Camera& camera) {
+	for (Chunk& c : _chunks) {
+		if (camera.get_world_position() >= c.pos &&
+			camera.get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE) &&
+			!c.loaded) {
+			c.load_chunk(camera);
+			_loaded_chunks.push_back(&c);
+			std::cout << "Loaded chunk at " << c.pos.x << " " << c.pos.y << std::endl;
+		}
+	}
+}
+
+std::vector<Actor*> Level::get_loaded_actors() {
+	std::vector<Actor*> v;
+	for (Chunk* c : _loaded_chunks) {
+		for (Chunk::ChunkTile& ct : c->chunktiles) {
+			v.push_back(ct.actor);
+		}
+	}
+	return v;
+}
+
+void Level::chunk_add_actor(Actor* a) {
+	for (Chunk& c : _chunks) {
+		if (a->get_world_position() >= c.pos &&
+			a->get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE)) {
+			c.chunktiles.push_back(a);
+		}
+	}
+}
+
+void Level::chunk_delete_actor(Actor* a) {
+	for (Chunk& c : _chunks) {
+		if (a->get_world_position() >= c.pos &&
+			a->get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE)) {
+			c.chunktiles.erase(std::remove(c.chunktiles.begin(), c.chunktiles.end(), a));
+		}
 	}
 }

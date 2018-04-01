@@ -29,6 +29,7 @@ public:
 		OPEN_MAP,
 		CLOSE_MAP,
 		MOUSE_MOVE,
+		TEST_LEVEL2,
 		EXIT,
 	};
 	enum class GAME_STATUS {

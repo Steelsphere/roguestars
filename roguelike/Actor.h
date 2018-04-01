@@ -42,8 +42,13 @@ public:
 	void set_bcolor(int r, int g, int b) { _bcolor = TCODColor(r, g, b); }
 	void set_bcolor_obj(TCODColor color) { _bcolor = color; }
 
+	// Old
 	void set_position(int x, int y, int z);
+	//
+
+	void set_screen_position(Vec2 pos);
 	void set_world_position(int x, int y, int z);
+	void set_world_position(Vec2 pos);
 
 	char get_char() { return _c; }
 	void set_char(char c) { _c = c; }
