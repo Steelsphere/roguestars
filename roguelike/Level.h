@@ -11,8 +11,6 @@
 #include <vector>
 #include <array>
 
-#define CHUNK_SIZE 16
-
 class Camera;
 
 class Level {
@@ -37,6 +35,8 @@ public:
 			pos.y = y;
 		}
 		void load_chunk(const Camera& camera);
+		void unload_chunk();
+		Vec2 get_midpoint();
 
 		std::vector<ChunkTile> chunktiles;
 		Vec2 pos;

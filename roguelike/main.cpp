@@ -1,5 +1,7 @@
 #include "main.h"
 
+#include <string>
+
 // Non-platform independent file
 
 #ifdef _WIN32
@@ -13,7 +15,6 @@ int main() {
 	std::cout.rdbuf(NULL);
 #endif
 
-	Game game = Game();
 	game.init();
 
 #ifdef _WIN32

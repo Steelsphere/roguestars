@@ -3,6 +3,7 @@
 #include "Item.h"
 #include "Input.h"
 #include "Camera.h"
+#include "Game.h"
 
 #include <typeinfo>
 #include <iostream>
@@ -203,8 +204,13 @@ void Actor::move(const std::string& dir) {
 	}
 	Level::get_fov_map()->setProperties(_world_x + xm, _world_y + ym, _transparent, !_impassable);
 	
+	Level* level = game.get_current_level();
+	level->chunk_delete_actor(this);
+
 	this->set_position(_screen_x + xm, _screen_y + ym, _screen_z);
 	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
+
+	level->chunk_add_actor(this);
 }
 
 void Actor::get_color(float* h, float* s, float* v) {
@@ -277,7 +283,7 @@ Actor* Actor::get_actor_scr(int x, int y) {
 void Actor::delete_actor() {
 	_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this));
 	auto* m = Actor::get_map();
-	(*m)[_world_x][_world_y].erase(std::remove((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
+	(*m)[_world_x][_world_y].erase(std::find((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
 	std::cout << "Deleted actor at " << this << std::endl;
 }
 

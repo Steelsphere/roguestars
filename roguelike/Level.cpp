@@ -6,6 +6,7 @@
 #include "Character.h"
 #include "Benchmark.h"
 #include "Camera.h"
+#include "Game.h"
 
 #include <fstream>
 #include <cstdlib>
@@ -13,6 +14,7 @@
 #include <string>
 
 #define CHUNK_SIZE 32
+#define CHUNK_LOAD_DISTANCE 32
 
 TCODMap* Level::_fovmap = nullptr;
 
@@ -485,6 +487,8 @@ void Level::generate_test_level() {
 void Level::generate_chunks() {
 	if (_width % CHUNK_SIZE == 0 && _height % CHUNK_SIZE == 0) {
 		_chunks.resize((_width * _height) / (CHUNK_SIZE * CHUNK_SIZE));
+		
+		// determine chunk bounds
 		int i = 0;
 		int xpos = 0;
 		int ypos = 0;
@@ -492,17 +496,19 @@ void Level::generate_chunks() {
 			for (int y = 0; y < _height / CHUNK_SIZE; y++) {
 				_chunks[i].pos.x = xpos;
 				_chunks[i].pos.y = ypos;
-				ypos += CHUNK_SIZE;
+				ypos += CHUNK_SIZE + 1;
 				i++;
 			}
 			if (i == _chunks.size()) {
 				break;
 			}
-			xpos += CHUNK_SIZE;
+			xpos += CHUNK_SIZE + 1;
 			ypos = 0;
 			_chunks[i].pos.x = xpos;
 			_chunks[i].pos.y = ypos;
 		}
+		
+		// add actors to chunks
 		xpos = 0;
 		ypos = 0;
 		int chunk_index = 0;
@@ -532,16 +538,40 @@ void Level::Chunk::load_chunk(const Camera& camera) {
 	}
 }
 
+void Level::Chunk::unload_chunk() {
+	loaded = false;
+}
+
 void Level::update_chunks(const Camera& camera) {
 	for (Chunk& c : _chunks) {
-		if (camera.get_world_position() >= c.pos &&
-			camera.get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE) &&
-			!c.loaded) {
-			c.load_chunk(camera);
-			_loaded_chunks.push_back(&c);
-			std::cout << "Loaded chunk at " << c.pos.x << " " << c.pos.y << std::endl;
+		if (!c.loaded) {
+			// Load if camera in chunk
+			if (camera.get_world_position() >= c.pos &&
+				camera.get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE)) {
+				c.load_chunk(camera);
+				_loaded_chunks.push_back(&c);
+				std::cout << "Enter: Loaded chunk at " << c.pos.x << " " << c.pos.y << std::endl;
+				continue;
+			}
+			// Load if dist is low
+			if (Vec2::distance(camera.get_world_position(), c.get_midpoint()) < CHUNK_LOAD_DISTANCE) {
+				c.load_chunk(camera);
+				_loaded_chunks.push_back(&c);
+				std::cout << "Distance: Loaded chunk at " << c.pos.x << " " << c.pos.y << std::endl;
+				continue;
+			}
+		}
+		else {
+			// Unload if dist is high
+			if (Vec2::distance(camera.get_world_position(), c.get_midpoint()) > CHUNK_LOAD_DISTANCE) {
+				c.unload_chunk();
+				_loaded_chunks.erase(std::find(_loaded_chunks.begin(), _loaded_chunks.end(), &c));
+				std::cout << "Distance: Unloaded chunk at " << c.pos.x << " " << c.pos.y << std::endl;
+				continue;
+			}
 		}
 	}
+	std::cout << Vec2::distance(camera.get_world_position(), _chunks[0].get_midpoint()) << std::endl;
 }
 
 std::vector<Actor*> Level::get_loaded_actors() {
@@ -567,7 +597,16 @@ void Level::chunk_delete_actor(Actor* a) {
 	for (Chunk& c : _chunks) {
 		if (a->get_world_position() >= c.pos &&
 			a->get_world_position() <= Vec2(c.pos.x + CHUNK_SIZE, c.pos.y + CHUNK_SIZE)) {
-			c.chunktiles.erase(std::remove(c.chunktiles.begin(), c.chunktiles.end(), a));
+			for (int i = 0; i < c.chunktiles.size(); i++) {
+				if (c.chunktiles[i].actor == a) {
+					c.chunktiles.erase(c.chunktiles.begin() + i);
+					return;
+				}
+			}
 		}
 	}
+}
+
+Vec2 Level::Chunk::get_midpoint() {
+	return Vec2((pos.x + CHUNK_SIZE / 2), (pos.y + CHUNK_SIZE / 2));
 }

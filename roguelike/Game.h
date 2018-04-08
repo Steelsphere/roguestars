@@ -1,23 +1,26 @@
 #pragma once
 #define TCOD_SDL2
 
-#include "Actor.h"
-#include "Player.h"
-#include "GameObjects.h"
-#include "Level.h"
-#include "Camera.h"
-#include "GUI.h"
-#include "World.h"
-#include "Light.h"
-#include "Time.h"
+#include <libtcod.h>
+#include <string>
 
-#include <cstdlib>
-#include <algorithm>
-#include <libtcod.hpp>
-#include <iostream>
-#include <cmath>
-#include <memory>
-#include <functional>
+class Level;
+class Camera;
+class World;
+class Player;
+class LightSystem;
+class Time;
+class Log;
+class Status;
+class MainMenu;
+class ESCMenu;
+class InfoViewer;
+class InventoryPanel;
+class Map;
+class LoadingScreen;
+class SimulationScreen;
+class TextBox;
+class SelectionBox;
 
 class Game {
 public:
@@ -126,6 +129,8 @@ public:
 
 	void test_level2();
 
+	Level* get_current_level() { return _level; }
+
 private:
 
 	int _screen_width, _screen_height, _num_actors_drawn, _num_updates, _turn;
@@ -140,7 +145,7 @@ private:
 
 	// Level stuff
 	Level* _level = nullptr;
-	Camera* _camera = new Camera(0, 0);
+	Camera* _camera = nullptr;
 	World* _world = nullptr;
 
 	// Player stuff
@@ -149,8 +154,8 @@ private:
 	Level* _spaceship = nullptr;
 
 	// Systems
-	Light::LightSystem _lightsystem;
-	Time _time;
+	LightSystem* _lightsystem = nullptr;
+	Time* _time = nullptr;
 
 	// GUI stuff
 	Log* _log = nullptr;
@@ -163,3 +168,5 @@ private:
 	LoadingScreen* _loadingscreen = nullptr;
 	SimulationScreen* _sgui = nullptr;
 };
+
+extern Game game;

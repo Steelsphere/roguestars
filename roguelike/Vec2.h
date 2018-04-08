@@ -25,4 +25,8 @@ struct Vec2 {
 
 	int x;
 	int y;
+
+	static int distance(const Vec2& a, const Vec2& b) {
+		return std::sqrt(((b.x - a.x)*(b.x - a.x)) + ((b.y - a.y)*(b.y - a.y)));
+	}
 };

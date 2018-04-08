@@ -7,11 +7,29 @@
 #include "Structure.h"
 #include "Tile.h"
 #include "Faction.h"
+#include "Actor.h"
+#include "Player.h"
+#include "GameObjects.h"
+#include "Level.h"
+#include "Camera.h"
+#include "GUI.h"
+#include "World.h"
+#include "Light.h"
+#include "Time.h"
 
+#include <cstdlib>
+#include <algorithm>
+#include <libtcod.hpp>
+#include <iostream>
+#include <cmath>
+#include <memory>
+#include <functional>
 #include <filesystem>
 #include <thread>
 
 //#define NO_SAVE
+
+Game game;
 
 Game::Game() 
 	: _screen_width(GameObjects::screen_width), _screen_height(GameObjects::screen_height)
@@ -28,8 +46,9 @@ void Game::init() {
 	TCODConsole::initRoot(_screen_width, _screen_height, "Rogue Stars", false, TCOD_RENDERER_GLSL);
 	TCODSystem::setFps(180);
 
-	_time = Time(0);
-	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
+	_time = new Time(0);
+	_camera = new Camera(0, 0);
+	std::cout << _time->format_time("%M/%D/%Y %H:%m:%S") << std::endl;
 
 //	_time.pass_time(9223372036854775807);
 //	std::cout << _time.format_time("%M/%D/%Y %H:%m:%S") << std::endl;
@@ -81,7 +100,7 @@ void Game::game_loop() {
 		// Debug printing
 
 		// MOUSE
-		TCODConsole::root->print(0, 0, (std::to_string(_mouse.cx) + ", " + std::to_string(_mouse.cy)).c_str() );
+//		TCODConsole::root->print(0, 0, (std::to_string(_mouse.cx) + ", " + std::to_string(_mouse.cy)).c_str() );
 		// FPS
 //		TCODConsole::root->print(0, 0, (std::string("FPS: ") + std::to_string(TCODSystem::getFps())).c_str());
 		
@@ -242,8 +261,7 @@ void Game::update() {
 			_status->draw(true);
 		}
 
-		_time.pass_time(86400 + Random::randc(-250, 250));
-		GameObjects::new_turn = false;
+		_time->pass_time(86400 + Random::randc(-250, 250));
 	}
 	// End sim
 
@@ -252,7 +270,9 @@ void Game::update() {
 	std::vector<Actor*> actors;
 	if (_level != nullptr) {
 		actors = _level->get_loaded_actors();
-		_level->update_chunks((*_camera));
+		if (GameObjects::new_turn) {
+			_level->update_chunks((*_camera));
+		}
 	}
 	TCODMap* fov = nullptr;
 
@@ -265,7 +285,9 @@ void Game::update() {
 	
 	if (_level != nullptr) {
 		fov = _level->get_fov_map();
-		fov->computeFov(_player->get_world_pos()[0], _player->get_world_pos()[1], 100);
+		if (GameObjects::new_turn) {
+			fov->computeFov(_player->get_world_pos()[0], _player->get_world_pos()[1], 100);
+		}
 	}
 
 	if (_level != nullptr) {
@@ -301,7 +323,8 @@ void Game::update() {
 	_num_updates++;
 	
 	update_gui(true);
-
+	
+	GameObjects::new_turn = false;
 	GameObjects::update = false;
 }
 
@@ -390,7 +413,7 @@ void Game::startup_new_game() {
 	_log = new Log;
 	GameObjects::log = _log;
 
-	_status = new Status(_player, &_time);
+	_status = new Status(_player, _time);
 	
 	level_setup();
 	GameObjects::update = true;
@@ -404,7 +427,7 @@ void Game::startup_load_game() {
 	_player->spawn_player_in_world();
 	level_setup();
 	_log = new Log;
-	_status = new Status(_player, &_time);
+	_status = new Status(_player, _time);
 
 }
 
@@ -520,7 +543,7 @@ void Game::new_world() {
 	_player->add_to_inventory(new Item(0, 0, 0, Item::DIGITAL_WATCH));
 	
 	level_setup();
-	_lightsystem.set_global_lighting(_level, 15, 15, 0);
+	_lightsystem->set_global_lighting(_level, 15, 15, 0);
 	
 	GameObjects::update = true;
 }
@@ -586,7 +609,7 @@ void Game::new_world_map() {
 	loading_screen();
 	save_level();
 
-	_lightsystem.clear_cache();
+	_lightsystem->clear_cache();
 	if (_world != nullptr && _level != nullptr) {
 		delete _level;
 		_player = nullptr;
@@ -618,7 +641,7 @@ void Game::enter_world_tile() {
 	_player->spawn_player_in_world();
 	
 	level_setup();
-	_lightsystem.set_global_lighting(_level, 15, 15, 0);
+	_lightsystem->set_global_lighting(_level, 15, 15, 0);
 	
 	GameObjects::update = true;
 }
@@ -784,14 +807,14 @@ void Game::to_world_map() {
 
 void Game::highlight_player() {
 	for (Actor* a : _player->get_adjacent_actors_vec()) {
-		_lightsystem.set_light(a, TCODColor(30, 30, 30));
+		_lightsystem->set_light(a, TCODColor(30, 30, 30));
 	}
 	GameObjects::update = true;
 }
 
 void Game::dehighlight_player() {
 	for (Actor* a : _player->get_adjacent_actors_vec()) {
-		_lightsystem.remove_light(a);
+		_lightsystem->remove_light(a);
 	}
 	GameObjects::update = true;
 }
@@ -820,7 +843,7 @@ void Game::load_level() {
 			level_setup();
 
 			_log = new Log;
-			_status = new Status(_player, &_time);
+			_status = new Status(_player, _time);
 			
 			std::cout << "Loaded level with ID: " << GameObjects::level_id_to_load << std::endl;
 			
@@ -868,7 +891,7 @@ void Game::test_level() {
 	level_setup();
 
 	_log = new Log;
-	_status = new Status(_player, &_time);
+	_status = new Status(_player, _time);
 
 	GameObjects::update = true;
 }
@@ -940,7 +963,7 @@ void Game::generate_factions() {
 	while (_sim) {
 		
 		_sgui->set_text(2, "Simulating the galaxy, turns simulated:" + std::to_string(_simturn) + "/" + std::to_string(simturns));
-		_sgui->set_text(3, _time.format_time("Date:%M/%D/%Y %H:%m:%S"));
+		_sgui->set_text(3, _time->format_time("Date:%M/%D/%Y %H:%m:%S"));
 		
 		for (Faction* f : Faction::get_factions()) {
 			for (Actor* a : f->get_owned_tiles()) {
@@ -1142,7 +1165,7 @@ void Game::simulation_sim_thread(int simturns) {
 			//				Faction::save_faction_map("Data\\anim\\" + std::to_string(i) + ".png", _level->get_size());
 			//			}
 
-			_time.pass_time(86400 + Random::randc(-250, 250));
+			_time->pass_time(86400 + Random::randc(-250, 250));
 		}
 	}
 
@@ -1156,7 +1179,7 @@ void Game::simulation_gui_thread(int simturns) {
 	while (true) {
 		if (_simturn % 5 == 0) {
 			_sgui->set_text(2, "Simulating the galaxy, turns simulated:" + std::to_string(_simturn) + "/" + std::to_string(simturns));
-			_sgui->set_text(3, _time.format_time("Date:%M/%D/%Y %H:%m:%S"));
+			_sgui->set_text(3, _time->format_time("Date:%M/%D/%Y %H:%m:%S"));
 			_gui_map->draw(true);
 			GameObjects::log->draw(true);
 			TCODConsole::root->flush();
@@ -1181,6 +1204,7 @@ void Game::test_level2() {
 	destroy_main_menu();
 	TCODConsole::root->clear();
 
+	delete _camera;
 	_camera = new Camera(0, 0);
 	GameObjects::camera = _camera;
 
@@ -1192,7 +1216,7 @@ void Game::test_level2() {
 	level_setup();
 
 	_log = new Log;
-	_status = new Status(_player, &_time);
+	_status = new Status(_player, _time);
 
 	GameObjects::update = true;
 }

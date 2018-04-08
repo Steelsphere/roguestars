@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameObjects.h"
+#include "Game.h"
 
 Player::Player() {
 
@@ -8,6 +9,7 @@ Player::Player() {
 Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, z, c, fcolor, "Player", true)
 {
 	GameObjects::player_controlled = true;
+	GameObjects::new_turn = true;
 	_speed = 1000;
 
 	Bodypart head = { "Head", 25 };
@@ -62,9 +64,14 @@ void Player::move(const std::string& dir) {
 	}
 	Level::get_fov_map()->setProperties(_world_x + xm, _world_y + ym, _transparent, !_impassable);
 	
+	Level* level = game.get_current_level();
+	level->chunk_delete_actor(this);
+
 	this->set_position(_screen_x + xm, _screen_y + ym, _screen_z);
 	this->set_world_position(_world_x + xm, _world_y + ym, _world_z);
 	
+	level->chunk_add_actor(this);
+
 	if (_info != nullptr) {
 		_info->draw();
 	}
