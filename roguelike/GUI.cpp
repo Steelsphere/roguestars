@@ -13,6 +13,7 @@
 #include <filesystem>
 #include <tuple>
 #include <ctype.h>
+#include <cctype>
 
 std::vector<GUI*> GUI::_buffer;
 
@@ -1021,17 +1022,17 @@ void TextBox::draw(bool force) {
 		}
 		else if (_text[0].str.size() < _text[0].w - 1) {
 			if (_digits_only) {
-				if (isdigit(key.c)) {
-					_text[0].str += key.c;
+				if (std::isdigit(key.text[0])) {
+					_text[0].str += key.text[0];
 				}
 			}
 			else {
-				if (isalpha(key.c) || isdigit(key.c)) {
+				if (isalpha(key.text[0]) || isdigit(key.text[0])) {
 					if (key.shift) {
-						_text[0].str += toupper(key.c);
+						_text[0].str += toupper(key.text[0]);
 					}
 					else {
-						_text[0].str += key.c;
+						_text[0].str += key.text[0];
 					}
 				}
 			}
@@ -1042,10 +1043,10 @@ void TextBox::draw(bool force) {
 	GUI::make_transparency_work();
 
 	if (GameObjects::ticks % 50 < 25) {
-		_cons->putChar(_text[0].str.size() + 1, _text[0].y, '\\');
+		_cons->putChar(_text[0].str.size() + 1, _text[0].y, '.');
 	}
 	else {
-		_cons->putChar(_text[0].str.size() + 1, _text[0].y, '/');
+		_cons->putChar(_text[0].str.size() + 1, _text[0].y, ' ');
 	}
 
 	TCODConsole::blit(_cons, 0, 0, _width, _height, TCODConsole::root, _x, _y, 1.0f, _transparency);

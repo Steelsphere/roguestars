@@ -14,7 +14,7 @@
 #include <string>
 
 #define CHUNK_SIZE 32
-#define CHUNK_LOAD_DISTANCE 32
+#define CHUNK_LOAD_DISTANCE 128
 
 TCODMap* Level::_fovmap = nullptr;
 
