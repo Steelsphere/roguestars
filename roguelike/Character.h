@@ -31,6 +31,9 @@ public:
 
 	virtual void move(const std::string& dir);
 
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
+
 protected:
 	static int _playertime;
 
@@ -47,5 +50,6 @@ private:
 
 class Monster : public Character {
 public:
+	Monster() {}
 	Monster(int x, int y, int z);
 };

@@ -22,6 +22,9 @@ public:
 	bool in_inventory() { return _is_in_inv; }
 	void set_in_inventory(bool s) { _is_in_inv = s; }
 
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
+
 protected:
 	bool _is_in_inv = false;
 };

@@ -109,6 +109,9 @@ void Faction::simulate() {
 			}
 		}
 		
+		if (ex_points.size() == 0) {
+			return;
+		}
 		int idx2 = Random::randc(0, ex_points.size() - 1);
 		if (ex_points[idx2] == nullptr) {
 			std::cout << "Something went wrong" << std::endl;
@@ -375,6 +378,10 @@ void Faction::decide_buildings() {
 
 void Faction::decide_ships() {
 	
+	if (_capital_tile == nullptr) {
+		return;
+	}
+
 	// Freighters
 	if (Random::randc(1, 4) == 1 && _numfreighters <= FREIGHTER_LIMIT) {
 		for (StarSector* ss : _ssv) {
@@ -533,4 +540,12 @@ void Faction::discover_nation(Faction* f) {
 	diplomatic_relations[f] = Random::randc(-25, 25);
 	f->diplomatic_relations[this] = Random::randc(-25, 25);
 	std::cout << _name << " has met " << f->get_name() << " " << diplomatic_relations[f] << " " << f->diplomatic_relations[this] << std::endl;
+}
+
+void Faction::clean() {
+	_owned_tiles.clear();
+	_ssv.clear();
+	_capital_tile = nullptr;
+	_heroes.clear();
+	spaceships.clear();
 }

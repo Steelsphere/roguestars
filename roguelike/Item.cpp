@@ -70,3 +70,13 @@ void Item::draw() {
 		Actor::draw();
 	}
 }
+
+void Item::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_is_in_inv);
+}
+
+void Item::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_is_in_inv = zip->getInt();
+}

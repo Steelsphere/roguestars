@@ -3,6 +3,7 @@
 #include "Spaceship.h"
 #include "Faction.h"
 #include "GameObjects.h"
+#include "Serializer.h"
 
 #include <iostream>
 #include <string>
@@ -404,10 +405,29 @@ Economy::Goods Economy::trend(Economy::SUPPLY_TYPES type) {
 	}
 }
 
+void Economy::serialize(TCODZip* zip) {
+	supply.serialize(zip); // Goods
+	demand.serialize(zip); // demand
+	Serializer::serialize_vector(zip, Serializer::pointer_vector_to_reference(buildings));
+	Serializer::serialize_vector(zip, supply_history);
+	Serializer::serialize_vector(zip, demand_history);
+}
+
+void Economy::deserialize(TCODZip* zip) {
+	supply.deserialize(zip); // Goods
+	demand.deserialize(zip); // demand
+	buildings = Serializer::deserialize_vector<Building>(zip, true);
+	for (auto* b : buildings) {
+		b->economy = this;
+	}
+	supply_history = Serializer::deserialize_vector<Goods>(zip);
+	demand_history = Serializer::deserialize_vector<Goods>(zip);
+}
+
 Economy::Building::Building(Economy* e) : economy(e)
 {}
 
-void Economy::Building::serialize(TCODZip * zip) {
+void Economy::Building::serialize(TCODZip* zip) {
 	cost.serialize(zip);
 	zip->putInt(tier);
 	zip->putString(name.c_str());
@@ -415,8 +435,12 @@ void Economy::Building::serialize(TCODZip * zip) {
 	zip->putColor(&color);
 }
 
-void Economy::Building::deserialize(TCODZip * zip) {
-
+void Economy::Building::deserialize(TCODZip* zip) {
+	cost.deserialize(zip);
+	tier = zip->getInt();
+	name = zip->getString();
+	initial = zip->getString();
+	color = zip->getColor();
 }
 
 Buildings::FarmingComplex::FarmingComplex(Economy* e) : Economy::Building(e) {

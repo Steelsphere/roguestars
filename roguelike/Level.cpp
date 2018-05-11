@@ -50,6 +50,8 @@ void Level::generate_level(int size, LEVEL_TYPE type) {
 	_type = type;
 	id = Random::random(Random::generator);
 
+	_chunks.clear();
+
 	for (int i = 0; i < _map.size(); i++) {
 		_map[i].resize(_width);
 	}
@@ -407,6 +409,12 @@ void Level::save_level_file(std::string path) {
 	zip.putInt(_type);
 
 	for (int i = 0; i < _actors.size(); i++) {
+		const char* typestring = typeid((*_actors[i])).name();
+		if (typestring != typeid(Space).name()) {
+			std::cout << typestring << std::endl;
+		}
+
+		zip.putString(typestring);
 		_actors[i]->serialize(&zip);
 	}
 
@@ -424,11 +432,13 @@ Level* Level::load_level_file(std::string path) {
 	int type;
 	type = zip.getInt();
 
+	int count = 0;
+
 	std::cout << "IMPORTANT!!!" << type << std::endl;
 
 	while (true) {
 		std::string typestring = zip.getString();
-
+		
 		if (typestring.size() == 0) {
 			break;
 		}

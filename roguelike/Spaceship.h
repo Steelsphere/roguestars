@@ -10,12 +10,16 @@ class Faction;
 
 class Spaceship : public Actor {
 public:
+	Spaceship() {}
 	Spaceship(char c, StarSector* s, Faction* f);
 	~Spaceship();
 
 	virtual void update();
 	void path_to_location(int x, int y);
 	void follow_path();
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 
 	Economy::Goods cost;
 	std::vector<Actor*> path;
@@ -31,11 +35,15 @@ public:
 		IDLE
 	};
 
+	Freighter() {}
 	Freighter(StarSector* s, Faction* f);
 
 	virtual void update() override;
 
 	void route(StarSector* start, StarSector* end, Economy::Goods g);
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 
 	Economy::Goods cargo;
 	FREIGHTER_ACTION action = NONE;
@@ -55,9 +63,13 @@ public:
 		SCOUTING
 	};
 
+	Scout() {}
 	Scout(StarSector* s, Faction* f);
 
 	virtual void update() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 
 	SCOUT_ACTION action = NONE;
 };
@@ -74,9 +86,13 @@ public:
 		DEFENDING
 	};
 
+	Warship() {}
 	Warship(StarSector* s, Faction* f);
 
 	virtual void update() override;
+
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
 
 	MILSHIP_ACTION action = NONE;
 

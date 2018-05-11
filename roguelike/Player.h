@@ -26,6 +26,9 @@ public:
 
 	void set_alias(const std::string& str) { _alias = str; }
 
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
+
 protected:
 	InfoViewer* _info = nullptr;
 
@@ -35,6 +38,7 @@ private:
 
 class Dummy : public Player {
 public:
+	Dummy() {}
 	Dummy(int x, int y, int z, char c, TCODColor color);
 
 	~Dummy();

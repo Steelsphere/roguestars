@@ -240,6 +240,18 @@ void Input::input(TCOD_key_t key, TCOD_mouse_t mouse) {
 					GameEvent::lock_event();
 					_mode = MAP;
 					break;
+				case '.':
+					if (TCODConsole::root->isKeyPressed(TCODK_SHIFT)) {
+						if (GameObjects::player_controlled) {
+							for (Actor* a : Actor::get_actors(_reciever->get_world_pos()[0], _reciever->get_world_pos()[1], 0)) {
+								a->on_pg_down();
+							}
+						}
+						break;
+					}
+				case ',':
+					GameEvent::set_event(GameEvent::UPWARDS);
+					break;
 				}
 				break;
 			}

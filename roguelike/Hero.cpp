@@ -142,3 +142,17 @@ void Hero::simulate() {
 	}
 	
 }
+
+void Hero::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_in_playarea);
+	zip->putInt(_action); // Action
+	zip->putInt(_moving);
+}
+
+void Hero::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_in_playarea = zip->getInt();
+	_action = (Action)zip->getInt(); // Action
+	_moving = zip->getInt();
+}

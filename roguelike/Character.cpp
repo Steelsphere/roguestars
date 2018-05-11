@@ -62,6 +62,30 @@ bool Character::is_item_in_inventory(const std::string& item) {
 	return false;
 }
 
+void Character::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_playertime);
+	zip->putInt(_health);
+	zip->putInt(_speed);
+	zip->putInt(_selftime);
+	zip->putInt(_action_available);
+//	_inventory.serialize(zip); // std::vector<Item *>
+//	_bodyparts.serialize(zip); // std::vector<Bodypart>
+//	_chbuf.serialize(zip); // static std::vector<Character *>
+}
+
+void Character::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_playertime = zip->getInt();
+	_health = zip->getInt();
+	_speed = zip->getInt();
+	_selftime = zip->getInt();
+	_action_available = zip->getInt();
+//	_inventory.deserialize(zip); // std::vector<Item *>
+//	_bodyparts.deserialize(zip); // std::vector<Bodypart>
+//	_chbuf.deserialize(zip); // std::vector<Character
+}
+
 Monster::Monster(int x, int y, int z) : Character(x, y, z) {
 	_c = 'M';
 	_fcolor = TCODColor::brass;

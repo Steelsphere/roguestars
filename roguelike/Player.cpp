@@ -136,6 +136,16 @@ void Player::draw() {
 	Actor::draw();
 }
 
+void Player::serialize(TCODZip* zip) {
+	Character::serialize(zip);
+	zip->putString(_alias.c_str());
+}
+
+void Player::deserialize(TCODZip* zip) {
+	Character::deserialize(zip);
+	_alias = zip->getString();
+}
+
 Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, color) {
 	GameObjects::player_controlled = false;
 	auto* m = Actor::get_map();
@@ -166,3 +176,4 @@ void Dummy::draw_mem() {
 	TCODConsole::root->setCharForeground(_screen_x, _screen_y, _fcolor);
 	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
 }
+

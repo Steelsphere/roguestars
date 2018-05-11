@@ -282,10 +282,17 @@ void TravelPoint::colonize(Faction* f) {
 void TravelPoint::serialize(TCODZip* zip) {
 	Actor::serialize(zip);
 	zip->putInt(id);
+	economy.serialize(zip); // Economy
+	zip->putString(alias.c_str());
+	zip->putInt(colonized);
 }
 
 void TravelPoint::deserialize(TCODZip* zip) {
 	Actor::deserialize(zip);
+	id = zip->getInt();
+	economy.deserialize(zip); // Economy
+	alias = zip->getString();
+	colonized = zip->getInt();
 }
 
 StarSector::StarSector(int x, int y, int z) : TravelPoint(x, y, z) {
@@ -310,13 +317,11 @@ void StarSector::on_pg_down() {
 }
 
 void StarSector::serialize(TCODZip* zip) {
-	Actor::serialize(zip);
-	zip->putInt(id);
+	TravelPoint::serialize(zip);
 }
 
 void StarSector::deserialize(TCODZip* zip) {
-	Actor::deserialize(zip);
-	id = zip->getInt();
+	TravelPoint::deserialize(zip);
 }
 
 SolarSystem::SolarSystem(int x, int y, int z) : TravelPoint(x, y, z) {
@@ -341,13 +346,11 @@ void SolarSystem::on_pg_down() {
 }
 
 void SolarSystem::serialize(TCODZip* zip) {
-	Actor::serialize(zip);
-	zip->putInt(id);
+	TravelPoint::serialize(zip);
 }
 
 void SolarSystem::deserialize(TCODZip* zip) {
-	Actor::deserialize(zip);
-	id = zip->getInt();
+	TravelPoint::serialize(zip);
 }
 
 Planet::Planet(int x, int y, int z, PLANET_TYPE type) : TravelPoint(x, y, z) {
@@ -377,13 +380,11 @@ void Planet::on_pg_down() {
 }
 
 void Planet::serialize(TCODZip* zip) {
-	Actor::serialize(zip);
-	zip->putInt(id);
+	TravelPoint::serialize(zip);
 }
 
 void Planet::deserialize(TCODZip* zip) {
-	Actor::deserialize(zip);
-	id = zip->getInt();
+	TravelPoint::serialize(zip);
 }
 
 
@@ -454,13 +455,11 @@ Biome::Biome(int x, int y, int z, int type) : TravelPoint(x, y, z) {
 }
 
 void Biome::serialize(TCODZip* zip) {
-	Actor::serialize(zip);
-	zip->putInt(id);
+	TravelPoint::serialize(zip);
 }
 
 void Biome::deserialize(TCODZip* zip) {
-	Actor::deserialize(zip);
-	id = zip->getInt();
+	TravelPoint::serialize(zip);
 }
 
 void Biome::on_pg_down() {

@@ -113,6 +113,8 @@ public:
 
 	void discover_nation(Faction* f);
 
+	void clean();
+
 private:
 	static std::vector<Faction*> _factions;
 	std::vector<Actor*> _owned_tiles;

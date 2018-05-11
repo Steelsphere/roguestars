@@ -244,6 +244,7 @@ public:
 			INDUSTRIAL_COMPLEX,
 		};
 
+		Building::Building() {}
 		Building::Building(Economy* e);
 
 		virtual void update() { std::cout << "DEBUG ERROR: A BUILDING HAS NO UPDATE FUNCTION\n"; }
@@ -287,6 +288,9 @@ public:
 	bool has_building(const std::string& type);
 
 	Goods trend(SUPPLY_TYPES type);
+
+	void serialize(TCODZip* zip);
+	void deserialize(TCODZip* zip);
 };
 
 namespace Buildings {

@@ -1,0 +1,892 @@
+void Actor::serialize(TCODZip* zip) {
+	zip->putInt(_screen_x);
+	zip->putInt(_screen_y);
+	zip->putInt(_screen_z);
+	zip->putInt(_world_x);
+	zip->putInt(_world_y);
+	zip->putInt(_world_z);
+	zip->putChar(_c);
+	zip->putColor(&_fcolor);
+	zip->putColor(&_bcolor);
+	zip->putString(_name.c_str());
+	zip->putInt(_impassable);
+	zip->putInt(_transparent);
+	zip->putInt(_memorized);
+	zip->putInt(_in_fov);
+}
+
+void Actor::deserialize(TCODZip* zip) {
+	_screen_x = zip->getInt();
+	_screen_y = zip->getInt();
+	_screen_z = zip->getInt();
+	_world_x = zip->getInt();
+	_world_y = zip->getInt();
+	_world_z = zip->getInt();
+	_c = zip->getChar();
+	_fcolor = zip->getColor();
+	_bcolor = zip->getColor();
+	_name = zip->getString();
+	_impassable = zip->getInt();
+	_transparent = zip->getInt();
+	_memorized = zip->getInt();
+	_in_fov = zip->getInt();
+}
+
+void AI::serialize(TCODZip* zip) {
+}
+
+void AI::deserialize(TCODZip* zip) {
+}
+
+void Camera::serialize(TCODZip* zip) {
+	zip->putInt(_screen_x);
+	zip->putInt(_screen_y);
+	zip->putInt(_screen_z);
+	zip->putInt(_world_x);
+	zip->putInt(_world_y);
+	zip->putInt(_world_z);
+}
+
+void Camera::deserialize(TCODZip* zip) {
+	_screen_x = zip->getInt();
+	_screen_y = zip->getInt();
+	_screen_z = zip->getInt();
+	_world_x = zip->getInt();
+	_world_y = zip->getInt();
+	_world_z = zip->getInt();
+}
+
+void Character::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_playertime);
+	zip->putInt(_health);
+	zip->putInt(_speed);
+	zip->putInt(_selftime);
+	zip->putInt(_action_available);
+	_inventory.serialize(zip); // std::vector<Item *>
+	_bodyparts.serialize(zip); // std::vector<Bodypart>
+	_chbuf.serialize(zip); // static std::vector<Character *>
+}
+
+void Character::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_playertime = zip->getInt();
+	_health = zip->getInt();
+	_speed = zip->getInt();
+	_selftime = zip->getInt();
+	_action_available = zip->getInt();
+	_inventory.deserialize(zip); // std::vector<Item *>
+	_bodyparts.deserialize(zip); // std::vector<Bodypart>
+	_chbuf.deserialize(zip); // std::vector<Character
+}
+
+void Bodypart::serialize(TCODZip* zip) {
+	zip->putString(name.c_str());
+	zip->putInt(health);
+}
+
+void Bodypart::deserialize(TCODZip* zip) {
+	name = zip->getString();
+	health = zip->getInt();
+}
+
+void Monster::serialize(TCODZip* zip) {
+	Character::serialize(zip);
+}
+
+void Monster::deserialize(TCODZip* zip) {
+	Character::deserialize(zip);
+}
+
+void Economy::serialize(TCODZip* zip) {
+	supply.serialize(zip); // Goods
+	.serialize(zip); // demand
+	buildings.serialize(zip); // std::vector<Building *>
+	underconstruction_buildings.serialize(zip); // std::vector<Building *>
+	supply_history.serialize(zip); // std::vector<Goods>
+	demand_history.serialize(zip); // std::vector<Goods>
+}
+
+void Economy::deserialize(TCODZip* zip) {
+	supply.deserialize(zip); // Goods
+	.deserialize(zip); // demand
+	buildings.deserialize(zip); // std::vector<Building *>
+	underconstruction_buildings.deserialize(zip); // std::vector<Building *>
+	supply_history.deserialize(zip); // std::vector<Goods>
+	demand_history.deserialize(zip); // std::vector<Goods>
+}
+
+void Goods::serialize(TCODZip* zip) {
+	zip->putInt(food);
+	zip->putInt(water);
+	zip->putInt(air);
+	zip->putInt(consumer_goods);
+	zip->putInt(industrial_goods);
+	zip->putInt(luxury_goods);
+	zip->putInt(military_goods);
+	zip->putInt(minerals);
+	zip->putInt(workers);
+}
+
+void Goods::deserialize(TCODZip* zip) {
+	food = zip->getInt();
+	water = zip->getInt();
+	air = zip->getInt();
+	consumer_goods = zip->getInt();
+	industrial_goods = zip->getInt();
+	luxury_goods = zip->getInt();
+	military_goods = zip->getInt();
+	minerals = zip->getInt();
+	workers = zip->getInt();
+}
+
+void Building::serialize(TCODZip* zip) {
+	cost.serialize(zip); // Goods
+	zip->putInt(tier);
+	zip->putString(name.c_str());
+	zip->putString(initial.c_str());
+	zip->putColor(&color);
+}
+
+void Building::deserialize(TCODZip* zip) {
+	cost.deserialize(zip); // Goods
+	tier = zip->getInt();
+	name = zip->getString();
+	initial = zip->getString();
+	color = zip->getColor();
+}
+
+void FarmingComplex::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void FarmingComplex::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void MiningComplex::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void MiningComplex::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void IndustrialComplex::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void IndustrialComplex::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void Infrastructure::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void Infrastructure::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void SpacePort::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void SpacePort::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void MIC::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void MIC::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void Commercial::serialize(TCODZip* zip) {
+	Economy::Building::serialize(zip);
+}
+
+void Commercial::deserialize(TCODZip* zip) {
+	Economy::Building::deserialize(zip);
+}
+
+void Faction::serialize(TCODZip* zip) {
+	spaceships.serialize(zip); // std::vector<Spaceship *>
+	diplomatic_relations.serialize(zip); // std::map<Faction *, int>
+	_factions.serialize(zip); // static std::vector<Faction *>
+	_owned_tiles.serialize(zip); // std::vector<Actor *>
+	_ssv.serialize(zip); // std::vector<StarSector *>
+	zip->putColor(&_color);
+	zip->putString(_name.c_str());
+	_heroes.serialize(zip); // std::vector<Hero *>
+	zip->putInt(_numfreighters);
+	zip->putInt(_numscouts);
+}
+
+void Faction::deserialize(TCODZip* zip) {
+	spaceships.deserialize(zip); // std::vector<Spaceship *>
+	diplomatic_relations.deserialize(zip); // std::map<Faction *, int>
+	_factions.deserialize(zip); // std::vector<Faction
+	_owned_tiles.deserialize(zip); // std::vector<Actor *>
+	_ssv.deserialize(zip); // std::vector<StarSector *>
+	_color = zip->getColor();
+	_name = zip->getString();
+	_heroes.deserialize(zip); // std::vector<Hero *>
+	_numfreighters = zip->getInt();
+	_numscouts = zip->getInt();
+}
+
+void Game::serialize(TCODZip* zip) {
+	zip->putInt(_screen_width);
+	zip->putInt(_screen_height);
+	zip->putInt(_num_actors_drawn);
+	zip->putInt(_num_updates);
+	zip->putInt(_turn);
+	zip->putInt(_galaxy_id);
+	zip->putInt(_starsector_id);
+	zip->putInt(_solarsystem_id);
+	zip->putInt(_world_id);
+	zip->putInt(_simturn);
+	zip->putInt(_sim);
+	_key.serialize(zip); // TCOD_key_t
+	_mouse.serialize(zip); // TCOD_mouse_t
+	_event.serialize(zip); // TCOD_event_t
+	zip->putString(_savegame_directory.c_str());
+}
+
+void Game::deserialize(TCODZip* zip) {
+	_screen_width = zip->getInt();
+	_screen_height = zip->getInt();
+	_num_actors_drawn = zip->getInt();
+	_num_updates = zip->getInt();
+	_turn = zip->getInt();
+	_galaxy_id = zip->getInt();
+	_starsector_id = zip->getInt();
+	_solarsystem_id = zip->getInt();
+	_world_id = zip->getInt();
+	_simturn = zip->getInt();
+	_sim = zip->getInt();
+	_key.deserialize(zip); // TCOD_key_t
+	_mouse.deserialize(zip); // TCOD_mouse_t
+	_event.deserialize(zip); // TCOD_event_t
+	_savegame_directory = zip->getString();
+}
+
+void GameEvent::serialize(TCODZip* zip) {
+	_currevent.serialize(zip); // static GAME_EVENT
+	_lastevent.serialize(zip); // static GAME_EVENT
+	zip->putInt(_locked);
+	zip->putInt(_param);
+}
+
+void GameEvent::deserialize(TCODZip* zip) {
+	_currevent.deserialize(zip); // GAME_EVENT
+	_lastevent.deserialize(zip); // GAME_EVENT
+	_locked = zip->getInt();
+	_param = zip->getInt();
+}
+
+void GAME_STATUS::serialize(TCODZip* zip) {
+}
+
+void GAME_STATUS::deserialize(TCODZip* zip) {
+}
+
+void GameObjects::serialize(TCODZip* zip) {
+	zip->putInt(screen_width);
+	zip->putInt(screen_height);
+	zip->putInt(ticks);
+	zip->putInt(level_id_to_load);
+	zip->putInt(new_level_id);
+	zip->putInt(old_level_id);
+	zip->putInt(galaxy_size);
+	zip->putFloat(time);
+	zip->putInt(update);
+	zip->putInt(player_controlled);
+	zip->putInt(new_turn);
+	zip->putString(savegame_path.c_str());
+	map_dir.serialize(zip); // static std::map<std::string, std::pair<int, int> >
+	.serialize(zip); // static std::map<std::string, Actor * ( * ) ( )> type_map
+}
+
+void GameObjects::deserialize(TCODZip* zip) {
+	screen_width = zip->getInt();
+	screen_height = zip->getInt();
+	ticks = zip->getInt();
+	level_id_to_load = zip->getInt();
+	new_level_id = zip->getInt();
+	old_level_id = zip->getInt();
+	galaxy_size = zip->getInt();
+	time = zip->getFloat();
+	update = zip->getInt();
+	player_controlled = zip->getInt();
+	new_turn = zip->getInt();
+	savegame_path = zip->getString();
+	map_dir.deserialize(zip); // std::map<std::string,
+	.deserialize(zip); // std::map<std::string,
+}
+
+void GUI::serialize(TCODZip* zip) {
+	zip->putInt(_x);
+	zip->putInt(_y);
+	zip->putInt(_width);
+	zip->putInt(_height);
+	zip->putFloat(_transparency);
+	zip->putInt(_update);
+	_text.serialize(zip); // std::vector<Text>
+	_type.serialize(zip); // GUI_TYPE
+	_buffer.serialize(zip); // static std::vector<GUI *>
+}
+
+void GUI::deserialize(TCODZip* zip) {
+	_x = zip->getInt();
+	_y = zip->getInt();
+	_width = zip->getInt();
+	_height = zip->getInt();
+	_transparency = zip->getFloat();
+	_update = zip->getInt();
+	_text.deserialize(zip); // std::vector<Text>
+	_type.deserialize(zip); // GUI_TYPE
+	_buffer.deserialize(zip); // std::vector<GUI
+}
+
+void Text::serialize(TCODZip* zip) {
+	zip->putInt(x);
+	zip->putInt(y);
+	zip->putInt(w);
+	zip->putInt(h);
+	zip->putString(str.c_str());
+	zip->putColor(&color);
+	zip->putInt(ovrcolor);
+	zip->putColor(&bcolor);
+}
+
+void Text::deserialize(TCODZip* zip) {
+	x = zip->getInt();
+	y = zip->getInt();
+	w = zip->getInt();
+	h = zip->getInt();
+	str = zip->getString();
+	color = zip->getColor();
+	ovrcolor = zip->getInt();
+	bcolor = zip->getColor();
+}
+
+void Message_Box::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void Message_Box::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void Log::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void Log::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void HealthInfo::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void HealthInfo::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void TileInfo::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void TileInfo::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void CharInfo::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void CharInfo::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void MiscInfo::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void MiscInfo::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void SectorInfo::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void SectorInfo::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void Status::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void Status::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void SelectionBox::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+	zip->putInt(selection);
+	_mtext.serialize(zip); // std::vector<MText>
+}
+
+void SelectionBox::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+	selection = zip->getInt();
+	_mtext.deserialize(zip); // std::vector<MText>
+}
+
+void MText::serialize(TCODZip* zip) {
+	zip->putInt(x);
+	zip->putInt(y);
+	zip->putInt(w);
+	zip->putInt(h);
+	zip->putString(str.c_str());
+	zip->putColor(&color);
+	zip->putInt(selected);
+	action.serialize(zip); // GameEvent::GAME_EVENT
+	zip->putColor(&bcolor);
+}
+
+void MText::deserialize(TCODZip* zip) {
+	x = zip->getInt();
+	y = zip->getInt();
+	w = zip->getInt();
+	h = zip->getInt();
+	str = zip->getString();
+	color = zip->getColor();
+	selected = zip->getInt();
+	action.deserialize(zip); // GameEvent::GAME_EVENT
+	bcolor = zip->getColor();
+}
+
+void SelectionBoxEx::serialize(TCODZip* zip) {
+	SelectionBox::serialize(zip);
+}
+
+void SelectionBoxEx::deserialize(TCODZip* zip) {
+	SelectionBox::deserialize(zip);
+}
+
+void Picture::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void Picture::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void MainMenu::serialize(TCODZip* zip) {
+	SelectionBox::serialize(zip);
+	_state.serialize(zip); // STATE
+}
+
+void MainMenu::deserialize(TCODZip* zip) {
+	SelectionBox::deserialize(zip);
+	_state.deserialize(zip); // STATE
+}
+
+void ESCMenu::serialize(TCODZip* zip) {
+	SelectionBox::serialize(zip);
+}
+
+void ESCMenu::deserialize(TCODZip* zip) {
+	SelectionBox::deserialize(zip);
+}
+
+void InfoViewer::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void InfoViewer::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void InventoryPanel::serialize(TCODZip* zip) {
+	SelectionBoxEx::serialize(zip);
+}
+
+void InventoryPanel::deserialize(TCODZip* zip) {
+	SelectionBoxEx::deserialize(zip);
+}
+
+void Map::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void Map::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void LoadingScreen::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void LoadingScreen::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void TextBox::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+	zip->putString(_val.c_str());
+	zip->putInt(_done);
+	zip->putInt(_digits_only);
+}
+
+void TextBox::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+	_val = zip->getString();
+	_done = zip->getInt();
+	_digits_only = zip->getInt();
+}
+
+void GalaxySizeSelection::serialize(TCODZip* zip) {
+	SelectionBox::serialize(zip);
+}
+
+void GalaxySizeSelection::deserialize(TCODZip* zip) {
+	SelectionBox::deserialize(zip);
+}
+
+void SimulationScreen::serialize(TCODZip* zip) {
+	GUI::serialize(zip);
+}
+
+void SimulationScreen::deserialize(TCODZip* zip) {
+	GUI::deserialize(zip);
+}
+
+void Hero::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_in_playarea);
+	_action.serialize(zip); // Action
+	zip->putInt(_moving);
+}
+
+void Hero::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_in_playarea = zip->getInt();
+	_action.deserialize(zip); // Action
+	_moving = zip->getInt();
+}
+
+void Input::serialize(TCODZip* zip) {
+	_mode.serialize(zip); // static MODE
+	_lastkey.serialize(zip); // static TCOD_key_t
+	_lastmouse.serialize(zip); // static TCOD_mouse_t
+}
+
+void Input::deserialize(TCODZip* zip) {
+	_mode.deserialize(zip); // MODE
+	_lastkey.deserialize(zip); // TCOD_key_t
+	_lastmouse.deserialize(zip); // TCOD_mouse_t
+}
+
+void Item::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_is_in_inv);
+}
+
+void Item::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_is_in_inv = zip->getInt();
+}
+
+void Level::serialize(TCODZip* zip) {
+	zip->putInt(id);
+	zip->putInt(_width);
+	zip->putInt(_height);
+	_actors.serialize(zip); // std::vector<Actor *>
+	_map.serialize(zip); // std::vector<std::vector<std::vector<Actor *> > >
+	_noise.serialize(zip); // FastNoise
+	_type.serialize(zip); // LEVEL_TYPE
+	zip->putString(_savedir.c_str());
+	_chunks.serialize(zip); // std::vector<Chunk>
+	_loaded_chunks.serialize(zip); // std::vector<Chunk *>
+}
+
+void Level::deserialize(TCODZip* zip) {
+	id = zip->getInt();
+	_width = zip->getInt();
+	_height = zip->getInt();
+	_actors.deserialize(zip); // std::vector<Actor *>
+	_map.deserialize(zip); // std::vector<std::vector<std::vector<Actor *> > >
+	_noise.deserialize(zip); // FastNoise
+	_type.deserialize(zip); // LEVEL_TYPE
+	_savedir = zip->getString();
+	_chunks.deserialize(zip); // std::vector<Chunk>
+	_loaded_chunks.deserialize(zip); // std::vector<Chunk *>
+}
+
+void Chunk::serialize(TCODZip* zip) {
+	chunktiles.serialize(zip); // std::vector<ChunkTile>
+	pos.serialize(zip); // Vec2
+	zip->putInt(loaded);
+}
+
+void Chunk::deserialize(TCODZip* zip) {
+	chunktiles.deserialize(zip); // std::vector<ChunkTile>
+	pos.deserialize(zip); // Vec2
+	loaded = zip->getInt();
+}
+
+void ChunkTile::serialize(TCODZip* zip) {
+	relpos.serialize(zip); // Vec2
+}
+
+void ChunkTile::deserialize(TCODZip* zip) {
+	relpos.deserialize(zip); // Vec2
+}
+
+void LightSystem::serialize(TCODZip* zip) {
+	_original_colors.serialize(zip); // std::map<Actor *, TCODColor>
+}
+
+void LightSystem::deserialize(TCODZip* zip) {
+	_original_colors.deserialize(zip); // std::map<Actor *, TCODColor>
+}
+
+void Player::serialize(TCODZip* zip) {
+	Character::serialize(zip);
+	zip->putString(_alias.c_str());
+}
+
+void Player::deserialize(TCODZip* zip) {
+	Character::deserialize(zip);
+	_alias = zip->getString();
+}
+
+void Dummy::serialize(TCODZip* zip) {
+	Player::serialize(zip);
+}
+
+void Dummy::deserialize(TCODZip* zip) {
+	Player::deserialize(zip);
+}
+
+void Random::serialize(TCODZip* zip) {
+	device.serialize(zip); // static std::random_device
+	generator.serialize(zip); // static std::mt19937_64
+	random.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_four.serialize(zip); // static std::uniform_int_distribution<int>
+	big_number.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_sixteen.serialize(zip); // static std::uniform_int_distribution<int>
+	coinflip.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_thirty_two.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_sixty_four.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_one_twenty_eight.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_two_fifty_six.serialize(zip); // static std::uniform_int_distribution<int>
+	one_to_eight.serialize(zip); // static std::uniform_int_distribution<int>
+}
+
+void Random::deserialize(TCODZip* zip) {
+	device.deserialize(zip); // std::random_device
+	generator.deserialize(zip); // std::mt19937_64
+	random.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_four.deserialize(zip); // std::uniform_int_distribution<int>
+	big_number.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_sixteen.deserialize(zip); // std::uniform_int_distribution<int>
+	coinflip.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_thirty_two.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_sixty_four.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_one_twenty_eight.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_two_fifty_six.deserialize(zip); // std::uniform_int_distribution<int>
+	one_to_eight.deserialize(zip); // std::uniform_int_distribution<int>
+}
+
+void Spaceship::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	cost.serialize(zip); // Economy::Goods
+	path.serialize(zip); // std::vector<Actor *>
+}
+
+void Spaceship::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	cost.deserialize(zip); // Economy::Goods
+	path.deserialize(zip); // std::vector<Actor *>
+}
+
+void Freighter::serialize(TCODZip* zip) {
+	Spaceship::serialize(zip);
+	cargo.serialize(zip); // Economy::Goods
+	action.serialize(zip); // FREIGHTER_ACTION
+	_willpickup.serialize(zip); // Economy::Goods
+}
+
+void Freighter::deserialize(TCODZip* zip) {
+	Spaceship::deserialize(zip);
+	cargo.deserialize(zip); // Economy::Goods
+	action.deserialize(zip); // FREIGHTER_ACTION
+	_willpickup.deserialize(zip); // Economy::Goods
+}
+
+void Scout::serialize(TCODZip* zip) {
+	Spaceship::serialize(zip);
+	action.serialize(zip); // SCOUT_ACTION
+}
+
+void Scout::deserialize(TCODZip* zip) {
+	Spaceship::deserialize(zip);
+	action.deserialize(zip); // SCOUT_ACTION
+}
+
+void Warship::serialize(TCODZip* zip) {
+	Spaceship::serialize(zip);
+	action.serialize(zip); // MILSHIP_ACTION
+	_patrol_points.serialize(zip); // std::vector<StarSector *>
+}
+
+void Warship::deserialize(TCODZip* zip) {
+	Spaceship::deserialize(zip);
+	action.deserialize(zip); // MILSHIP_ACTION
+	_patrol_points.deserialize(zip); // std::vector<StarSector *>
+}
+
+void Structure::serialize(TCODZip* zip) {
+}
+
+void Structure::deserialize(TCODZip* zip) {
+}
+
+void Tile::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+}
+
+void Tile::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+}
+
+void TravelPoint::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(id);
+	economy.serialize(zip); // Economy
+	zip->putString(alias.c_str());
+	zip->putInt(colonized);
+}
+
+void TravelPoint::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	id = zip->getInt();
+	economy.deserialize(zip); // Economy
+	alias = zip->getString();
+	colonized = zip->getInt();
+}
+
+void StarSector::serialize(TCODZip* zip) {
+	TravelPoint::serialize(zip);
+}
+
+void StarSector::deserialize(TCODZip* zip) {
+	TravelPoint::deserialize(zip);
+}
+
+void SolarSystem::serialize(TCODZip* zip) {
+	TravelPoint::serialize(zip);
+}
+
+void SolarSystem::deserialize(TCODZip* zip) {
+	TravelPoint::deserialize(zip);
+}
+
+void Planet::serialize(TCODZip* zip) {
+	TravelPoint::serialize(zip);
+}
+
+void Planet::deserialize(TCODZip* zip) {
+	TravelPoint::deserialize(zip);
+}
+
+void Biome::serialize(TCODZip* zip) {
+	TravelPoint::serialize(zip);
+}
+
+void Biome::deserialize(TCODZip* zip) {
+	TravelPoint::deserialize(zip);
+}
+
+void Door::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	zip->putInt(_isopen);
+}
+
+void Door::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	_isopen = zip->getInt();
+}
+
+void Space::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+}
+
+void Space::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+}
+
+void Time::serialize(TCODZip* zip) {
+	zip->putInt(_timestamp);
+}
+
+void Time::deserialize(TCODZip* zip) {
+	_timestamp.deserialize(zip); // unsigned long long
+}
+
+void Vec2::serialize(TCODZip* zip) {
+	zip->putInt(x);
+	zip->putInt(y);
+}
+
+void Vec2::deserialize(TCODZip* zip) {
+	x = zip->getInt();
+	y = zip->getInt();
+}
+
+void World::serialize(TCODZip* zip) {
+	zip->putInt(_width);
+	zip->putInt(_height);
+	zip->putInt(_numlevels);
+	zip->putInt(_temperature);
+	_currpos.serialize(zip); // std::pair<int, int>
+	_world.serialize(zip); // std::vector<std::vector<LevelTile> >
+	_terrain_n.serialize(zip); // FastNoise
+	_biome_n.serialize(zip); // FastNoise
+}
+
+void World::deserialize(TCODZip* zip) {
+	_width = zip->getInt();
+	_height = zip->getInt();
+	_numlevels = zip->getInt();
+	_temperature = zip->getInt();
+	_currpos.deserialize(zip); // std::pair<int, int>
+	_world.deserialize(zip); // std::vector<std::vector<LevelTile> >
+	_terrain_n.deserialize(zip); // FastNoise
+	_biome_n.deserialize(zip); // FastNoise
+}
+
+void LevelTile::serialize(TCODZip* zip) {
+	biome.serialize(zip); // Level::LEVEL_TYPE
+	zip->putInt(temp);
+	zip->putInt(height);
+	zip->putFloat(biome_noise);
+}
+
+void LevelTile::deserialize(TCODZip* zip) {
+	biome.deserialize(zip); // Level::LEVEL_TYPE
+	temp = zip->getInt();
+	height = zip->getInt();
+	biome_noise = zip->getFloat();
+}
+

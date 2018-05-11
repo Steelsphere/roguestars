@@ -24,6 +24,9 @@ public:
 
 	void simulate();
 
+	virtual void serialize(TCODZip* zip) override;
+	virtual void deserialize(TCODZip* zip) override;
+
 private:
 	bool _in_playarea;
 	Faction* _faction;

@@ -218,13 +218,6 @@ void Actor::get_color(float* h, float* s, float* v) {
 }
 
 void Actor::serialize(TCODZip* zip) {
-	std::string typestring = typeid((*this)).name();
-	
-	if (typestring.size() == 0) {
-		std::cerr << "Serialization error!\n";
-	}
-	
-	zip->putString(typestring.c_str());
 	zip->putInt(_screen_x); zip->putInt(_screen_y); zip->putInt(_screen_z);
 	zip->putInt(_world_x); zip->putInt(_world_y); zip->putInt(_world_z);
 	zip->putChar(_c);

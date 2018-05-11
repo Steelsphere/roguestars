@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Hero.h"
 #include "Camera.h"
+#include "Spaceship.h"
 
 #include <typeinfo>
 #include <string>
@@ -42,15 +43,23 @@ std::map<std::string, std::pair<int, int>> GameObjects::map_dir = {
 
 std::map<std::string, Actor*(*)()> GameObjects::type_map = {
 	{ typeid(Actor).name(), create_actor_instance<Actor> },
-	{ typeid(Tile).name(), create_actor_instance<Tile> },
+	{ typeid(Character).name(), create_actor_instance<Character> },
+	{ typeid(Monster).name(), create_actor_instance<Monster> },
+	{ typeid(Hero).name(), create_actor_instance<Hero> },
 	{ typeid(Item).name(), create_actor_instance<Item> },
 	{ typeid(Player).name(), create_actor_instance<Player> },
+	{ typeid(Dummy).name(), create_actor_instance<Dummy> },
+	{ typeid(Spaceship).name(), create_actor_instance<Spaceship> },
+	{ typeid(Freighter).name(), create_actor_instance<Freighter> },
+	{ typeid(Scout).name(), create_actor_instance<Scout> },
+	{ typeid(Warship).name(), create_actor_instance<Warship> },
+	{ typeid(Tile).name(), create_actor_instance<Tile> },
+	{ typeid(TravelPoint).name(), create_actor_instance<TravelPoint> },
 	{ typeid(StarSector).name(), create_actor_instance<StarSector> },
 	{ typeid(SolarSystem).name(), create_actor_instance<SolarSystem> },
 	{ typeid(Planet).name(), create_actor_instance<Planet> },
 	{ typeid(Biome).name(), create_actor_instance<Biome> },
 	{ typeid(Door).name(), create_actor_instance<Door> },
-	{ typeid(Hero).name(), create_actor_instance<Hero> },
 	{ typeid(Space).name(), create_actor_instance<Space> },
 };
 

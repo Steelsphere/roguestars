@@ -16,6 +16,7 @@
 #include "World.h"
 #include "Light.h"
 #include "Time.h"
+#include "Serializer.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -568,6 +569,12 @@ void Game::new_solar_system() {
 
 void Game::new_star_sector() {
 	
+	if (_level->get_type() == Level::GALAXY) {
+		for (Faction* f : Faction::get_factions()) {
+			f->clean();
+		}
+	}
+
 	save_level();
 	
 	delete _level;
@@ -740,6 +747,12 @@ void Game::to_galaxy() {
 
 void Game::to_star_sector() {
 	
+	if (_level->get_type() == Level::GALAXY) {
+		for (Faction* f : Faction::get_factions()) {
+			f->clean();
+		}
+	}
+
 	if (GameObjects::is_directory_empty(_savegame_directory + "\\starsector")) {
 		new_star_sector();
 		fix_tile_id<SolarSystem>();

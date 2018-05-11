@@ -66,6 +66,18 @@ void Spaceship::follow_path() {
 	path.erase(path.begin());
 }
 
+void Spaceship::serialize(TCODZip* zip) {
+	Actor::serialize(zip);
+	cost.serialize(zip); // Economy::Goods
+//	path.serialize(zip); // std::vector<Actor *>
+}
+
+void Spaceship::deserialize(TCODZip* zip) {
+	Actor::deserialize(zip);
+	cost.deserialize(zip); // Economy::Goods
+//	path.deserialize(zip); // std::vector<Actor *>
+}
+
 Freighter::Freighter(StarSector* s, Faction* f) : Spaceship('F', s, f) {
 	cost.military_goods = 100;
 	_fcolor = TCODColor::orange;
@@ -129,6 +141,20 @@ void Freighter::route(StarSector* start, StarSector* end, Economy::Goods g) {
 	action = PICKUP;
 }
 
+void Freighter::serialize(TCODZip* zip) {
+	Spaceship::serialize(zip);
+	cargo.serialize(zip); // Economy::Goods
+	zip->putInt(action);
+	_willpickup.serialize(zip); // Economy::Goods
+}
+
+void Freighter::deserialize(TCODZip* zip) {
+	Spaceship::deserialize(zip);
+	cargo.deserialize(zip); // Economy::Goods
+	action = (FREIGHTER_ACTION)zip->getInt();
+	_willpickup.deserialize(zip); // Economy::Goods
+}
+
 Scout::Scout(StarSector* s, Faction* f) : Spaceship('s', s, f) {
 	cost.military_goods = 25;
 	_fcolor = TCODColor::blue;
@@ -157,6 +183,16 @@ void Scout::update() {
 			action = NONE;
 		}
 	}
+}
+
+void Scout::serialize(TCODZip* zip) {
+	Spaceship::serialize(zip);
+	zip->putInt(action);
+}
+
+void Scout::deserialize(TCODZip* zip) {
+	Spaceship::deserialize(zip);
+	action = (SCOUT_ACTION)zip->getInt();
 }
 
 Warship::Warship(StarSector* s, Faction* f) : Spaceship('M', s, f) {
@@ -198,4 +234,16 @@ void Warship::update() {
 			}
 		}
 	}
+}
+
+void Warship::serialize(TCODZip* zip) {
+	Spaceship::serialize(zip);
+	zip->putInt(action);
+//	_patrol_points.serialize(zip); // std::vector<StarSector *>
+}
+
+void Warship::deserialize(TCODZip* zip) {
+	Spaceship::deserialize(zip);
+	action = (MILSHIP_ACTION)zip->getInt();
+//	_patrol_points.deserialize(zip); // std::vector<StarSector *>
 }
