@@ -407,12 +407,12 @@ void Level::save_level_file(std::string path) {
 	int size = _width + _height;
 	zip.putInt(size);
 	zip.putInt(_type);
+	zip.putInt(_actors.size());
+
+	int count = 0;
 
 	for (int i = 0; i < _actors.size(); i++) {
 		const char* typestring = typeid((*_actors[i])).name();
-		if (typestring != typeid(Space).name()) {
-			std::cout << typestring << std::endl;
-		}
 
 		zip.putString(typestring);
 		_actors[i]->serialize(&zip);
@@ -431,12 +431,12 @@ Level* Level::load_level_file(std::string path) {
 	size = zip.getInt();
 	int type;
 	type = zip.getInt();
-
-	int count = 0;
+	int numactors;
+	numactors = zip.getInt();
 
 	std::cout << "IMPORTANT!!!" << type << std::endl;
 
-	while (true) {
+	for (int i = 0; i < numactors; i++) {
 		std::string typestring = zip.getString();
 		
 		if (typestring.size() == 0) {
@@ -581,7 +581,6 @@ void Level::update_chunks(const Camera& camera) {
 			}
 		}
 	}
-	std::cout << Vec2::distance(camera.get_world_position(), _chunks[0].get_midpoint()) << std::endl;
 }
 
 std::vector<Actor*> Level::get_loaded_actors() {

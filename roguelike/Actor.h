@@ -96,7 +96,7 @@ public:
 
 	std::string get_type() { return std::string(typeid(*this).name()); }
 
-	void delete_actor();
+	virtual void delete_actor();
 
 protected:
 	int _screen_x, _screen_y, _screen_z;

@@ -276,8 +276,11 @@ Actor* Actor::get_actor_scr(int x, int y) {
 void Actor::delete_actor() {
 	_buffer->erase(std::remove(_buffer->begin(), _buffer->end(), this));
 	auto* m = Actor::get_map();
-	(*m)[_world_x][_world_y].erase(std::find((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
-	std::cout << "Deleted actor at " << this << std::endl;
+	auto remove_iterator = std::remove((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this);
+	if (remove_iterator != (*m)[_world_x][_world_y].end()) {
+		(*m)[_world_x][_world_y].erase(remove_iterator);
+		std::cout << "Deleted actor at " << this << std::endl;
+	}
 }
 
 Vec2 Actor::get_screen_position() {

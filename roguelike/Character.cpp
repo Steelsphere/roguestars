@@ -31,7 +31,7 @@ Character::Character(int x, int y, int z, char c, TCODColor color, const std::st
 
 Character::~Character() {
 	_chbuf.erase(std::remove(_chbuf.begin(), _chbuf.end(), this), _chbuf.end());
-	delete_actor();
+	this->delete_actor();
 }
 
 void Character::update() {

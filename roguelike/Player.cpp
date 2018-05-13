@@ -28,9 +28,7 @@ Player::Player(int x, int y, int z, char c, TCODColor fcolor) : Character(x, y, 
 }
 
 
-Player::~Player()
-{
-}
+Player::~Player() {}
 
 
 void Player::move(const std::string& dir) {
@@ -150,10 +148,10 @@ Dummy::Dummy(int x, int y, int z, char c, TCODColor color) : Player(x, y, z, c, 
 	GameObjects::player_controlled = false;
 	auto* m = Actor::get_map();
 	(*m)[_world_x][_world_y].erase(std::remove((*m)[_world_x][_world_y].begin(), (*m)[_world_x][_world_y].end(), this));
+	_name = "Dummy";
 }
 
 Dummy::~Dummy() {
-	Character::~Character();
 	GameObjects::player_controlled = true;
 }
 
@@ -167,8 +165,14 @@ void Dummy::move(const std::string& dir) {
 	if (_info != nullptr) {
 		_info->draw(true);
 	}
-	
+
 	GameObjects::update = true;
+}
+
+void Dummy::draw() {
+	TCODConsole::root->putChar(_screen_x, _screen_y, _c);
+	TCODConsole::root->setCharForeground(_screen_x, _screen_y, _fcolor);
+	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
 }
 
 void Dummy::draw_mem() {
@@ -177,3 +181,4 @@ void Dummy::draw_mem() {
 	TCODConsole::root->setCharBackground(_screen_x, _screen_y, _bcolor);
 }
 
+void Dummy::delete_actor() {}

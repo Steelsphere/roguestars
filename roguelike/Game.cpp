@@ -292,6 +292,7 @@ void Game::update() {
 	}
 
 	if (_level != nullptr) {
+		TCODConsole::root->clear();
 		for (int i = 0; i < actors.size(); i++) {
 
 			a = actors.operator[](i);
@@ -391,7 +392,7 @@ void Game::startup_new_game() {
 
 
 #ifndef NO_SAVE 
-	std::cout << "Saving is on\b";
+	std::cout << "Saving is on\n";
 	
 	int num = 1;
 	for (auto& f : std::experimental::filesystem::directory_iterator("Data\\Save")) {
@@ -402,11 +403,11 @@ void Game::startup_new_game() {
 	_savegame_directory = "Data\\Save\\" + gname;
 	GameObjects::savegame_path = _savegame_directory;
 
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\galaxy");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\starsector");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\solarsystem");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\world");
-	std::experimental::filesystem::create_directory(_savegame_directory + "\\surface");
+	//std::experimental::filesystem::create_directory(_savegame_directory + "\\galaxy");
+	//std::experimental::filesystem::create_directory(_savegame_directory + "\\starsector");
+	//std::experimental::filesystem::create_directory(_savegame_directory + "\\solarsystem");
+	//std::experimental::filesystem::create_directory(_savegame_directory + "\\world");
+	//std::experimental::filesystem::create_directory(_savegame_directory + "\\surface");
 #endif
 
 	std::cout << "Number of actors: " << Actor::get_buffer()->size() << std::endl;
@@ -743,6 +744,7 @@ void Game::to_galaxy() {
 
 	Faction::reinit_factions();
 	GameObjects::update = true;
+	GameObjects::new_turn = true;
 }
 
 void Game::to_star_sector() {
@@ -770,6 +772,7 @@ void Game::to_star_sector() {
 
 	fix_tile_id<SolarSystem>();
 	GameObjects::update = true;
+	GameObjects::new_turn = true;
 }
 
 void Game::to_solar_system() {
@@ -795,6 +798,7 @@ void Game::to_solar_system() {
 
 	fix_tile_id<Planet>();
 	GameObjects::update = true;
+	GameObjects::new_turn = true;
 }
 
 void Game::to_world_map() {
@@ -816,6 +820,7 @@ void Game::to_world_map() {
 
 	fix_tile_id<Biome>();
 	GameObjects::update = true;
+	GameObjects::new_turn = true;
 }
 
 void Game::highlight_player() {
@@ -875,7 +880,7 @@ void Game::save_level() {
 	}
 	
 	std::string name = std::to_string(_level->id);
-	name.insert(0, _level->get_savedir() + "\\");
+//	name.insert(0, _level->get_savedir() + "\\");
 	_level->save_level_file(_savegame_directory + "\\" + name);
 
 	std::cout << "Saved level with ID: " << name << std::endl;
@@ -895,6 +900,10 @@ void Game::fix_tile_id() {
 void Game::test_level() {
 	destroy_main_menu();
 	TCODConsole::root->clear();
+
+	delete _camera;
+	_camera = new Camera(0, 0);
+	GameObjects::camera = _camera;
 
 	_level = new Level;
 	_camera->set_world_pos(0, 0);

@@ -548,6 +548,7 @@ void InfoViewer::draw(bool force) {
 		for (int i = _text.size() - 1; i > actors.size(); i--) {
 			_text[i].str = "";
 		}
+		TCODConsole::root->putCharEx(GameObjects::screen_width / 2, GameObjects::screen_height / 2, 'X', TCODColor::yellow, TCODColor::black);
 	}
 }
 
